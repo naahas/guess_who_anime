@@ -18,6 +18,9 @@ var app = new Vue({
 
     methods: {
 
+        createLobby: function() {
+            alert('PUPUTSU PAISEN')
+        }
         
 
     },
