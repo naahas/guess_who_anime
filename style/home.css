@@ -1,19 +1,28 @@
 
+body{
+    overflow-x: hidden;
+    background-color: rgb(5, 18, 2);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  }
 
-#app {
-    width: 100vw;
-    height: 100vh;
-}
 
 #maindiv {
     position: absolute;
     background-color: rgb(148, 176, 199);
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    border: 0.3em double rgb(110, 129, 129);
+    background-size:cover;
+}
+
+
+#mainback {
+    z-index: -10;
+    filter: brightness(30%);
     width: 100%;
     height: 100%;
-    text-align: center;
-    border: 1em double azure;
-    background-image: url('https://pbs.twimg.com/media/GGdhhZBXwAA3OkX.jpg');
-    background-size:cover;
+    object-fit: cover;
 }
 
 .btndiv {
@@ -28,7 +37,7 @@
 }
 
 .pbtn {
-    min-width: 17em;
+    width: 100%;
     font-size: 1.5em;
     font-family: Georgia, 'Times New Roman', Times, serif;
     padding: 0.8em;
@@ -47,7 +56,7 @@
     outline: none;
     background: rgb(134, 191, 182);
     background: linear-gradient(0deg, rgb(12, 12, 15) 0%, rgb(18, 18, 19) 100%);
-    border: 0.15em double rgb(40, 53, 53);
+    border: 0.5em double rgb(128, 182, 182);
 
 }
 
@@ -58,3 +67,13 @@
     background: rgb(67, 67, 89);
     background: linear-gradient(0deg, rgb(228, 234, 240) 0%, rgb(229, 233, 237) 100%);
  }
+
+
+
+ @media (max-width:431px) {
+    .pbtn {
+       
+       
+        font-size: 90%;
+    }
+  }
