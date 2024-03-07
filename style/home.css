@@ -1,1 +1,60 @@
 
+
+#app {
+    width: 100vw;
+    height: 100vh;
+}
+
+#maindiv {
+    position: absolute;
+    background-color: rgb(148, 176, 199);
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border: 1em double azure;
+    background-image: url('https://pbs.twimg.com/media/GGdhhZBXwAA3OkX.jpg');
+    background-size:cover;
+}
+
+.btndiv {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top:0;
+    margin: auto;
+}
+
+.pbtn {
+    min-width: 17em;
+    font-size: 1.5em;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    padding: 0.8em;
+    margin: 1em;
+    letter-spacing: 0.2em;
+    color: #fff;
+    border-radius: 0.5em;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+    7px 7px 20px 0px rgba(0,0,0,.1),
+    4px 4px 5px 0px rgba(0,0,0,.1);
+    outline: none;
+    background: rgb(134, 191, 182);
+    background: linear-gradient(0deg, rgb(12, 12, 15) 0%, rgb(18, 18, 19) 100%);
+    border: 0.15em double rgb(40, 53, 53);
+
+}
+
+
+.pbtn:hover {
+    transform: scale(1.1);
+    color:rgb(10, 15, 20);
+    background: rgb(67, 67, 89);
+    background: linear-gradient(0deg, rgb(228, 234, 240) 0%, rgb(229, 233, 237) 100%);
+ }
