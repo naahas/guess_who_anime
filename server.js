@@ -32,7 +32,7 @@ const sessionMiddleware = session({
     resave: true,
     saveUninitialized: true,
     cookie: {
-        maxAge: 5*tmin,
+        maxAge: 60*tmin,
         sameSite: 'lax'
     }
 });
@@ -75,12 +75,46 @@ app.use(express.static(__dirname + "/img/"));
 
 //path handle
 app.get('/' , function(req,res) {
-    res.sendFile(__dirname + "/home.html");
+    
+    if(req.session.created) {
+        res.sendFile(__dirname + "/create.html");
+    } else if(req.session.joined) {
+        res.sendFile(__dirname + "/join.html");
+    } else res.sendFile(__dirname + "/home.html");
 
  
 });
+
+
+
+app.post('/launch' , function(req,res) {
+    
+    var nickname = req.body.val;
+    var cres = checkUsername(nickname);
+
+    if(cres == "good") req.session.username = nickname;
+
+    res.end(cres);
+
+});
  
 
+
+app.post('/create' , function(req,res) {
+    req.session.created = true;
+
+    var roomID = generateRoomID(5);
+    console.log("room => " , roomID );
+    res.end();
+
+});
+
+
+app.post('/join' , function(req,res) {
+    req.session.joined = true;
+    res.end();
+
+});
 
 
 
@@ -103,9 +137,49 @@ io.on('connection' , (socket) => {
     })
 
 
+
+    const iocreate = socket.request.session.created;
+    const iojoin = socket.request.session.joined;
+    const iousername= socket.request.session.username;
+
+
+    socket.emit('showSettingEvent' , iousername);
+    
+    if(iousername) socket.emit('displayUsernameEvent' , iousername);
+
+    
+
+
 })
            
 
+
+
+
+
+/// JS FUNCTIONS
+function generateRoomID(code_length) {
+    var res = '';
+    const all_char = 'ABCDEFGHIJKLMONPQRSTUVWXYZ01234567890123456789';
+    var counter = 0;
+
+    while(counter < code_length) {
+        res += all_char[Math.floor(Math.random() * all_char.length)];
+        counter+=1;
+    }
+
+    return res;
+}
+
+
+
+function checkUsername(username) {
+    if(username.length < 4) return "TROP COURT (4-15)";
+    if(username.length > 15) return "TROP LONG (4-15)";
+    // if(username.indexOf(' ') >= 0) return "FORMAT INVALIDE";
+
+    return "good";
+}
 
 
 

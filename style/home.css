@@ -26,8 +26,9 @@ body{
 }
 
 .btndiv {
+    
     position: absolute;
-    width: fit-content;
+    width: 50%;
     height: fit-content;
     bottom: 0;
     left: 0;
@@ -37,7 +38,7 @@ body{
 }
 
 .pbtn {
-    width: 100%;
+    width: 70%;
     font-size: 1.5em;
     font-family: Georgia, 'Times New Roman', Times, serif;
     padding: 0.8em;
@@ -72,6 +73,103 @@ body{
 
  @media (max-width:431px) {
     .pbtn {
+        width: 100%;
         font-size: 90%;
     }
   }
+
+
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+    .pbtn {
+        width: 70%;
+        font-size: 90%;
+    }
+  
+  
+  }
+  
+
+
+  h2 {
+    color:rgb(234, 247, 246);
+    
+    text-shadow: .0.7em .1em 0 hsl(200, 51%, 58%);
+    word-spacing: 0.2em;
+    letter-spacing: 0.1em;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: 500;
+  }
+
+
+  hr {
+    width: 100%;
+    color:aliceblue;
+    
+  }
+
+  #usernameinput {
+    margin: 1em;
+    color:darkolivegreen;
+    outline: none;
+	border: 0.2em solid rgb(110, 129, 129);
+    padding: 1em;
+    width: 80%;
+    height: 80%;
+  }
+
+
+
+  #subnick{
+	min-width: 30%;
+	height: 3.5em;
+    margin: 1em;
+	border-radius: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    letter-spacing: 0.2em;
+	border: 3px solid #f8f0f4;
+	background-color: transparent;
+	text-align: center;
+	color: aliceblue;
+	transition: all .2s ease-in;
+	-webkit-transition: all .2s ease-in;
+	cursor:pointer;
+    
+}
+
+#subnick:hover{
+	background-color: #e9dceb;
+	color: #100e0e;
+}
+
+.errortxt {
+    display: none;
+    font-size: 1em;
+    padding: 0.5em;
+    position: absolute;
+    color:red;
+}
+
+
+.currentxt {
+    display: none;
+    position: absolute;
+    font-size: 1em;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color:aliceblue;
+    margin: 0.7em;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    top:0;
+    right: 0;
+    text-shadow: .0.7em .1em 0 hsl(200, 51%, 58%);
+}
+
+
+.usernamediv {
+    display: none;
+}
+
+
+.cjdiv {
+    display: none;
+}

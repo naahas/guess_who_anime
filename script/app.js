@@ -11,7 +11,10 @@ var app = new Vue({
 
     data: function() {
         return {
-            testo:"pikinemad"
+            testo:"pkm",
+            username:''
+            
+            
         }
     },
 
@@ -19,9 +22,70 @@ var app = new Vue({
     methods: {
 
         createLobby: function() {
-            alert('PUPUTSU PAISEN')
+            var body = {
+                val: 'create'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/create',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.href = "/";
+             
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+
+        },
+
+        joinLobby: function() {
+            var body = {
+                val: 'join'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/join',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.href = '/';
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+
+        },
+
+
+        submitUsername: function() {
+            var body = {
+                val: this.username
+            };
+
+            var config = {
+                method: 'post',
+                url: '/launch',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                if(res.data == "good") location.reload();
+                else editError(res.data);
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+
         }
-        
 
     },
 
@@ -33,8 +97,26 @@ var app = new Vue({
    
     mounted: async function() {
         
+        socket.on('showSettingEvent' , (iouser) => {
+            if(iouser != null) $('.cjdiv').show();
+            else $('.usernamediv').show();
+        });
         
+        socket.on('displayUsernameEvent' , (iouser) => {
+            this.username = iouser;
+            $('.currentxt').show();
+        });
 
     },
 
 })
+
+
+
+
+//JS AND JQUERY SECTION
+
+function editError(error) {
+    $('.errortxt').text(error);
+    $('.errortxt').show();
+}
