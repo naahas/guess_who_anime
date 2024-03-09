@@ -12,7 +12,8 @@ var app = new Vue({
     data: function() {
         return {
             testo:"pkm",
-            username:''
+            username:'',
+            roomid: '',
             
             
         }
@@ -85,6 +86,28 @@ var app = new Vue({
                 console.log(err);
             });
 
+        },
+
+
+        submitCode: function() {
+            var body = {
+                val: this.roomid
+            };
+
+            var config = {
+                method: 'post',
+                url: '/codeCheck',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                if(res.data == "non") errorCodeInput();
+                else location.reload();
+            })
+            .catch(function (err) {
+                
+            });
         }
 
     },
@@ -107,7 +130,27 @@ var app = new Vue({
             $('.currentxt').show();
         });
 
+
+        //for host
+        socket.on('displayCodeEvent' , (roomid) => {
+            editCode(roomid);
+        });
+
+        //for players
+        socket.on('displayJoinDiv' , (roomid) => {
+            if(roomid !=null) $('.waitplayerdiv').show();
+            else $('.joindiv').show();
+        });
+
+
+        socket.on('joinNotificationEvent' , (player) => {
+            $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 1/1 (" + player + ")");
+            $('.startbtn').removeClass('disablemode');
+        })
+
+
     },
+
 
 })
 
@@ -119,4 +162,20 @@ var app = new Vue({
 function editError(error) {
     $('.errortxt').text(error);
     $('.errortxt').show();
+}
+
+
+function editCode(roomid) {
+    $('.codetxt').html('CODE DU SALON : ' + roomid)
+}
+
+
+function errorCodeInput() {
+    $('#inputroom').addClass('tmpshake');
+    $('#inputroom').val('');
+    $("#codebtn").animate({'background-color': '#e26381'}, 400);
+    setTimeout(function(){
+        $('#inputroom').removeClass('tmpshake');
+     },300);    
+     $("#inputroom").trigger('blur'); 
 }

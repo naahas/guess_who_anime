@@ -73,8 +73,14 @@ app.use(express.static(__dirname + "/img/"));
 
 
 
+var mapcode = new Map();
+var mapcodefull = [];
+
+
 //path handle
 app.get('/' , function(req,res) {
+
+    
     
     if(req.session.created) {
         res.sendFile(__dirname + "/create.html");
@@ -104,7 +110,9 @@ app.post('/create' , function(req,res) {
     req.session.created = true;
 
     var roomID = generateRoomID(5);
-    console.log("room => " , roomID );
+    mapcode.set(req.session.username , roomID);
+    req.session.rid = roomID;
+
     res.end();
 
 });
@@ -114,6 +122,23 @@ app.post('/join' , function(req,res) {
     req.session.joined = true;
     res.end();
 
+});
+
+
+app.post('/codeCheck' , function(req,res) {
+
+    var code = req.body.val;
+    var resnb = "non";
+
+    for (let [key, value] of mapcode) {
+        if(code == value && !mapcodefull.includes(code))  {
+            resnb = "oui";
+            req.session.rid = code;
+        }   
+    }
+    
+
+    res.end(resnb);
 });
 
 
@@ -141,11 +166,44 @@ io.on('connection' , (socket) => {
     const iocreate = socket.request.session.created;
     const iojoin = socket.request.session.joined;
     const iousername= socket.request.session.username;
+    const ioroomid = socket.request.session.rid;
 
 
     socket.emit('showSettingEvent' , iousername);
+    socket.emit('displayJoinDiv' , ioroomid);
+
     
     if(iousername) socket.emit('displayUsernameEvent' , iousername);
+
+    //show raher username input or create/join button , and keep screen notified when there is a player 
+    if(iocreate) {
+     
+        var rid = mapcode.get(iousername);
+        socket.join(ioroomid);
+        socket.emit('displayCodeEvent' , rid);
+        if(mapcodefull.includes(ioroomid)) {
+            var oplayer = 'undefined';
+            for (let [key, value] of mapcode) {
+                if(key!=iousername) socket.emit('joinNotificationEvent' , (key));
+            }
+            
+        }
+    }
+
+
+    if(iojoin == true && ioroomid) {
+        var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
+        if(roomsize == 1) mapcodefull.push(ioroomid);
+        if(roomsize<=1) {
+            mapcode.set(iousername , ioroomid);
+            socket.join(ioroomid);
+            socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , iousername)
+        }
+
+        
+
+        
+    }
 
     
 

@@ -39,6 +39,19 @@
             <img id="mainback" src="jjk.jpg" amt="backpic">
             <p  class="currentxt"> {{username}} </p>
 
+
+            <div class="joindiv">   
+                    <input v-model="roomid" id="inputroom" name="codeid" placeholder="Code du salon.." autocomplete="off">
+                    <br>
+                    <button @click="submitCode()" id="codebtn">VALIDER</button>  
+            </div>
+
+
+            <div class="waitplayerdiv">
+                <h2> EN ATTENTE DE L'HÔTE</h2>
+                <span class="loader2"></span>
+            </div>
+
     
         </div> <!-- end main div-->
     
