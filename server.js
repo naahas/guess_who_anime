@@ -75,18 +75,26 @@ app.use(express.static(__dirname + "/img/"));
 
 var mapcode = new Map();
 var mapcodefull = [];
+var mapgametime = new Map();
+var mapgametheme = new Map();
 
 
 //path handle
 app.get('/' , function(req,res) {
 
     
-    
-    if(req.session.created) {
-        res.sendFile(__dirname + "/create.html");
-    } else if(req.session.joined) {
-        res.sendFile(__dirname + "/join.html");
-    } else res.sendFile(__dirname + "/home.html");
+    if(req.session.ingame == true) {
+        res.redirect('/game');
+    } else {
+
+        if(req.session.created) {
+            res.sendFile(__dirname + "/create.html");
+        } else if(req.session.joined) {
+            res.sendFile(__dirname + "/join.html");
+        } else res.sendFile(__dirname + "/home.html");
+
+
+    }
 
  
 });
@@ -125,6 +133,7 @@ app.post('/join' , function(req,res) {
 });
 
 
+//when player try to actually join 
 app.post('/codeCheck' , function(req,res) {
 
     var code = req.body.val;
@@ -139,6 +148,60 @@ app.post('/codeCheck' , function(req,res) {
     
 
     res.end(resnb);
+});
+
+
+
+app.post('/game' , function(req,res) {
+
+    io.once('connection' , (socket) => {
+        socket.to(req.session.rid).emit('changeGamePlayerStatusEvent');
+    });  
+
+    req.session.ingame = true;
+    res.redirect('/game');
+
+    
+});
+
+
+app.get('/game' , function(req,res) {
+    if(req.session.ingame == true) {
+        res.sendFile(__dirname + '/game.html');
+    } else res.redirect('/');
+
+});
+
+
+
+app.post('/igstatus' , function(req,res) {
+    req.session.ingame = true;
+
+    res.end();
+});
+
+
+app.post('/ipstatus' , function(req,res) {
+    req.session.isplaying = true;
+
+    res.end();
+});
+
+
+app.post('/confirmSetting' , function(req,res) {
+    var btime = req.body.val1;
+    var theme = req.body.val2;
+
+    mapgametime.set(req.session.rid , btime);
+    mapgametheme.set(req.session.rid , theme);
+
+    req.session.isplaying = true;
+
+    io.once('connection' , (socket) => {
+        socket.to(req.session.rid).emit('makePlayerPlayingEvent');
+    });  
+
+    res.end();
 });
 
 
@@ -167,6 +230,8 @@ io.on('connection' , (socket) => {
     const iojoin = socket.request.session.joined;
     const iousername= socket.request.session.username;
     const ioroomid = socket.request.session.rid;
+    const ioingame = socket.request.session.ingame;
+    const ioplaying = socket.request.session.isplaying;
 
 
     socket.emit('showSettingEvent' , iousername);
@@ -182,7 +247,6 @@ io.on('connection' , (socket) => {
         socket.join(ioroomid);
         socket.emit('displayCodeEvent' , rid);
         if(mapcodefull.includes(ioroomid)) {
-            var oplayer = 'undefined';
             for (let [key, value] of mapcode) {
                 if(key!=iousername) socket.emit('joinNotificationEvent' , (key));
             }
@@ -200,11 +264,34 @@ io.on('connection' , (socket) => {
             socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , iousername)
         }
 
-        
-
-        
     }
 
+
+    if(iocreate && ioingame == true) {
+        if(!ioplaying) socket.emit('displaySetting');
+    }
+
+    if(ioingame == true) {
+        var oplayer = 'undefined';
+            for (let [key, value] of mapcode) {
+                if(key!=iousername) oplayer = key;
+            }
+        socket.emit('displayOpponent' , oplayer)
+    }
+
+
+
+    if(ioingame == true && iocreate!=true) {
+        if(!ioplaying) socket.emit('displayWaitMsgGameEvent')
+    }
+
+
+    if(ioplaying) {
+        var time = mapgametime.get(ioroomid);
+        var theme = mapgametheme.get(ioroomid);
+        socket.emit('displayPostRule' , time , theme)
+        socket.emit('enableInputEvent');
+    }
     
 
 

@@ -8,7 +8,7 @@ body{
 
 #maindiv {
     position: absolute;
-    background-color: rgb(148, 176, 199);
+    background-color: rgba(198, 201, 204, 0.489);
     width: 100vw;
     height: 100vh;
     text-align: center;
@@ -239,7 +239,7 @@ body{
 
 
 .disablemode {
-    pointer-events: none;
+    /* pointer-events: none; */
     background-color: rgba(70, 103, 126, 0.901);
 }
 
@@ -435,3 +435,507 @@ body{
       border-color: white white white white;
     }
   } 
+
+
+
+
+
+  .p1div {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top:50%;
+    margin: auto;
+    /* margin: 0 auto;  bottom middle without top */ 
+  
+  }
+
+
+  .turnpic {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top:15%;
+    right: 0;
+    left:15%;
+    bottom: 0;
+    margin: auto;
+    transform: rotate(90deg);
+  }
+
+
+  .bombpic {
+    animation: pulse 0.5s infinite;
+    position: absolute;
+    top:0;
+    right: 0;
+    left:0;
+    bottom: 0;
+    margin: auto;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+
+    100% {
+      transform: scale(1.05);
+    }
+  }
+
+
+/* reset input */
+.p1input{
+  width: 70%;
+  text-align: center;
+  font-family:'Courier New', Courier, monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 0;
+  font-weight: 600;
+  text-shadow: .0.7em .1em 0 hsl(195, 10%, 8%);
+  border-bottom: 0.05em solid rgba(240, 248, 255, 0.591);
+  outline: 0;
+  font-size: 1.5rem;
+  color: rgb(179, 241, 247);
+  padding:1em 0.7em 0.7em 1em;
+  background-color: transparent;
+}
+
+.p1input:focus {
+  animation: extend 0.2s forwards;
+}
+
+
+@keyframes extend {
+  0% {
+     width: 70%;
+  }
+
+  100% {
+    width: 75%;
+  }
+}
+
+
+.disablemode2 {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+
+
+/* side menu */
+
+
+.navdiv {
+  display: none;
+  position: absolute;
+  z-index: 99;
+  width: 20%;
+  height: 100%;
+  background-color: #1b1a1a;
+  text-align: center;
+}
+
+.postnavdiv {
+  display: none;
+  position: absolute;
+  z-index: 99;
+  width: 20%;
+  height: 100%;
+  background-color: #1b1a1a;
+  text-align: center;
+}
+
+
+.rdiv2 {
+  display: none;
+  width: fit-content;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0.5em;
+  background-color: #39134a;
+  border-top: 2px solid aliceblue;
+  border-radius: 10px;
+  position: absolute;
+  left: 0;
+}
+
+.rdiv2:hover {
+  opacity: 0.9;
+}
+
+.rdiv2 span {
+  color:azure;
+}
+
+.rdiv2 img {
+  width: 1em;
+  height: 1em;
+}
+
+
+.rdiv {
+  display: none;
+  width: fit-content;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0.5em;
+  background-color: #39134a;
+  border-top: 2px solid aliceblue;
+  border-radius: 10px;
+  position: absolute;
+  left: 0;
+}
+
+.rdiv:hover {
+  opacity: 0.9;
+}
+
+.rdiv span {
+  color:azure;
+}
+
+.rdiv img {
+  width: 1em;
+  height: 1em;
+}
+
+.postnavdiv img {
+  position: absolute;
+  right: 0;
+  margin: 0.5em;
+  opacity: 0.5;
+  width: 9%;
+  transition: all .2s ease-in-out;
+}
+
+.postnavdiv img:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.navdiv img {
+  position: absolute;
+  right: 0;
+  margin: 0.5em;
+  opacity: 0.5;
+  width: 9%;
+  transition: all .2s ease-in-out;
+}
+
+.navdiv img:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.headsettxt {
+  color:rgb(202, 245, 245);
+  margin: 2em;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  text-shadow: .0.7em 1em 1em hsl(193, 100%, 98%);
+  letter-spacing: 0.3em;
+  
+}
+
+
+
+
+.secrange {
+  margin: 0.2em;
+  border-radius: 5px;  
+  outline: none;
+  opacity: 0.9;
+}
+
+.secrange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: rgb(170, 31, 202)
+  
+}
+
+
+.secrange::-webkit-slider-runnable-track {
+  cursor: pointer;
+  background: #aca0b1;
+  border-radius: 1em;
+}
+
+
+
+
+
+.secval {
+  color:aliceblue;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+}
+
+
+.rangediv {
+  padding: 1em;
+  letter-spacing: 0.1em;
+  background-color:rgba(71, 28, 92, 0.2);
+}
+
+
+.rangediv hr {
+  width: 70%;
+  margin-left:15%;
+}
+
+
+
+.rangediv p {
+  font-family: 'Courier New', Courier, monospace;
+  color:aliceblue;
+}
+
+
+.themediv {
+  margin-top:1em;
+  padding: 1em;
+  letter-spacing: 0.1em;
+  background-color:rgba(71, 28, 92, 0.2);
+}
+
+.rulediv {
+  margin-top:1em;
+  padding: 1em;
+  letter-spacing: 0.1em;
+  background-color:rgba(71, 28, 92, 0.2);
+  
+}
+
+
+.rulediv hr {
+  width: 70%;
+  margin-left:15%;
+}
+
+
+.rulediv p {
+  font-family: 'Courier New', Courier, monospace;
+  color:aliceblue;
+}
+
+
+
+.themediv hr {
+  width: 70%;
+  margin-left:15%;
+}
+
+
+.themediv p {
+  font-family: 'Courier New', Courier, monospace;
+  color:aliceblue;
+}
+
+
+.themeop {
+  margin: 1em;
+}
+
+
+
+.dropdown {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  height: 28px;
+  width: 150px;
+  background: #f2f2f2;
+  border: 1px solid;
+  border-color: white #f7f7f7 whitesmoke;
+  border-radius: 3px;
+  background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.06));
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+.dropdown:before, .dropdown:after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 9px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 4px dashed;
+  border-color: #888888 transparent;
+  pointer-events: none;
+}
+
+.dropdown:before {
+  border-bottom-style: solid;
+  border-top: none;
+}
+
+.dropdown:after {
+  margin-top: 7px;
+  border-top-style: solid;
+  border-bottom: none;
+}
+
+.dropdown-select {
+  position: relative;
+  width: 130%;
+  padding: 0.1em;
+  color: #30383d;
+  text-shadow: 0 1px white;
+  background: #f2f2f2; /* Fallback for IE 8 */
+  background: rgba(0, 0, 0, 0) !important; /* "transparent" doesn't work with Opera */
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+
+.dropdown-select:focus {
+  z-index: 3;
+  width: 100%;
+  color: #394349;
+  outline: 2px solid #49aff2;
+  outline: 2px solid -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.dropdown-select > option {
+  padding: 1em;
+  margin: 0.1em;
+  text-shadow: none;
+  background: #2a2626;
+  color:aliceblue;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+
+
+.subsettingbtn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #d8bebe9a;
+  width: 100%;
+  height: 4em;
+  border: 2px solid rgb(208, 162, 215);
+  font-family:'Times New Roman', Times, serif;
+  letter-spacing: 0.1em;
+  transition: all 0.1s ease-in-out;
+}
+
+
+.subsettingbtn:hover {
+  background-color: #2c0836;
+  color:aliceblue;
+}
+
+
+
+
+@media (max-width:431px) {
+  .navdiv {
+    width: fit-content;
+    height: 100%;
+  }
+  .postnavdiv {
+    width: fit-content;
+    height: 100%;
+  }
+  .rulediv {
+    display: none;
+  }
+}
+
+
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+ .navdiv {
+    height: 100%;
+    width: fit-content;
+    overflow-y:auto
+  }
+  .postnavdiv {
+    height: 100%;
+    width: fit-content;
+    overflow-y:auto
+  }
+  .rulediv {
+    display: none;
+  }
+
+  .subsettingbtn {
+    position: unset;
+  }
+
+}
+
+
+
+.opponentdiv {
+  display: none;
+  position: absolute;
+  width: fit-content;
+  height: fit-content;
+  top:5%;
+  left:0;
+  right: 0;
+  margin: auto;
+}
+
+
+.opponentdiv img {
+  width: 100px;
+  height: 100px;
+}
+
+
+.opponentdiv span {
+  margin: 0.5em;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+
+
+@media (max-width:431px) {
+  .opponentdiv img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+    .opponentdiv img {
+      width: 50px;
+      height: 50px;
+    }
+
+}
+
+
+
+.waitgametxt {
+  display: none;
+  position: absolute;
+  left:0;
+  margin: 1em;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  border-bottom: 1px solid black;
+  background-color: rgba(144, 196, 196, 0.4);
+}
+
+
+

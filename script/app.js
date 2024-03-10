@@ -14,6 +14,9 @@ var app = new Vue({
             testo:"pkm",
             username:'',
             roomid: '',
+            opponent:'eeee',
+            bombtime:'8',
+            currenttheme:'Dragon Ball'
             
             
         }
@@ -108,6 +111,53 @@ var app = new Vue({
             .catch(function (err) {
                 
             });
+        },
+
+
+        launchGame: function() {
+            var body = {
+                val: 'val'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/game',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.href = '/game';
+            })
+            .catch(function (err) {
+                
+            });
+
+        },
+
+        sendGameSetting: function() {
+            var bombtime = $('#rangeid').val();
+            var themechoice = $('.cselect').find(":selected").val();
+            
+            var body = {
+                val1: bombtime,
+                val2: themechoice
+            };
+
+            var config = {
+                method: 'post',
+                url: '/confirmSetting',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.reload();
+            })
+            .catch(function (err) {
+                
+            });
+
         }
 
     },
@@ -126,7 +176,7 @@ var app = new Vue({
         });
         
         socket.on('displayUsernameEvent' , (iouser) => {
-            this.username = iouser;
+            this.username = iouser + " (vous)";
             $('.currentxt').show();
         });
 
@@ -146,6 +196,45 @@ var app = new Vue({
         socket.on('joinNotificationEvent' , (player) => {
             $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 1/1 (" + player + ")");
             $('.startbtn').removeClass('disablemode');
+        });
+
+
+        socket.on('changeGamePlayerStatusEvent' , () => {
+            ingameRequest();
+        });
+
+
+        socket.on('makePlayerPlayingEvent' , () => {
+            isplayingRequest();
+        });
+
+
+        socket.on('displaySetting', () => {
+            $('.navdiv').show();
+            $('.rdiv').show();
+        });
+
+
+        socket.on('displayOpponent' , (opponent) => {
+            this.opponent = opponent;
+            $('.opponentdiv').show();
+        });
+
+
+        socket.on('displayWaitMsgGameEvent' , () => {
+            $('.waitgametxt').show();
+        });
+
+
+        socket.on('enableInputEvent' , () => {
+            $('.p1div').removeClass('disablemode2');
+        });
+
+
+        socket.on('displayPostRule' , (time , theme) => {
+            this.bombtime = time;
+            this.currenttheme = theme;
+            $('.rdiv2').show();
         })
 
 
@@ -158,6 +247,29 @@ var app = new Vue({
 
 
 //JS AND JQUERY SECTION
+
+$('.closeimg2').on('click' , function() {
+    $('.postnavdiv').slideToggle();
+});
+
+
+$('.closeimg').on('click' , function() {
+    $('.navdiv').slideToggle();
+});
+
+
+$('.rdiv').on('click' , function() {
+    $('.navdiv').slideToggle();
+});
+
+
+$('.rdiv2').on('click' , function() {
+    $('.postnavdiv').slideToggle();
+});
+
+
+
+
 
 function editError(error) {
     $('.errortxt').text(error);
@@ -178,4 +290,67 @@ function errorCodeInput() {
         $('#inputroom').removeClass('tmpshake');
      },300);    
      $("#inputroom").trigger('blur'); 
+}
+
+
+function ingameRequest() {
+    var body = {
+        val: 'val'
+    };
+
+    var config = {
+        method: 'post',
+        url: '/igstatus',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        location.href = '/game';
+    })
+    .catch(function (err) {
+        
+    });
+}
+
+
+function isplayingRequest() {
+    var body = {
+        val: 'val'
+    };
+
+    var config = {
+        method: 'post',
+        url: '/ipstatus',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        location.reload();
+    })
+    .catch(function (err) {
+        
+    });
+}
+
+
+
+const sliderEl = document.getElementById('rangeid');
+const sliderValue = document.getElementById('secvalid')
+
+if(sliderEl) {
+
+    sliderEl.addEventListener("input", (event) => {
+    const tempSliderValue = event.target.value; 
+    
+    sliderValue.textContent = tempSliderValue;
+    
+    const progress = (tempSliderValue / sliderEl.max) * 100;
+    
+    sliderEl.style.background = `linear-gradient(to right, #f50 ${progress}%, #ccc ${progress}%)`;
+    })
+
+
+
 }
