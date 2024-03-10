@@ -454,16 +454,9 @@ body{
   }
 
 
-  .turnpic {
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    top:15%;
-    right: 0;
-    left:15%;
-    bottom: 0;
-    margin: auto;
-    transform: rotate(90deg);
+  .p1turn {
+   
+
   }
 
 
@@ -484,6 +477,23 @@ body{
 
     100% {
       transform: scale(1.05);
+    }
+  }
+
+
+
+  .turnclass {
+    /* animation: turn 0.5s forwards; */
+  }
+
+
+  @keyframes turn {
+    0% {
+      
+    }
+
+    100% {
+      transform: rotate(130deg)
     }
   }
 
@@ -519,6 +529,24 @@ body{
   100% {
     width: 75%;
   }
+}
+
+
+.p2input{
+  width: 65%;
+  text-align: center;
+  font-family:'Courier New', Courier, monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 0;
+  font-weight: 600;
+  text-shadow: .0.7em .1em 0 hsl(195, 10%, 8%);
+  border-bottom: 0.05em solid rgb(143, 226, 237 , 0.5);
+  outline: 0;
+  font-size: 1.2rem;
+  color: rgb(188, 239, 239 , 0.7);
+  padding:1em 0.7em 0.7em 1em;
+  background-color: transparent;
 }
 
 
@@ -881,6 +909,17 @@ body{
 
 
 
+.p2turn {
+  transform: scaleX(-1)
+}
+
+
+.p1turn {
+  transform: scaleX(-1);
+}
+
+
+
 .opponentdiv {
   display: none;
   position: absolute;
@@ -893,7 +932,7 @@ body{
 }
 
 
-.opponentdiv img {
+.imgop {
   width: 100px;
   height: 100px;
 }
@@ -939,3 +978,20 @@ body{
 
 
 
+.soundpic {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 2.5em;
+  height: 2.5em;
+  margin: 2em;
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: 50%;
+}
+
+.soundpic:hover {
+  background-color: rgb(110, 129, 129 );
+  opacity: 0.9;
+}

@@ -65,11 +65,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 io.engine.use(sessionMiddleware);
 
+var profile = JSON.parse(fs.readFileSync('./data.json'));
+
+
 
 //folder handler
 app.use(express.static(__dirname + "/script/"));
 app.use(express.static(__dirname + "/style/"));
 app.use(express.static(__dirname + "/img/"));
+app.use(express.static(__dirname + "/sound/"));
 
 
 
@@ -205,6 +209,15 @@ app.post('/confirmSetting' , function(req,res) {
 });
 
 
+app.post('/sendAnswer' , function(req,res) {
+    var answer = req.body.val;
+    var theme = mapgametheme.get(req.session.rid);
+
+
+    res.end();
+})
+
+
 
 app.get('*' , function(req,res) {
     res.send('pikine error');
@@ -261,7 +274,7 @@ io.on('connection' , (socket) => {
         if(roomsize<=1) {
             mapcode.set(iousername , ioroomid);
             socket.join(ioroomid);
-            socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , iousername)
+            socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , iousername);
         }
 
     }
@@ -276,7 +289,7 @@ io.on('connection' , (socket) => {
             for (let [key, value] of mapcode) {
                 if(key!=iousername) oplayer = key;
             }
-        socket.emit('displayOpponent' , oplayer)
+        socket.emit('displayOpponent' , oplayer);
     }
 
 
@@ -291,7 +304,13 @@ io.on('connection' , (socket) => {
         var theme = mapgametheme.get(ioroomid);
         socket.emit('displayPostRule' , time , theme)
         socket.emit('enableInputEvent');
+        socket.emit('startSoundEvent');
     }
+
+
+    socket.on('showTypingEvent' , (msg) => {
+        socket.broadcast.to(ioroomid).emit('showTypingOpponentEvent' , msg)
+    })
     
 
 

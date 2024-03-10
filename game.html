@@ -50,9 +50,14 @@
 
 
             <div class="opponentdiv">
-                <img src="vs1.png" alt="VERSUS">
-                <img src="opponent.png" alt="opponent"> 
+                <img class="imgop" src="vs1.png" alt="VERSUS">
+                <img class="imgop" src="opponent.png" alt="opponent"> 
                 <span> {{opponent}} </span>
+                
+                <br>
+                <input v-model="opponentres" disabled type="text" class="p2input">
+
+
             </div>
 
 
@@ -134,23 +139,29 @@
             <p class="currentxt"> {{username}} </p>
 
 
+            <img class="bombpic" src="bomb2.png">
             
 
-
-            <img class="bombpic" src="bomb2.png">
-            <!-- <img class="turnpic" src="parrow.png"> -->
-
                 <div class="p1div disablemode2">
-                    <input type="text" class="p1input">
+                    <form @submit.prevent = "sendAnswer">
+                        <input v-model="canswer" autofocus type="text" class="p1input">
+                    </form>
                 </div>    
 
         
+            <img class="soundpic" src="sound.png" alt="SOUND">
 
             
     
         </div> <!-- end main div-->
     
 
+
+
+
+        <audio id="audio1">
+            <source src="timer.mp3" type="audio/mp3">
+        </audio>
 
     </div> <!-- end app div -->
 

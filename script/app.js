@@ -5,6 +5,8 @@ socket.on('connect' , () => { console.log(socket.id)});
 
 
 
+
+
 var app = new Vue({
 
     el: '#app',
@@ -14,9 +16,11 @@ var app = new Vue({
             testo:"pkm",
             username:'',
             roomid: '',
-            opponent:'eeee',
-            bombtime:'8',
-            currenttheme:'Dragon Ball'
+            opponent:'',
+            bombtime:'',
+            currenttheme:'',
+            opponentres:'',
+            canswer:''
             
             
         }
@@ -158,6 +162,30 @@ var app = new Vue({
                 
             });
 
+        },
+
+        sendAnswer: function() {
+            
+            var player_answer = this.canswer;
+            $('.p1input').val('');
+
+            var body = {
+                val: player_answer
+            };
+
+            var config = {
+                method: 'post',
+                url: '/sendAnswer',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                
+            })
+            .catch(function (err) {
+                
+            });
         }
 
     },
@@ -215,7 +243,7 @@ var app = new Vue({
         });
 
 
-        socket.on('displayOpponent' , (opponent) => {
+        socket.on('displayOpponent' , (opponent) => {   
             this.opponent = opponent;
             $('.opponentdiv').show();
         });
@@ -235,8 +263,19 @@ var app = new Vue({
             this.bombtime = time;
             this.currenttheme = theme;
             $('.rdiv2').show();
+        });
+
+
+        socket.on('startSoundEvent' , () => {
+            playTimer();
+        });
+
+
+        socket.on('showTypingOpponentEvent' , (msg) => {
+            this.opponentres = msg;
         })
 
+     
 
     },
 
@@ -247,6 +286,12 @@ var app = new Vue({
 
 
 //JS AND JQUERY SECTION
+
+
+$('.p1input').on('input' , function(e) {
+    socket.emit('showTypingEvent' , e.target.value);
+})
+
 
 $('.closeimg2').on('click' , function() {
     $('.postnavdiv').slideToggle();
@@ -268,6 +313,48 @@ $('.rdiv2').on('click' , function() {
 });
 
 
+$('.soundpic').on('click' , function() {
+    var ta = document.getElementById('audio1');
+    if(ta.paused == false) {
+        $('.soundpic').attr("src" , "notsound.png");
+        ta.pause();  
+    } else {
+        $('.soundpic').attr("src" , "sound.png");
+        ta.volume = 0.4;
+        const promise = ta.play();  
+        
+        let playedOnLoad;
+
+        if (promise !== undefined) {
+            promise.then(_ => {
+                playedOnLoad = true;
+            }).catch(error => {
+                playedOnLoad = true;
+            });
+        }
+    }
+    
+    
+})
+
+
+
+function playTimer() {
+    var ta = document.getElementById('audio1');
+    ta.loop = true;
+    ta.volume = 0.4;
+    const promise = ta.play();  
+        
+    let playedOnLoad;
+
+    if (promise !== undefined) {
+        promise.then(_ => {
+            playedOnLoad = true;
+        }).catch(error => {
+            playedOnLoad = true;
+        });
+    }
+}   
 
 
 
@@ -333,6 +420,19 @@ function isplayingRequest() {
         
     });
 }
+
+
+
+var taudio = document.getElementById('audio1');
+
+if(taudio) {
+    if(taudio.paused == true) {
+        $('.soundpic').attr("src" , "notsound.png");
+    } else $('.soundpic').attr("src" , "sound.png");
+
+    $('.soundpic').show();
+}
+
 
 
 
