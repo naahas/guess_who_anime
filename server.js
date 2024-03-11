@@ -68,7 +68,6 @@ io.engine.use(sessionMiddleware);
 var profile = JSON.parse(fs.readFileSync('./data.json'));
 
 
-
 //folder handler
 app.use(express.static(__dirname + "/script/"));
 app.use(express.static(__dirname + "/style/"));
@@ -81,6 +80,7 @@ var mapcode = new Map();
 var mapcodefull = [];
 var mapgametime = new Map();
 var mapgametheme = new Map();
+var mapgameturn = new Map();
 
 
 //path handle
@@ -198,6 +198,7 @@ app.post('/confirmSetting' , function(req,res) {
 
     mapgametime.set(req.session.rid , btime);
     mapgametheme.set(req.session.rid , theme);
+    mapgameturn.set(req.session.rid , req.session.username);
 
     req.session.isplaying = true;
 
@@ -209,13 +210,46 @@ app.post('/confirmSetting' , function(req,res) {
 });
 
 
-app.post('/sendAnswer' , function(req,res) {
-    var answer = req.body.val;
-    var theme = mapgametheme.get(req.session.rid);
+
+app.post('/returnBackJoin' , function(req,res) {
+    req.session.joined = false;
+
+    if(req.session.rid != null) {
+        mapcode.delete(req.session.username);
+        mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
+        io.once('connection' , (socket) => {
+            socket.to(req.session.rid).emit('notifHostCancelFromPlayer');
+        });  
+    }
+
+    res.end();
+});
+
+
+
+app.post('/returnBackCreate' , function(req,res) {
+    mapcode.delete(req.session.username);
+    req.session.created = false;
+    var tmpid = req.session.rid;
+    req.session.rid = null;
+
+    io.once('connection' , (socket) => {
+        socket.to(tmpid).emit('cancelGameExitEvent');
+    });  
+
 
 
     res.end();
-})
+});
+
+
+
+app.post('/cancelPreGame' , function(req,res) {
+    req.session.joined = false;
+    req.session.rid = null;
+
+    res.end();
+});
 
 
 
@@ -302,22 +336,66 @@ io.on('connection' , (socket) => {
     if(ioplaying) {
         var time = mapgametime.get(ioroomid);
         var theme = mapgametheme.get(ioroomid);
-        socket.emit('displayPostRule' , time , theme)
-        socket.emit('enableInputEvent');
+        socket.emit('displayPostRule' , time , theme);
         socket.emit('startSoundEvent');
+
+        if(mapgameturn.get(ioroomid) == iousername) socket.emit('denableTurnInput' , 0)
+        else socket.emit('denableTurnInput' , 1);
     }
 
 
     socket.on('showTypingEvent' , (msg) => {
         socket.broadcast.to(ioroomid).emit('showTypingOpponentEvent' , msg)
-    })
+    });
+
+
+
+
+    // CHECK ANSWER HERE 
+
+    socket.on('sendAnswerEvent' , (answer) => {
+
+        var canswer = answer.toUpperCase();
+        var ctheme = mapgametheme.get(ioroomid);
+        var banktab = profile.Character.Naruto;
+
+        if(ctheme == 'Naruto') banktab = profile.Character.Naruto.map(chara => chara.toUpperCase());
+        if(ctheme == 'One Piece') banktab = profile.Character.OnePiece.map(chara => chara.toUpperCase());
+        if(ctheme == 'Dragon Ball') banktab = profile.Character.Dbz.map(chara => chara.toUpperCase());
+        if(ctheme == 'Tout') banktab = profile.Character.Tout.map(chara => chara.toUpperCase());
+
+        //IF ANSWER IS RIGHT
+        if(banktab.includes(canswer)) {
+            
+            removeJsonAnswer(ctheme , canswer)
+
+            // GAME TURN IS THE OTHER PLAYER'S
+            for (let [key, value] of mapcode) {
+                if(key!=iousername) mapgameturn.set(ioroomid , key ); 
+            }
+
+            socket.emit('playRightAudio');
+
+            // WRONG ANSWER
+        } else {
+            socket.emit('answerErrorEvent');
+        }
+
+        
+        if(mapgameturn.get(ioroomid) == iousername) {
+            socket.emit('denableTurnInput' , 0);
+            socket.broadcast.to(ioroomid).emit('denableTurnInput' , 1);
+         }else {
+            socket.emit('denableTurnInput' , 1);
+            socket.broadcast.to(ioroomid).emit('denableTurnInput' , 0);
+         } 
+
+    });
     
 
 
 })
            
-
-
 
 
 
@@ -344,6 +422,77 @@ function checkUsername(username) {
 
     return "good";
 }
+
+
+
+function removeJsonAnswer(theme , answer) {
+    var banktab = [];
+    var similar = [];
+    
+    if(theme == 'Naruto') {
+        banktab = profile.Character.Naruto;
+        for(var i = 0 ; i < banktab.length ; i++) {
+            if(banktab[i].includes(answer)) similar.push(banktab[i]);
+        }
+
+        
+        for(var i = 0 ; i < similar.length ; i++) {
+            var toRemove = similar[i];
+            profile.Character.Naruto = profile.Character.Naruto.filter(item => item!=toRemove);
+        }
+    }
+
+    if(theme == 'One Piece') {
+        banktab = profile.Character.OnePiece;
+        for(var i = 0 ; i < banktab.length ; i++) {
+            if(banktab[i].includes(answer)) similar.push(banktab[i]);
+        }
+
+        //TO DO REMOVE SIMILAR ELEMENT IN JSON
+        for(var i = 0 ; i < similar.length ; i++) {
+            var toRemove = similar[i];
+            profile.Character.OnePiece = profile.Character.OnePiece.filter(item => item!=toRemove);
+        }
+    }
+
+    if(theme == 'Dragon Ball') {
+        banktab = profile.Character.Dbz;
+        for(var i = 0 ; i < banktab.length ; i++) {
+            if(banktab[i].includes(answer)) similar.push(banktab[i]);
+        }
+
+        //TO DO REMOVE SIMILAR ELEMENT IN JSON
+        for(var i = 0 ; i < similar.length ; i++) {
+            var toRemove = similar[i];
+            profile.Character.Dbz = profile.Character.Dbz.filter(item => item!=toRemove);
+        }
+    }
+
+    if(theme == 'Tout') {
+        banktab = profile.Character.Tout;
+         for(var i = 0 ; i < banktab.length ; i++) {
+            if(banktab[i].includes(answer)) similar.push(banktab[i]);
+        }
+
+        //TO DO REMOVE SIMILAR ELEMENT IN JSON
+        for(var i = 0 ; i < similar.length ; i++) {
+            var toRemove = similar[i];
+            profile.Character.Tout = profile.Character.Tout.filter(item => item!=toRemove);
+        }
+
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
 
 
 

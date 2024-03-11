@@ -142,10 +142,8 @@
             <img class="bombpic" src="bomb2.png">
             
 
-                <div class="p1div disablemode2">
-                    <form @submit.prevent = "sendAnswer">
-                        <input v-model="canswer" autofocus type="text" class="p1input">
-                    </form>
+                <div class="p1div">
+                    <input id="p1inputid" disabled v-model="canswer" @keyup.enter = "checkAnswer" autofocus type="text" class="p1input disablemode2">
                 </div>    
 
         
@@ -161,6 +159,14 @@
 
         <audio id="audio1">
             <source src="timer.mp3" type="audio/mp3">
+        </audio>
+
+        <audio id="audio2">
+            <source src="right2.mp3" type="audio/mp3">
+        </audio>
+
+        <audio id="audio3">
+            <source src="wrong.mp3" type="audio/mp3">
         </audio>
 
     </div> <!-- end app div -->

@@ -164,28 +164,62 @@ var app = new Vue({
 
         },
 
-        sendAnswer: function() {
-            
+
+        returnBack: function(backval) {
+
+            if(backval == 'join')  {
+
+                var body = {
+                    val: 'val'
+                };
+
+                var config = {
+                    method: 'post',
+                    url: '/returnBackJoin',
+                    data: body
+                };
+
+                axios(config)
+                .then(function (res) {
+                    location.reload();
+                })
+                .catch(function (err) {
+                    
+                });
+
+            } else {
+
+                var body = {
+                    val: 'val'
+                };
+
+                var config = {
+                    method: 'post',
+                    url: '/returnBackCreate',
+                    data: body
+                };
+
+                axios(config)
+                .then(function (res) {
+                    location.reload();
+                })
+                .catch(function (err) {
+                    
+                });
+
+            }
+
+
+
+        },
+
+
+        checkAnswer: function() {
             var player_answer = this.canswer;
+            this.canswer = '';
             $('.p1input').val('');
 
-            var body = {
-                val: player_answer
-            };
-
-            var config = {
-                method: 'post',
-                url: '/sendAnswer',
-                data: body
-            };
-
-            axios(config)
-            .then(function (res) {
-                
-            })
-            .catch(function (err) {
-                
-            });
+            socket.emit('sendAnswerEvent' , player_answer)
         }
 
     },
@@ -273,7 +307,62 @@ var app = new Vue({
 
         socket.on('showTypingOpponentEvent' , (msg) => {
             this.opponentres = msg;
-        })
+        });
+
+
+        socket.on('cancelGameExitEvent' , () => {
+            cancelRequest();
+        });
+
+
+        socket.on('notifHostCancelFromPlayer' , () => {
+            $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 0/1");
+        });
+
+
+        socket.on('denableTurnInput' , (nbturn) => {
+            this.opponentres = '';
+            handleInput(nbturn);
+        });
+
+        socket.on('enableForOpponent' , () => {
+            console.log("JACTIVE")
+            $('.p1div').removeClass('disablemode2');
+        });
+
+
+        socket.on('disableForSelf' , () => {
+            console.log("JE DESACTIVE");
+            $('.p1div').addClass('disablemode2');
+        });
+
+
+        socket.on('testEvent' , () => {
+            alert('WONDER')
+        });
+
+
+        socket.on('answerErrorEvent' , () => {
+            editAnswerError();
+        });
+
+
+        socket.on('playRightAudio', () => {
+            var ta = document.getElementById('audio2');
+            ta.volume = 0.5;
+            const promise = ta.play();  
+                
+            let playedOnLoad;
+
+            if (promise !== undefined) {
+                promise.then(_ => {
+                    playedOnLoad = true;
+                }).catch(error => {
+                    playedOnLoad = true;
+                });
+            }
+            
+        });
 
      
 
@@ -380,6 +469,35 @@ function errorCodeInput() {
 }
 
 
+function editAnswerError() {
+    $('#p1inputid').addClass('tmpshake');
+    $("#p1inputid").animate({'border-bottom-color': '#e26381'}, 400);
+    setTimeout(function(){
+        $('#p1inputid').removeClass('tmpshake');
+     },300);    
+
+     setTimeout(function(){
+        $("#p1inputid").css('border-bottom-color' , '#e0cbcb');
+     },500);  
+
+     $("#p1inputid").trigger('blur'); 
+
+     var ta = document.getElementById('audio3');
+     ta.volume = 0.5;
+     const promise = ta.play();  
+                
+     let playedOnLoad;
+
+     if (promise !== undefined) {
+         promise.then(_ => {
+             playedOnLoad = true;
+         }).catch(error => {
+             playedOnLoad = true;
+         });
+     }             
+}
+
+
 function ingameRequest() {
     var body = {
         val: 'val'
@@ -421,6 +539,40 @@ function isplayingRequest() {
     });
 }
 
+
+
+function cancelRequest() {
+    var body = {
+        val: 'val'
+    };
+
+    var config = {
+        method: 'post',
+        url: '/cancelPreGame',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        location.reload();
+    })
+    .catch(function (err) {
+        
+    });
+}
+
+
+
+function handleInput(nbturn) {
+    if(nbturn == 0) {
+        $('#p1inputid').removeClass('disablemode2');
+        $("#p1inputid").removeAttr('disabled');
+    } else {
+        $('#p1inputid').addClass('disablemode2');
+        $("#p1inputid").prop("disabled", true);
+    } 
+
+}
 
 
 var taudio = document.getElementById('audio1');

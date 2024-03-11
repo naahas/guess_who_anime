@@ -460,7 +460,18 @@ body{
   }
 
 
+  .turnpic {
+    z-index: 1;
+    position: absolute;
+    top:0;
+    right: 0;
+    left:0;
+    bottom: 0;
+    margin: auto;
+  }
+
   .bombpic {
+    z-index: 2;
     animation: pulse 0.5s infinite;
     position: absolute;
     top:0;
@@ -509,6 +520,7 @@ body{
   font-weight: 600;
   text-shadow: .0.7em .1em 0 hsl(195, 10%, 8%);
   border-bottom: 0.05em solid rgba(240, 248, 255, 0.591);
+  color:rgba(224, 203, 203, 0.694);
   outline: 0;
   font-size: 1.5rem;
   color: rgb(179, 241, 247);
@@ -994,4 +1006,32 @@ body{
 .soundpic:hover {
   background-color: rgb(110, 129, 129 );
   opacity: 0.9;
+}
+
+
+
+.returnjoinbtn {
+  position: absolute;
+  top:0;
+  left: 0;
+  margin: 1em;
+  background-color: #fe9fe9;
+  opacity: 0.6;
+  border-radius: 3px;
+  border: 1px solid aliceblue;
+  box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #0f1112;
+  cursor: pointer;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  letter-spacing: 1px;
+  font-weight: 400;
+  line-height: 1.15385;
+  padding: 0.5em;
+}
+
+
+.returnjoinbtn:hover {
+  opacity: 1;
+  transform: scale(1.05);
 }

@@ -2,7 +2,11 @@
  
     "Character" : {
 
-        "Naruto" : ["Naruto" , "Naruto uzumaki" , "Uzumaki Naruto"]
+        "Naruto" : ["NARUTO" , "NARUTO UZUMAKI" , "SASUKE UCHIHA" , "UZUMAKI NARUTO" , "SASUKE"],
+        "Dbz" : ["GOKU" , "SON GOKU" , "VEGETA"],
+        "OnePiece" : ["LUFFY" , "MONKEY D LUFFY" , "NAMI"],
+        "Tout" : ["lol" , "mdr" , "ptdr"]
+  
 
 
 
