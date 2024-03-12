@@ -37,7 +37,7 @@
 
             
 
-            <img id="mainback" src="jjk.jpg" amt="backpic">
+            <img id="mainback" src="op2.jpg" amt="backpic">
             <p class="currentxt"> {{username}} </p>
 
             <div class="btndiv">
@@ -45,7 +45,7 @@
             <div class="usernamediv">
                 <h2> RENTRE TON PSEUDO </h2>
                 <hr>
-                <input v-model="username" type="text" id="usernameinput">
+                <input placeholder="Ton Pseudo..." maxlength="15" minlength="4" autocomplete="off" v-model="username" type="text" id="usernameinput">
                 <span class="errortxt">  </span>
                 <br>
                 <hr>
@@ -53,8 +53,8 @@
             </div>
 
             <div class="cjdiv">
-                <button class="pbtn" @click="createLobby()" >CREATE LOBBY</button> <br>
-                <button class="pbtn" @click="joinLobby()">JOIN LOBBY</button>
+                <button class="pbtn" @click="createLobby()" >CRÉER SALON</button> <br>
+                <button class="pbtn" @click="joinLobby()">REJOINDRE SALON</button>
             </div>
 
 

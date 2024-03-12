@@ -90,12 +90,11 @@ body{
   
 
 
-  h2 {
+  .usernamediv h2 {
     color:rgb(234, 247, 246);
-    
-    text-shadow: .0.7em .1em 0 hsl(200, 51%, 58%);
+    text-shadow: rgb(20, 97, 184) 1px 0 10px;  
     word-spacing: 0.2em;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-weight: 500;
   }
@@ -108,12 +107,16 @@ body{
   }
 
   #usernameinput {
+    text-transform: uppercase;
+    text-align: center;
     margin: 1em;
     color:darkolivegreen;
+    background-color: #e5fff3;
     outline: none;
-	border: 0.2em solid rgb(110, 129, 129);
+	  border: 0.2em solid rgb(110, 129, 129);
     padding: 1em;
-    width: 80%;
+    text-shadow: rgb(61, 46, 55) 1px 1px 1px;  
+    width: 75%;
     height: 80%;
   }
 
@@ -251,6 +254,7 @@ body{
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     margin: 1em;
     padding: 1em;
+    text-shadow: rgb(200, 214, 2) 1px 0 10px;  
 }
 
 
@@ -407,6 +411,12 @@ body{
   .waitplayerdiv h2 {
     color:aliceblue;
     font-family: 'Times New Roman', Times, serif;
+    color:rgb(234, 247, 246);
+    text-shadow: rgb(20, 97, 184) 1px 0 10px;  
+    word-spacing: 0.2em;
+    letter-spacing: 0.12em;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: 500;
   }
 
   
@@ -438,9 +448,80 @@ body{
 
 
 
+  .winnerdiv {
+    display: none;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    top:0;
+    bottom: 0;
+    right: 0;
+    left:0;
+    margin: auto;
+  }
+
+
+  .subwinnerdiv {
+    animation: winnerT 2s infinite;
+  }
+
+  @keyframes winnerT {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.06);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+
+  .winnerdiv h2 {
+    color:rgb(234, 247, 246);
+    text-shadow: rgb(248, 240, 29) 1px 0 10px;  
+    word-spacing: 0.2em;
+    letter-spacing: 0.12em;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: 500;
+    margin: 0.1em;
+  }
+
+  .winnerdiv img {
+    transform:rotate(-7deg);
+  }
+
+
+  .replaybtn {
+    display: none;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    padding: 0.8em;
+    margin: 1em;
+    letter-spacing: 0.2em;
+    color: #061f17;
+    border-radius: 1em;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    background: rgba(189, 245, 237, 0.555);
+    border: 1px solid rgb(60, 80, 80);
+  }
+
+
+  .replaybtn:hover {
+    background-color: #4b4545;
+    color:aliceblue;
+  }
+
 
 
   .p1div {
+    display: none;
     position: absolute;
     width: fit-content;
     height: fit-content;
@@ -454,14 +535,12 @@ body{
   }
 
 
-  .p1turn {
-   
 
-  }
-
-
-  .turnpic {
-    z-index: 1;
+  .bombdiv {
+    display: none;
+    z-index: 2;
+    width: fit-content;
+    height: fit-content;
     position: absolute;
     top:0;
     right: 0;
@@ -471,15 +550,20 @@ body{
   }
 
   .bombpic {
-    z-index: 2;
-    position: absolute;
-    top:0;
-    right: 0;
-    left:0;
-    bottom: 0;
-    margin: auto;
-    animation: pulse 0.5s infinite;
+    animation: pulse 0.6s infinite;
   }
+
+
+  .bombpic2 {
+    animation: pulse 0.3s infinite;
+  }
+
+
+  .bombpic3 {
+    animation: pulse 0.17s infinite;
+  }
+
+
 
   @keyframes pulse {
     0% {
@@ -492,17 +576,66 @@ body{
   }
 
 
+
+  #subbtn {
+    display: none;
+    position: absolute;
+    background-color: #dfc6c6d2;
+    color:black;
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 0.6em;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  #subbtn:hover {
+    background-color: #2a2626;
+    color:aliceblue;
+  }
+
+
+  @media (max-width:431px) {
+    #subbtn {
+      display:inline;
+    }
+  }
+  
+  
+  @media screen and (orientation:landscape) and (max-width:950px)  { 
+    #subbtn {
+      display:inline;
+    }
+  }
+
+
 .movebomb {
-  animation:moveTurn 1s forwards;
+  animation: moveTurn 1s forwards;
+}
+
+
+.movebomb2 {
+  animation: moveTurn2 1s forwards;
 }
 
 
 @keyframes moveTurn {
   0% {
+    transform: translateY(-3em);
   }
 
   100% {
     transform: translateY(3em);
+  }
+}
+
+
+@keyframes moveTurn2 {
+  0% {
+    transform: translateY(3em);
+  }
+
+  100% {
+    transform: translateY(-3em);
   }
 }
 

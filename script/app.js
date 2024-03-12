@@ -20,7 +20,8 @@ var app = new Vue({
             bombtime:'',
             currenttheme:'',
             opponentres:'',
-            canswer:''
+            canswer:'',
+            gwinner: 'SLAYER'
             
             
         }
@@ -161,6 +162,9 @@ var app = new Vue({
             .catch(function (err) {
                 
             });
+
+
+            socket.emit('handleTimerEvent');
 
         },
 
@@ -321,12 +325,12 @@ var app = new Vue({
 
 
         socket.on('denableTurnInput' , (nbturn) => {
+
             this.opponentres = '';
             handleInput(nbturn);
         });
 
         socket.on('enableForOpponent' , () => {
-            console.log("JACTIVE")
             $('.p1div').removeClass('disablemode2');
         });
 
@@ -338,7 +342,7 @@ var app = new Vue({
 
 
         socket.on('testEvent' , () => {
-            alert('WONDER')
+            alert('WONDER');
         });
 
 
@@ -363,6 +367,33 @@ var app = new Vue({
             }
             
         });
+
+
+
+        socket.on('changeBombStepEvent' , (step) => {
+            editBombPic(step);
+        });
+
+
+        socket.on('endGameEvent' , (winner) => {
+            displayWinner(winner);
+        });
+
+
+        socket.on('endGameEventAfterReload' , (winner) => {
+            displayWinner2(winner);
+        });
+
+
+        socket.on('displayBeginning' , () => {
+            $('.p1div').show();
+            $('.bombdiv').show();
+        });
+
+
+        socket.on('displayRePlay' , () => {
+            $('.replaybtn').show();
+        })
 
      
 
@@ -565,14 +596,88 @@ function cancelRequest() {
 
 function handleInput(nbturn) {
     if(nbturn == 0) {
+        $('.bombdiv').removeClass('movebomb2');
+        $('.bombdiv').addClass('movebomb');
         $('#p1inputid').removeClass('disablemode2');
         $("#p1inputid").removeAttr('disabled');
     } else {
+        $('.bombdiv').removeClass('movebomb');
+        $('.bombdiv').addClass('movebomb2');
         $('#p1inputid').addClass('disablemode2');
         $("#p1inputid").prop("disabled", true);
     } 
 
 }
+
+
+
+
+function editBombPic(step) {
+    if(step == 1) {
+        $(".bombpic").removeClass('bombpic2');
+        $(".bombpic").removeClass('bombpic3');
+        $(".bombpic").attr('src', "step1.png");
+    } 
+
+    if(step == 2) {
+        $(".bombpic").removeClass('bombpic3');
+        $(".bombpic").attr('src', "step2.png");
+        $(".bombpic").addClass('bombpic2');
+    }
+
+    if(step == 3) {
+        $(".bombpic").removeClass('bombpic2');
+        $(".bombpic").attr('src', "step3.png");
+        $(".bombpic").addClass('bombpic3');
+    } 
+}
+
+
+function displayWinner2(winner) {
+    app.gwinner = winner;
+
+    $('.opponentdiv').hide();
+    $('.p1div').hide();
+    $('.bombdiv').hide();
+    $('.winnerdiv').show();
+
+    var ta = document.getElementById('audio1');
+    ta.pause();
+}
+
+
+function displayWinner(winner) {
+    var body = {
+        val: winner
+    };
+
+    var config = {
+        method: 'post',
+        url: '/endGame',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        
+    })
+    .catch(function (err) {
+        
+    });
+
+    app.gwinner = winner;
+    $('.opponentdiv').hide();
+    $('.p1div').hide();
+    $('.bombdiv').hide();
+    $('.winnerdiv').show();
+
+    var ta = document.getElementById('audio1');
+    ta.pause();
+
+
+}
+
+
 
 
 var taudio = document.getElementById('audio1');

@@ -53,7 +53,6 @@
                 <img class="imgop" src="vs1.png" alt="VERSUS">
                 <img class="imgop" src="opponent.png" alt="opponent"> 
                 <span> {{opponent}} </span>
-                
                 <br>
                 <input v-model="opponentres" disabled type="text" class="p2input">
 
@@ -116,7 +115,7 @@
                             <option selected="selected" value="Naruto">Naruto</option>
                             <option value="One Piece">One Piece</option>
                             <option value="Dragon Ball">Dragon Ball</option>
-                            <option value="Tout">Tout</option>
+                            <!-- <option value="Tout">Tout</option> -->
                         </select>
                     </div>
 
@@ -124,9 +123,9 @@
 
 
                   <div class="subsetdiv rulediv">
-                    <p> WARNING </p>
+                    <p> RULES </p>
                     <hr>
-                    <p>Le mode TOUT nécessite l'écriture complète du personnage (NOM+PRENOM) </p>
+                    <p> Indique le temps dont chaque joueur dispose pour donner une réponse respectant le thème </p>
                     
 
                   </div>
@@ -139,11 +138,25 @@
             <p class="currentxt"> {{username}} </p>
 
 
-            <img class="bombpic" src="bomb2.png">
+            <div class="winnerdiv">
+                <div class="subwinnerdiv">
+                    <img src="crown.png" alt="CROWN">
+                    <h2> {{gwinner}} A GAGNÉ </h2>
+                    <hr>
+                </div>
+                
+                <button class="replaybtn"> REJOUER </button>
+            </div>
+
+
+            <div class="bombdiv">
+                <img class="bombpic" src="step1.png">
+            </div>
             
 
                 <div class="p1div">
                     <input id="p1inputid" disabled v-model="canswer" @keyup.enter = "checkAnswer" autofocus type="text" class="p1input disablemode2">
+                    <button @click="checkAnswer()" id="subbtn"> <img width="25" height="20" src="sub.png" alt="VALIDER"> </button>
                 </div>    
 
         

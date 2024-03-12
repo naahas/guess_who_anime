@@ -81,7 +81,8 @@ var mapcodefull = [];
 var mapgametime = new Map();
 var mapgametheme = new Map();
 var mapgameturn = new Map();
-
+var mapgametimer = new Map();
+var mapgamewinner = new Map();
 
 //path handle
 app.get('/' , function(req,res) {
@@ -199,6 +200,7 @@ app.post('/confirmSetting' , function(req,res) {
     mapgametime.set(req.session.rid , btime);
     mapgametheme.set(req.session.rid , theme);
     mapgameturn.set(req.session.rid , req.session.username);
+    mapgametimer.set(req.session.rid , 1);
 
     req.session.isplaying = true;
 
@@ -253,10 +255,21 @@ app.post('/cancelPreGame' , function(req,res) {
 
 
 
+app.post('/endGame' , function(req,res) {
+    req.session.endgame = true;
+
+    var winner = req.body.val;
+    console.log("winner : " , winner)
+    mapgamewinner.set(req.session.rid , winner);
+
+    res.end();
+});
+
+
+
 app.get('*' , function(req,res) {
     res.send('pikine error');
 });
-
 
 
 
@@ -279,6 +292,7 @@ io.on('connection' , (socket) => {
     const ioroomid = socket.request.session.rid;
     const ioingame = socket.request.session.ingame;
     const ioplaying = socket.request.session.isplaying;
+    const ioendgame = socket.request.session.endgame;
 
 
     socket.emit('showSettingEvent' , iousername);
@@ -333,22 +347,54 @@ io.on('connection' , (socket) => {
     }
 
 
-    if(ioplaying) {
+    if(ioplaying && ioendgame != true) {
         var time = mapgametime.get(ioroomid);
         var theme = mapgametheme.get(ioroomid);
+        socket.emit('displayBeginning')
         socket.emit('displayPostRule' , time , theme);
         socket.emit('startSoundEvent');
 
         if(mapgameturn.get(ioroomid) == iousername) socket.emit('denableTurnInput' , 0)
         else socket.emit('denableTurnInput' , 1);
+
+
+        //CHANGE BOMB PIC STEP AFTER RELOAD
+        var xx = mapgametimer.get(ioroomid);
+        var yy = mapgametime.get(ioroomid);
+        var step2 = Math.floor(yy/2);
+
+        if((yy-xx) > step2) {
+            socket.emit('changeBombStepEvent' , 1);
+        }
+
+        if((yy-xx) > 1 && (yy-xx) <= step2) {
+            socket.emit('changeBombStepEvent' , 2);
+        }
+
+        if((yy-xx) <= 1) {
+            socket.emit('changeBombStepEvent' , 3);
+        }     
+
+
     }
+
+
+
+    if(ioendgame) {
+        socket.emit('displayPostRule' , mapgametime.get(ioroomid) , mapgametheme.get(ioroomid));
+        socket.emit('endGameEventAfterReload' , mapgamewinner.get(ioroomid));
+    }
+
+
+    if(ioendgame && iocreate) {
+        socket.emit('displayRePlay');
+    }
+
 
 
     socket.on('showTypingEvent' , (msg) => {
         socket.broadcast.to(ioroomid).emit('showTypingOpponentEvent' , msg)
     });
-
-
 
 
     // CHECK ANSWER HERE 
@@ -367,7 +413,10 @@ io.on('connection' , (socket) => {
         //IF ANSWER IS RIGHT
         if(banktab.includes(canswer)) {
             
-            removeJsonAnswer(ctheme , canswer)
+            removeJsonAnswer(ctheme , canswer);
+            mapgametimer.set(ioroomid , 1);
+            io.to(ioroomid).emit('changeBombStepEvent' , 1);
+            
 
             // GAME TURN IS THE OTHER PLAYER'S
             for (let [key, value] of mapcode) {
@@ -390,6 +439,53 @@ io.on('connection' , (socket) => {
             socket.broadcast.to(ioroomid).emit('denableTurnInput' , 0);
          } 
 
+    });
+
+
+
+    socket.on('handleTimerEvent' , () => {
+        var btimer = setInterval(() => {
+            var x = mapgametimer.get(ioroomid);
+            var y = mapgametime.get(ioroomid);
+            var step2 = Math.floor(y/2);
+            console.log(x);
+
+            //CHANGE BOMB PIC STEP
+            if((y-x) == step2 && y!=2 && y!=3) {
+                io.to(ioroomid).emit('changeBombStepEvent' , 2);
+            }
+
+            if((y-x) == 1) {
+                io.to(ioroomid).emit('changeBombStepEvent' , 3);
+            }
+
+            if(x>=y) {
+                console.log('BOOM')
+                clearInterval(btimer);
+                // mapgameturn.delete(req.session.rid);
+
+                var winner;
+                
+                var player_turn = mapgameturn.get(ioroomid);
+                for (let [key, value] of mapcode) {
+                    if(key!=player_turn) winner = key; 
+                }
+
+                io.to(ioroomid).emit('endGameEvent' , winner);
+                if(iocreate) {
+                    socket.emit('displayReplay')
+                }
+    
+            }
+            
+            
+            
+            // console.log("step2 : " , step2);
+    
+    
+            mapgametimer.set(ioroomid , x+1);
+    
+        }, 1000);
     });
     
 
