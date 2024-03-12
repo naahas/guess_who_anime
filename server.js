@@ -41,18 +41,6 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware , function(req,res, next) {
 
-    // if(req.session.log == true) { 
-    //     if(req.session.once!=true) req.session.h = req.session.cookie.expires.getTime();
-    //     req.session.once = true;
-        
-    // }
-
-    
-    //     console.log(">> " , req.session.h)
-    //     console.log('-- ' ,  (Date.now() - 5000))
-    //     if( req.session.h < new Date(Date.now())) console.log("c presque fini mgl")
-    
-
     next();
 });
 
@@ -267,6 +255,19 @@ app.post('/endGame' , function(req,res) {
 
 
 
+app.post('/exitGame' , function(req,res) {
+    req.session.rid = null;
+    req.session.endgame = null;
+    req.session.ingame = null;
+    req.session.isplaying = false;
+    req.session.joined = null;
+    req.session.created = null;
+
+    res.redirect('/');
+});
+
+
+
 app.get('*' , function(req,res) {
     res.send('pikine error');
 });
@@ -459,6 +460,8 @@ io.on('connection' , (socket) => {
                 io.to(ioroomid).emit('changeBombStepEvent' , 3);
             }
 
+
+            //GAME IS OVER
             if(x>=y) {
                 console.log('BOOM')
                 clearInterval(btimer);
@@ -471,11 +474,8 @@ io.on('connection' , (socket) => {
                     if(key!=player_turn) winner = key; 
                 }
 
-                io.to(ioroomid).emit('endGameEvent' , winner);
-                if(iocreate) {
-                    socket.emit('displayReplay')
-                }
-    
+                io.to(ioroomid).emit('endGameEvent' , winner , iousername + " (vous)");
+               
             }
             
             

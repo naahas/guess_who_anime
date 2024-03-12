@@ -224,7 +224,33 @@ var app = new Vue({
             $('.p1input').val('');
 
             socket.emit('sendAnswerEvent' , player_answer)
-        }
+        },
+
+
+        exitGame: function() {
+            var body = {
+                val : 'val'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/exitGame',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.reload();
+            })
+            .catch(function (err) {
+                
+            });
+        },
+
+
+        replay: function() {
+            
+        },
 
     },
 
@@ -301,6 +327,7 @@ var app = new Vue({
             this.bombtime = time;
             this.currenttheme = theme;
             $('.rdiv2').show();
+            $('.backigbtn').show();
         });
 
 
@@ -375,7 +402,9 @@ var app = new Vue({
         });
 
 
-        socket.on('endGameEvent' , (winner) => {
+        socket.on('endGameEvent' , (winner , host) => {
+            if(this.username == host) displayPostToHost();
+            $('.backigbtn').show();
             displayWinner(winner);
         });
 
@@ -392,6 +421,7 @@ var app = new Vue({
 
 
         socket.on('displayRePlay' , () => {
+            console.log("elelel")
             $('.replaybtn').show();
         })
 
@@ -677,6 +707,10 @@ function displayWinner(winner) {
 
 }
 
+
+function displayPostToHost() {
+    $('.replaybtn').show();
+}
 
 
 

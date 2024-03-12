@@ -384,7 +384,14 @@
                            "ZOSUI"
          ],
 
-        "Dbz" : ["GOKU" , "SON GOKU" , "VEGETA"],
+        "Dbz" : ["GOKU",
+                  "SON GOKU",
+                  "VEGETA"
+               
+      
+      
+      
+         ],
         "OnePiece" : ["LUFFY" , "MONKEY D LUFFY" , "NAMI"],
         "Tout" : ["lol" , "mdr" , "ptdr"]
   

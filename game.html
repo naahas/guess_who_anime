@@ -21,7 +21,7 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
-    <title>Guess Who</title>
+    <title>Bombanime</title>
 </head>
 
 
@@ -145,7 +145,7 @@
                     <hr>
                 </div>
                 
-                <button class="replaybtn"> REJOUER </button>
+                <button @click="replay()" class="replaybtn"> REJOUER </button>
             </div>
 
 
@@ -161,6 +161,10 @@
 
         
             <img class="soundpic" src="sound.png" alt="SOUND">
+
+
+
+            <button @click="exitGame()" class="backigbtn">RETOUR</button>
 
             
     
