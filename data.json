@@ -738,7 +738,19 @@
                   "VUON",
                   "TUPPER"
          ],
-        "OnePiece" : ["LUFFY" , "MONKEY D LUFFY" , "NAMI"],
+
+        "OnePiece" : ["LUFFY" , 
+                     "MONKEY D LUFFY" , 
+                     "NAMI",
+                     "ZORO",
+                     "USOPP",
+                     "CHOPPER",
+                     "ROBIN",
+                     "NICO ROBIN",
+                     "FRANKY",
+                     "BROOK"
+                  ],
+
         "Tout" : ["lol" , "mdr" , "ptdr"]
   
 
