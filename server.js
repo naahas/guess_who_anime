@@ -572,6 +572,138 @@ function removeJsonAnswer(theme , answer) {
             // if(answer.includes(banktab[i])) similar.push(banktab[i]);
             if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
             if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
+
+            if(answer == "TORTUE GENIAL") { similar.push("MUTEN ROSHI"); similar.push("ROSHI"); }
+            if(answer == "MUTEN ROSHI" || answer == "ROSHI")  similar.push("TORTUE GENIAL");
+
+            if(answer == "KAKAROT")  { similar.push("GOKU"); similar.push("SON GOKU"); similar.push("BLACK GOKU"); }
+            if(answer == "GOKU" || answer == "SON GOKU" || answer == "BLACK GOKU")  similar.push("KAKAROT");
+
+            if(answer == "BACTERIAN")  similar.push("BACTERIE");
+            if(answer == "BACTERIE")  similar.push("BACTERIAN");
+
+            if(answer == "C18")  { similar.push("C 18"); similar.push("C-18"); similar.push("LAZULI");}
+            if(answer == "C 18")  { similar.push("C18"); similar.push("C-18"); similar.push("LAZULI");}
+            if(answer == "C-18")  { similar.push("C 18"); similar.push("C18"); similar.push("LAZULI");}
+            if(answer == "LAZULI")  { similar.push("C 18"); similar.push("C18"); similar.push("C-18");}
+            
+            if(answer == "C17")  { similar.push("C 17"); similar.push("C-17"); similar.push("LAPIS");}
+            if(answer == "C 17")  { similar.push("C17"); similar.push("C-17"); similar.push("LAPIS");}
+            if(answer == "C-17")  { similar.push("C 17"); similar.push("C17"); similar.push("LAPIS");}
+            if(answer == "LAPIS")  { similar.push("C 17"); similar.push("C17"); similar.push("C-17");}
+
+            if(answer == "PUAR")  similar.push("PLUME");
+            if(answer == "PLUME")  similar.push("PUAR");
+
+            if(answer == "ZABON")  similar.push("ZARBON");
+            if(answer == "ZARBON")  similar.push("ZABON");
+
+            if(answer == "DORIA")  similar.push("DODORIA");
+            if(answer == "DODORIA")  similar.push("DORIA");
+
+            if(answer == "PIKKON")  similar.push("PAIKUHAN");
+            if(answer == "PAIKUHAN")  similar.push("PIKKON");
+
+            if(answer == "FREEZER")  similar.push("FRIEZA");
+            if(answer == "FRIEZA")  similar.push("FREEZER");
+
+            if(answer == "BUU")  similar.push("BOO");
+            if(answer == "BOO")  similar.push("BUU");
+
+            if(answer == "LANFAN")  similar.push("RANFAN");
+            if(answer == "RANFAN")  similar.push("LANFAN");
+
+            if(answer == "BARTA")  similar.push("BURTER");
+            if(answer == "BURTER")  similar.push("BARTA");
+
+            if(answer == "KAFLA")  similar.push("KEFLA");
+            if(answer == "KEFLA")  similar.push("KAFLA");
+
+            if(answer == "CAULIFLA")  similar.push("CAULIFA");
+            if(answer == "CAULIFA")  similar.push("CAULIFLA");
+
+            if(answer == "NAM")  similar.push("NAMU");
+            if(answer == "NAMU")  similar.push("NAM");
+
+            if(answer == "C16")  { similar.push("C 16"); similar.push("C-16");}
+            if(answer == "C 16")  { similar.push("C16"); similar.push("C-16");}
+            if(answer == "C-16")  { similar.push("C 16"); similar.push("C16");}
+
+            if(answer == "C19")  { similar.push("C 19"); similar.push("C-19");}
+            if(answer == "C 19")  { similar.push("C19"); similar.push("C-19");}
+            if(answer == "C-19")  { similar.push("C 19"); similar.push("C19");}
+
+            if(answer == "HERCULE")  { similar.push("SATAN"); similar.push("MISTER SATAN");}
+            if(answer == "SATAN" || answer == "MISTER SATAN")  { similar.push("HERCULE");}
+
+            if(answer == "TAO PAI PAI")  similar.push("TAOPAIPAI");
+            if(answer == "TAOPAIPAI")  similar.push("TAO PAI PAI");
+
+            if(answer == "C8")  { similar.push("C 8"); similar.push("C-8");}
+            if(answer == "C 8")  { similar.push("C8"); similar.push("C-8");}
+            if(answer == "C-8")  { similar.push("C 8"); similar.push("C8");}
+
+            if(answer == "RECOME")  similar.push("RECOOME");
+            if(answer == "RECOOME")  similar.push("RECOME");
+
+            if(answer == "BARDOCK")  similar.push("BADDACK");
+            if(answer == "BADDACK")  similar.push("BARDOCK");
+
+            if(answer == "CHI CHI")  similar.push("CHICHI");
+            if(answer == "CHICHI")  similar.push("CHI CHI");
+
+            if(answer == "SPOPOVITCH")  similar.push("SPOPOVICH");
+            if(answer == "SPOPOVICH")  similar.push("SPOPOVITCH");
+
+            if(answer == "DABRA")  similar.push("DABURA");
+            if(answer == "DABURA")  similar.push("DABRA");
+
+            if(answer == "KAIOBITO")  similar.push("KIBITOSHIN");
+            if(answer == "KIBITOSHIN")  similar.push("KAIOBITO");
+
+            if(answer == "UUB")  similar.push("OOB");
+            if(answer == "OOB")  similar.push("UUB");
+
+            if(answer == "TORI")  similar.push("TORI");
+            if(answer == "TORIYAMA")  similar.push("TORIYAMA");
+
+            if(answer == "SLUG")  similar.push("SLUGG");
+            if(answer == "SLUGG")  similar.push("SLUG");
+
+            if(answer == "THALES")  similar.push("TURLES");
+            if(answer == "TURLES")  similar.push("THALES");
+
+            if(answer == "JANEMBA")  similar.push("JANENBA");
+            if(answer == "JANENBA")  similar.push("JANEMBA");
+
+            if(answer == "JEECE")  { similar.push("JEICE"); similar.push("JEESE");}
+            if(answer == "JEESE")  { similar.push("JEICE"); similar.push("JEECE");}
+            if(answer == "JEICE")  { similar.push("JEESE"); similar.push("JEECE");}
+
+            if(answer == "C21")  { similar.push("C 21"); similar.push("C-21");}
+            if(answer == "C 21")  { similar.push("C21"); similar.push("C-21");}
+            if(answer == "C-21")  { similar.push("C 21"); similar.push("C21");}
+
+            if(answer == "C15")  { similar.push("C 15"); similar.push("C-15");}
+            if(answer == "C 15")  { similar.push("C15"); similar.push("C-15");}
+            if(answer == "C-15")  { similar.push("C 15"); similar.push("C15");}
+
+            if(answer == "C14")  { similar.push("C 14"); similar.push("C-14");}
+            if(answer == "C 14")  { similar.push("C14"); similar.push("C-14");}
+            if(answer == "C-14")  { similar.push("C 14"); similar.push("C14");}
+
+            
+            if(answer == "C13")  { similar.push("C 13"); similar.push("C-13");}
+            if(answer == "C 13")  { similar.push("C13"); similar.push("C-13");}
+            if(answer == "C-13")  { similar.push("C 13"); similar.push("C13");}
+
+            if(answer == "C20")  { similar.push("C 20"); similar.push("C-20"); similar.push("DR GERO"); similar.push("GERO");}
+            if(answer == "C 20")  { similar.push("C20"); similar.push("C-20"); similar.push("GERO"); similar.push("DR GERO");}
+            if(answer == "C-20")  { similar.push("C 20"); similar.push("C20"); similar.push("DR GERO"); similar.push("GERO")}
+            if(answer == "GERO" || answer == "DR GERO")  { similar.push("C 20"); similar.push("C20"); similar.push("C-20");}
+
+
+            
         }
 
         //TO DO REMOVE SIMILAR ELEMENT IN JSON
@@ -599,9 +731,14 @@ function removeJsonAnswer(theme , answer) {
     }
 
 
+    console.log("SIMILAR CHAR -> " , similar)
+
+
 
 
 }
+
+
 
 
 
