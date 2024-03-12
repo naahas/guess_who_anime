@@ -424,6 +424,12 @@ function checkUsername(username) {
 }
 
 
+function containsWord(str, searchValue){
+    str = str.replace(/[^a-z0-9 ]/gi, '');
+    var words = str.split(/ /g);
+    return words.indexOf(searchValue) > -1
+  }
+
 
 function removeJsonAnswer(theme , answer) {
     var banktab = [];
@@ -432,10 +438,15 @@ function removeJsonAnswer(theme , answer) {
     if(theme == 'Naruto') {
         banktab = profile.Character.Naruto;
         for(var i = 0 ; i < banktab.length ; i++) {
-            if(banktab[i].includes(answer)) similar.push(banktab[i]);
+            // if(banktab[i].includes(answer)) similar.push(banktab[i]);
+            // if(answer.includes(banktab[i])) similar.push(banktab[i]);
+            if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
+            if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
         }
 
-        
+
+        console.log(similar)
+
         for(var i = 0 ; i < similar.length ; i++) {
             var toRemove = similar[i];
             profile.Character.Naruto = profile.Character.Naruto.filter(item => item!=toRemove);
@@ -445,7 +456,10 @@ function removeJsonAnswer(theme , answer) {
     if(theme == 'One Piece') {
         banktab = profile.Character.OnePiece;
         for(var i = 0 ; i < banktab.length ; i++) {
-            if(banktab[i].includes(answer)) similar.push(banktab[i]);
+            // if(banktab[i].includes(answer)) similar.push(banktab[i]);
+            // if(answer.includes(banktab[i])) similar.push(banktab[i]);
+            if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
+            if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
         }
 
         //TO DO REMOVE SIMILAR ELEMENT IN JSON
@@ -458,7 +472,10 @@ function removeJsonAnswer(theme , answer) {
     if(theme == 'Dragon Ball') {
         banktab = profile.Character.Dbz;
         for(var i = 0 ; i < banktab.length ; i++) {
-            if(banktab[i].includes(answer)) similar.push(banktab[i]);
+            // if(banktab[i].includes(answer)) similar.push(banktab[i]);
+            // if(answer.includes(banktab[i])) similar.push(banktab[i]);
+            if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
+            if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
         }
 
         //TO DO REMOVE SIMILAR ELEMENT IN JSON
@@ -471,7 +488,10 @@ function removeJsonAnswer(theme , answer) {
     if(theme == 'Tout') {
         banktab = profile.Character.Tout;
          for(var i = 0 ; i < banktab.length ; i++) {
-            if(banktab[i].includes(answer)) similar.push(banktab[i]);
+            // if(banktab[i].includes(answer)) similar.push(banktab[i]);
+            // if(answer.includes(banktab[i])) similar.push(banktab[i]);
+            if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
+            if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
         }
 
         //TO DO REMOVE SIMILAR ELEMENT IN JSON
