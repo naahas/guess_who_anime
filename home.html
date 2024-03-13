@@ -45,7 +45,7 @@
             <div class="usernamediv">
                 <h2> RENTRE TON PSEUDO </h2>
                 <hr>
-                <input placeholder="Ton Pseudo..." maxlength="15" minlength="4" autocomplete="off" v-model="username" type="text" id="usernameinput">
+                <input @keyup.enter = "submitUsername" placeholder="Ton Pseudo..." maxlength="15" minlength="4" autocomplete="off" v-model="username" type="text" id="usernameinput">
                 <span class="errortxt">  </span>
                 <br>
                 <hr>
@@ -61,7 +61,9 @@
             </div>
 
 
-            <span> Anime Prodigy © Nahass 2024 </span>
+            <span class="copyright"> Bombanime © Nahass 2024 </span>
+
+            <a title="Instagram" target=”_blank” href = "https://www.instagram.com/naahas__/" > <img class="instapic" src="insta.png" alt="INSTA"> </a> 
 
     
         </div> <!-- end main div-->

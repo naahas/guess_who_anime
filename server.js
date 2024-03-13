@@ -24,6 +24,11 @@ const io = new Server(server , {
 
 
 
+//TODO : handle player reload when host leave game
+//TODO : add input or bomb effect when anwer is right (pulse...)
+//TODO : make replay button working 
+
+
 //session middleware
 var tsec = 1000;
 var tmin = 60000; //1 min
@@ -160,6 +165,17 @@ app.post('/game' , function(req,res) {
 
 
 app.get('/game' , function(req,res) {
+
+    //IF PLAYER TRY TO RELOAD AFTER HOST LEAVE THE GAME
+    if(req.session.isplaying == true && req.session.joined == true && !mapgameturn.get(req.session.rid)) {
+        req.session.endgame = null;
+        req.session.ingame = null;
+        req.session.joined = false;
+        req.session.isplaying = false;
+        req.session.rid = null;
+    }
+    
+
     if(req.session.ingame == true) {
         res.sendFile(__dirname + '/game.html');
     } else res.redirect('/');
@@ -273,7 +289,6 @@ app.post('/exitGame' , function(req,res) {
     req.session.joined = null;
     
     if(req.session.created) {
-
         mapcode.delete(req.session.username);
         mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
         mapgametime.delete(req.session.rid)
@@ -282,7 +297,6 @@ app.post('/exitGame' , function(req,res) {
         mapgametimer.delete(req.session.rid);
         mapgamewinner.delete(req.session.rid);
         mapgamedata.delete(req.session.rid);
-
     }
 
     req.session.created = null;
@@ -697,6 +711,40 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
 
             
+        }
+
+
+        if(theme == 'Naruto') {
+            if(answer == "JIRAYA")  { similar.push("JIRAIA"); similar.push("JIRAIYA"); }
+            if(answer == "JIRAIA")  { similar.push("JIRAYA"); similar.push("JIRAIYA"); }
+            if(answer == "JIRAIYA")  { similar.push("JIRAIA"); similar.push("JIRAYA"); }
+
+            if(answer == "ICHIBI") { similar.push("SHUKAKU");}
+            if(answer == "SHUKAKU") { similar.push("ICHIBI");}
+
+            if(answer == "NIBI") { similar.push("MATATABI");}
+            if(answer == "MATATABI") { similar.push("NIBI");}
+            
+            if(answer == "SANBI") { similar.push("ISOBU");}
+            if(answer == "ISOBU") { similar.push("SANBI");}
+
+            if(answer == "SON GOKU") { similar.push("YONBI");}
+            if(answer == "YONBI") { similar.push("SON GOKU");}
+
+            if(answer == "GOBI") { similar.push("KOKUO");}
+            if(answer == "KOKUO") { similar.push("GOBI");}
+
+            if(answer == "SAIKEN") { similar.push("ROKUBI");}
+            if(answer == "ROKUBI") { similar.push("SAIKEN");}
+
+            if(answer == "NANABI") { similar.push("CHOMEI");}
+            if(answer == "CHOMEI") { similar.push("NANABI");}
+
+            if(answer == "GYUKI") { similar.push("HACHIBI");}
+            if(answer == "HACHIBI") { similar.push("GYUKI");}
+
+            if(answer == "KURAMA") { similar.push("KYUBI");}
+            if(answer == "KYUBI") { similar.push("KURAMA");}
         }
 
        

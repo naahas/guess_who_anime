@@ -547,6 +547,32 @@ body{
   }
 
 
+  .instapic {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    opacity: 0.65;
+    margin: 0.5em;
+    transition: all .1s ease-in-out;
+  }
+
+
+  .instapic:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+
+
+  .copyright {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color:rgba(240, 248, 255, 0.694);
+    text-shadow: rgb(20, 97, 184) 1px 0 10px; 
+    margin: 0.5em;
+  }
+
 
   .p1div {
     display: none;

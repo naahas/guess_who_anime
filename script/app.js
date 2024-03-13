@@ -3,11 +3,6 @@ var socket = io();
 socket.on('connect' , () => { console.log(socket.id)});
 
 
-
-//TODO : KEEP JSON DATA AFTER GAME (BECAUSE ITS SPLICED DURING A GAME)
-//TODO : KEEP INPUT FOCUS AFTER OPPONENT ANSWER
-
-
 var app = new Vue({
 
     el: '#app',
@@ -371,6 +366,7 @@ var app = new Vue({
 
         socket.on('testEvent' , () => {
             alert('WONDER');
+            location.reload();
         });
 
 
