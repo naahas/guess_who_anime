@@ -390,6 +390,11 @@ var app = new Vue({
                 });
             }
             
+            $('.p1input').addClass('pulseclass');
+            setTimeout(() => {
+                $('.p1input').removeClass('pulseclass');
+            }, 500);
+
         });
 
 

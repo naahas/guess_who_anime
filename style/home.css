@@ -728,9 +728,37 @@ body{
   color: rgb(179, 241, 247);
   padding:1em 0.7em 0.7em 1em;
   background-color: transparent;
+  
+  
 }
 
-.p1input:focus {
+
+.pulseclass {
+  animation: pulse-black 0.4s ease-in-out;
+}
+
+
+@keyframes pulse-black {
+	0% {
+    opacity: 1;
+    -moz-box-shadow: 0 0 0 5px rgba(204,169,44, 0);
+      box-shadow: 0 0 0 5px rgba(204,169,44, 0);
+  }
+  
+  60% {
+    
+    -moz-box-shadow: 0 0 0 0 rgba(147, 245, 76, 0.813);
+    box-shadow: 0 10px 70px 0px rgba(147, 245, 76, 0.813);
+  }
+  100% {
+    opacity: 0;
+    -moz-box-shadow: 0 0 0 5px rgba(204,169,44, 0);
+      box-shadow: 0 0 0 5px rgba(204,169,44, 0);
+  }
+}
+
+
+/* .p1input:focus {
   animation: extend 0.2s forwards;
 }
 
@@ -743,7 +771,8 @@ body{
   100% {
     width: 75%;
   }
-}
+} */
+
 
 
 .p2input{

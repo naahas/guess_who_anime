@@ -24,7 +24,6 @@ const io = new Server(server , {
 
 
 
-//TODO : handle player reload when host leave game
 //TODO : add input or bomb effect when anwer is right (pulse...)
 //TODO : make replay button working 
 
