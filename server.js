@@ -24,6 +24,7 @@ const io = new Server(server , {
 
 
 
+
 //TODO : add input or bomb effect when anwer is right (pulse...)
 //TODO : make replay button working 
 
@@ -355,12 +356,14 @@ io.on('connection' , (socket) => {
 
 
     if(iojoin == true && ioroomid) {
-        var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
-        if(roomsize == 1) mapcodefull.push(ioroomid);
-        if(roomsize<=1) {
-            mapcode.set(iousername , ioroomid);
-            socket.join(ioroomid);
-            socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , iousername);
+        if(io.sockets.adapter.rooms.get(ioroomid)) {
+            var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
+            if(roomsize == 1) mapcodefull.push(ioroomid);
+            if(roomsize<=1) {
+                mapcode.set(iousername , ioroomid);
+                socket.join(ioroomid);
+                socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , iousername);
+            }
         }
 
     }
