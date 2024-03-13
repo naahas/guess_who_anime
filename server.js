@@ -71,6 +71,7 @@ var mapgametheme = new Map();
 var mapgameturn = new Map();
 var mapgametimer = new Map();
 var mapgamewinner = new Map();
+var mapgamedata = new Map();
 
 //path handle
 app.get('/' , function(req,res) {
@@ -180,10 +181,19 @@ app.post('/ipstatus' , function(req,res) {
     res.end();
 });
 
+var arr1 = [];
+var arr2 = [];
+
+
 
 app.post('/confirmSetting' , function(req,res) {
     var btime = req.body.val1;
     var theme = req.body.val2;
+
+    if(theme == 'Naruto') mapgamedata.set(req.session.rid , profile.Character.Naruto);
+    if(theme == 'One Piece') mapgamedata.set(req.session.rid , profile.Character.OnePiece)
+    if(theme == 'Dragon Ball') mapgamedata.set(req.session.rid , profile.Character.Dbz)
+    if(theme == 'Tout') mapgamedata.set(req.session.rid , profile.Character.Tout)
 
     mapgametime.set(req.session.rid , btime);
     mapgametheme.set(req.session.rid , theme);
@@ -256,13 +266,27 @@ app.post('/endGame' , function(req,res) {
 
 
 app.post('/exitGame' , function(req,res) {
-    req.session.rid = null;
+    
     req.session.endgame = null;
     req.session.ingame = null;
     req.session.isplaying = false;
     req.session.joined = null;
-    req.session.created = null;
+    
+    if(req.session.created) {
 
+        mapcode.delete(req.session.username);
+        mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
+        mapgametime.delete(req.session.rid)
+        mapgametheme.delete(req.session.rid);
+        mapgameturn.delete(req.session.rid);
+        mapgametimer.delete(req.session.rid);
+        mapgamewinner.delete(req.session.rid);
+        mapgamedata.delete(req.session.rid);
+
+    }
+
+    req.session.created = null;
+    req.session.rid = null;
     res.redirect('/');
 });
 
@@ -401,20 +425,20 @@ io.on('connection' , (socket) => {
     // CHECK ANSWER HERE 
 
     socket.on('sendAnswerEvent' , (answer) => {
-
+        
         var canswer = answer.toUpperCase();
         var ctheme = mapgametheme.get(ioroomid);
         var banktab = profile.Character.Naruto;
 
-        if(ctheme == 'Naruto') banktab = profile.Character.Naruto.map(chara => chara.toUpperCase());
-        if(ctheme == 'One Piece') banktab = profile.Character.OnePiece.map(chara => chara.toUpperCase());
-        if(ctheme == 'Dragon Ball') banktab = profile.Character.Dbz.map(chara => chara.toUpperCase());
-        if(ctheme == 'Tout') banktab = profile.Character.Tout.map(chara => chara.toUpperCase());
-
+        if(ctheme == 'Naruto') banktab = mapgamedata.get(ioroomid).map(chara => chara.toUpperCase());
+        if(ctheme == 'One Piece') banktab = mapgamedata.get(ioroomid).map(chara => chara.toUpperCase());
+        if(ctheme == 'Dragon Ball') banktab = mapgamedata.get(ioroomid).map(chara => chara.toUpperCase());
+        if(ctheme == 'Tout') banktab = mapgamedata.get(ioroomid).map(chara => chara.toUpperCase());
+       
         //IF ANSWER IS RIGHT
         if(banktab.includes(canswer)) {
             
-            removeJsonAnswer(ctheme , canswer);
+            removeJsonAnswer(ctheme , canswer , ioroomid , banktab);
             mapgametimer.set(ioroomid , 1);
             io.to(ioroomid).emit('changeBombStepEvent' , 1);
             
@@ -449,7 +473,7 @@ io.on('connection' , (socket) => {
             var x = mapgametimer.get(ioroomid);
             var y = mapgametime.get(ioroomid);
             var step2 = Math.floor(y/2);
-            console.log(x);
+            // console.log(x);
 
             //CHANGE BOMB PIC STEP
             if((y-x) == step2 && y!=2 && y!=3) {
@@ -527,52 +551,21 @@ function containsWord(str, searchValue){
   }
 
 
-function removeJsonAnswer(theme , answer) {
-    var banktab = [];
+function removeJsonAnswer(theme , answer , rid ,  banktab) {
+ 
     var similar = [];
     
-    if(theme == 'Naruto') {
-        banktab = profile.Character.Naruto;
-        for(var i = 0 ; i < banktab.length ; i++) {
-            // if(banktab[i].includes(answer)) similar.push(banktab[i]);
-            // if(answer.includes(banktab[i])) similar.push(banktab[i]);
-            if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
-            if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
-        }
+    for(var i = 0 ; i < banktab.length ; i++) {
+        console.log("tab name -> ", banktab[i])
+        console.log("answer -> " , answer)
+        console.log("tab name containsword answer -> " ,  containsWord(banktab[i] , answer))
+        console.log("answer containsword tab name -> " , containsWord(answer , banktab[i]))
+        console.log("------------------------------")
+        if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
+        if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
 
-
-        console.log(similar)
-
-        for(var i = 0 ; i < similar.length ; i++) {
-            var toRemove = similar[i];
-            profile.Character.Naruto = profile.Character.Naruto.filter(item => item!=toRemove);
-        }
-    }
-
-    if(theme == 'One Piece') {
-        banktab = profile.Character.OnePiece;
-        for(var i = 0 ; i < banktab.length ; i++) {
-            // if(banktab[i].includes(answer)) similar.push(banktab[i]);
-            // if(answer.includes(banktab[i])) similar.push(banktab[i]);
-            if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
-            if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
-        }
-
-        //TO DO REMOVE SIMILAR ELEMENT IN JSON
-        for(var i = 0 ; i < similar.length ; i++) {
-            var toRemove = similar[i];
-            profile.Character.OnePiece = profile.Character.OnePiece.filter(item => item!=toRemove);
-        }
-    }
-
-    if(theme == 'Dragon Ball') {
-        banktab = profile.Character.Dbz;
-        for(var i = 0 ; i < banktab.length ; i++) {
-            // if(banktab[i].includes(answer)) similar.push(banktab[i]);
-            // if(answer.includes(banktab[i])) similar.push(banktab[i]);
-            if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
-            if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
-
+        if(theme == 'Dragon Ball') {
+    
             if(answer == "TORTUE GENIAL") { similar.push("MUTEN ROSHI"); similar.push("ROSHI"); }
             if(answer == "MUTEN ROSHI" || answer == "ROSHI")  similar.push("TORTUE GENIAL");
 
@@ -706,33 +699,22 @@ function removeJsonAnswer(theme , answer) {
             
         }
 
-        //TO DO REMOVE SIMILAR ELEMENT IN JSON
-        for(var i = 0 ; i < similar.length ; i++) {
-            var toRemove = similar[i];
-            profile.Character.Dbz = profile.Character.Dbz.filter(item => item!=toRemove);
-        }
-    }
+       
 
-    if(theme == 'Tout') {
-        banktab = profile.Character.Tout;
-         for(var i = 0 ; i < banktab.length ; i++) {
-            // if(banktab[i].includes(answer)) similar.push(banktab[i]);
-            // if(answer.includes(banktab[i])) similar.push(banktab[i]);
-            if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
-            if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
-        }
-
-        //TO DO REMOVE SIMILAR ELEMENT IN JSON
-        for(var i = 0 ; i < similar.length ; i++) {
-            var toRemove = similar[i];
-            profile.Character.Tout = profile.Character.Tout.filter(item => item!=toRemove);
-        }
-
-    }
+    }    
 
 
-    console.log("SIMILAR CHAR -> " , similar)
 
+    console.log("similar char -> " , similar)
+    similar.push(answer);
+
+    for(var i = 0 ; i < similar.length ; i++) {
+        var toRemove = similar[i];
+        mapgamedata.set(rid , mapgamedata.get(rid).filter(item => item!=toRemove));
+    }   
+
+ 
+     
 
 
 

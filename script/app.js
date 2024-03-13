@@ -4,7 +4,8 @@ socket.on('connect' , () => { console.log(socket.id)});
 
 
 
-
+//TODO : KEEP JSON DATA AFTER GAME (BECAUSE ITS SPLICED DURING A GAME)
+//TODO : KEEP INPUT FOCUS AFTER OPPONENT ANSWER
 
 
 var app = new Vue({
@@ -555,7 +556,10 @@ function editAnswerError() {
          }).catch(error => {
              playedOnLoad = true;
          });
-     }             
+     }
+     
+     $('#p1inputid').focus();
+
 }
 
 
@@ -630,6 +634,7 @@ function handleInput(nbturn) {
         $('.bombdiv').addClass('movebomb');
         $('#p1inputid').removeClass('disablemode2');
         $("#p1inputid").removeAttr('disabled');
+        $('#p1inputid').focus();
     } else {
         $('.bombdiv').removeClass('movebomb');
         $('.bombdiv').addClass('movebomb2');
