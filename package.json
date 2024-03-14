@@ -1,7 +1,7 @@
 {
-  "name": "Guess Who",
+  "name": "Bombanime",
   "version": "1.0.0",
-  "description": "server du jeu guess who version anime",
+  "description": "server du jeu bombanime",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

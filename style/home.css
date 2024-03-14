@@ -242,7 +242,7 @@ body{
 
 
 .disablemode {
-    /* pointer-events: none; */
+    pointer-events: none;
     background-color: rgba(70, 103, 126, 0.901);
 }
 

@@ -157,6 +157,8 @@ app.post('/game' , function(req,res) {
         socket.to(req.session.rid).emit('changeGamePlayerStatusEvent');
     });  
 
+
+
     req.session.ingame = true;
     res.redirect('/game');
 
@@ -175,6 +177,8 @@ app.get('/game' , function(req,res) {
         req.session.rid = null;
     }
     
+
+    if(mapgamewinner.get(req.session.rid)!=null) req.session.endgame = true;
 
     if(req.session.ingame == true) {
         res.sendFile(__dirname + '/game.html');
@@ -572,11 +576,6 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
     var similar = [];
     
     for(var i = 0 ; i < banktab.length ; i++) {
-        console.log("tab name -> ", banktab[i])
-        console.log("answer -> " , answer)
-        console.log("tab name containsword answer -> " ,  containsWord(banktab[i] , answer))
-        console.log("answer containsword tab name -> " , containsWord(answer , banktab[i]))
-        console.log("------------------------------")
         if(containsWord(banktab[i] , answer))  similar.push(banktab[i]);
         if(containsWord(answer , banktab[i]))  similar.push(banktab[i]);
 
@@ -749,13 +748,164 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
             if(answer == "KYUBI") { similar.push("KURAMA");}
         }
 
+
+        if(theme == 'One Piece') {
+    
+            if(answer == "AOKIJI")  similar.push("KUZAN");
+            if(answer == "KUZAN")  similar.push("AOKIJI");
+
+            if(answer == "BELL MERE")  similar.push("BELLMERE");
+            if(answer == "BELLMERE")  similar.push("BELL MERE");
+
+            if(answer == "BELL MERE")  { similar.push("BELLMERE"); similar.push("BELLMERE"); }
+            if(answer == "BELLMERE")  { similar.push("BELL MERE"); similar.push("BELL MERE"); }
+
+            if(answer == "CHARLOTTE LINLIN" || answer == "LINLIN")  { similar.push("BIG MOM"); }
+            if(answer == "BIG MOM")  { similar.push("CHARLOTTE LINLIN"); similar.push("LINLIN"); }
+
+            if(answer == "BARBE NOIRE")  { similar.push("TEACH"); similar.push("MARSHALL D TEACH"); similar.push("BLACKBEARD");  }
+            if(answer == "TEACH" || answer == "MARSHALL D TEACH")  { similar.push("BARBE NOIRE"); similar.push("BLACKBEARD");  }
+            if(answer == "BLACKBEARD")  { similar.push("BARBE NOIRE"); similar.push("TEACH"); similar.push("MARSHALL D TEACH");}
+
+            if(answer == "BAGGY")  { similar.push("BUGGY"); }
+            if(answer == "BUGGY")  { similar.push("BAGGY"); }
+
+            if(answer == "CAESAR CLOWN" || answer == "CAESAR" )  { similar.push("CESAR"); }
+            if(answer == "CESAR")  { similar.push("CAESAR CLOWN"); similar.push("CAESAR");  }
+
+            if(answer == "CHOUCHOU")  { similar.push("SHUSHU"); }
+            if(answer == "SHUSHU")  { similar.push("CHOUCHOU"); }
+
+            if(answer == "ENER")  { similar.push("ENERU"); }
+            if(answer == "ENERU")  { similar.push("ENER"); }
+
+            if(answer == "ISSHO")  { similar.push("FUJITORA"); }
+            if(answer == "FUJITORA")  { similar.push("ISSHO"); }
+
+            if(answer == "JABRA")  { similar.push("JABURA"); }
+            if(answer == "JABURA")  { similar.push("JABRA"); }
+
+            if(answer == "JINBE")  { similar.push("JINBEI"); }
+            if(answer == "JINBEI")  { similar.push("JINBE"); }
+
+            if(answer == "DONQUIXOTE ROSINANTE" || answer == "ROSINANTE" )  { similar.push("CORAZON"); }
+            if(answer == "CORAZON")  { similar.push("DONQUIXOTE ROSINANTE"); similar.push("ROSINANTE");  }
+
+            if(answer == "GOLD ROGER")  { similar.push("GOL D ROGER"); similar.push("GOL D. ROGER");  }
+            if(answer == "GOL D ROGER")  { similar.push("GOLD ROGER"); similar.push("GOL D. ROGER"); }
+            if(answer == "GOL D. ROGER")  { similar.push("GOLD ROGER"); similar.push("GOL D ROGER");}
+
+            if(answer == "JAGUAR D SAUL")  { similar.push("JAGUAR D. SAUL"); }
+            if(answer == "JAGUAR D. SAUL")  { similar.push("JAGUAR D SAUL");}
+
+            if(answer == "KIZARU")  { similar.push("BORSALINO"); }
+            if(answer == "BORSALINO")  { similar.push("KIZARU"); }
+
+            if(answer == "MORGE")  { similar.push("MOHJI"); }
+            if(answer == "MOHJI")  { similar.push("MORGE"); }
+
+            if(answer == "NYON")  { similar.push("GLORIOSA"); }
+            if(answer == "GLORIOSA")  { similar.push("NYON"); }
+
+            if(answer == "SHAKKY")  { similar.push("SHAKUYAKU"); }
+            if(answer == "SHAKUYAKU")  { similar.push("SHAKKY"); }
+
+            if(answer == "THATCH")  { similar.push("SATCH"); }
+            if(answer == "SATCH")  { similar.push("THATCH"); }
+
+            if(answer == "MONKEY D DRAGON")  { similar.push("MONKEY D. DRAGON");  }
+            if(answer == "MONKEY D. DRAGON")  { similar.push("MONKEY D DRAGON");  }
+
+            if(answer == "MONKEY D GARP")  { similar.push("MONKEY D. GARP");  }
+            if(answer == "MONKEY D. GARP")  { similar.push("MONKEY D GARP");  }
+
+            if(answer == "MONKEY D LUFFY")  { similar.push("MONKEY D. LUFFY");  }
+            if(answer == "MONKEY D. LUFFY")  { similar.push("MONKEY D LUFFY");  }
+
+            if(answer == "PORTGAS D ACE")  { similar.push("PORTGAS D. ACE");  }
+            if(answer == "PORTGAS D. ACE")  { similar.push("PORTGAS D ACE");  }
+
+            if(answer == "PORTGAS D ROUGE")  { similar.push("PORTGAS D. ROUGE");  }
+            if(answer == "PORTGAS D. ROUGE")  { similar.push("PORTGAS D ROUGE");  }
+
+            if(answer == "MR 1")  { similar.push("DAZ BONEZ"); similar.push("DAZ BONES");  }
+            if(answer == "DAZ BONES")  { similar.push("MR 1"); similar.push("DAZ BONEZ");  }
+            if(answer == "DAZ BONEZ")  { similar.push("MR 1"); similar.push("DAZ BONES");  }
+
+            if(answer == "MR 2")  { similar.push("BON CLAY"); }
+            if(answer == "BON CLAY")  { similar.push("MR 2"); }
+
+            if(answer == "MR 3")  { similar.push("GALDINO"); }
+            if(answer == "GALDINO")  { similar.push("MR 3"); }
+
+            if(answer == "SHIRYU")  { similar.push("SHILEW"); }
+            if(answer == "SHILEW")  { similar.push("SHIRYU"); }
+
+            if(answer == "VIOLA")  { similar.push("VIOLET"); }
+            if(answer == "VIOLET")  { similar.push("VIOLA"); }
+
+            if(answer == "T BONE")  { similar.push("T-BONE");  similar.push("T. BONE");}
+            if(answer == "T-BONE")  { similar.push("T BONE"); similar.push("T. BONE"); }
+            if(answer == "T. BONE")  { similar.push("T BONE"); similar.push("T-BONE"); }
+
+            if(answer == "TRAFALGAR D WATER LAW")  { similar.push("TRAFALGAR LAW");  similar.push("TRAFALGAR D. WATER LAW");}
+            if(answer == "TRAFALGAR LAW")  { similar.push("TRAFALGAR D WATER LAW");  similar.push("TRAFALGAR D. WATER LAW"); }
+            if(answer == "TRAFALGAR D. WATER LAW")  { similar.push("TRAFALGAR D WATER LAW");  similar.push("TRAFALGAR LAW"); }
+
+            if(answer == "EDWARD NEWGATE" || answer == "NEWGATE")  { similar.push("BARBE BLANCHE");  similar.push("WHITEBEARD");}
+            if(answer == "WHITEBEARD")  { similar.push("BARBE BLANCHE"); similar.push("EDWARD NEWGATE"); }
+            if(answer == "BARBE BLANCHE")  { similar.push("WHITEBEARD"); similar.push("EDWARD NEWGATE"); }
+
+            if(answer == "ZEPHYR")  { similar.push("Z"); }
+            if(answer == "Z")  { similar.push("ZEPHYR"); }
+
+            if(answer == "JOZU")  { similar.push("JOZ"); }
+            if(answer == "JOZ")  { similar.push("JOZU"); }
+
+            if(answer == "MARGARET")  { similar.push("MARGUERITE"); }
+            if(answer == "MARGUERITE")  { similar.push("MARGARET"); }
+            
+            if(answer == "KAIDO")  { similar.push("KAIDOU"); }
+            if(answer == "KAIDOU")  { similar.push("KAIDO"); }
+
+            if(answer == "CHADROS HIGELYGES")  { similar.push("BARBE BRUNE");  similar.push("CHAHIGE");}
+            if(answer == "BARBE BRUNE")  { similar.push("CHAHIGE"); similar.push("CHADROS HIGELYGES"); }
+            if(answer == "CHAHIGE")  { similar.push("BARBE BRUNE"); similar.push("CHADROS HIGELYGES"); }
+
+            if(answer == "O KIKU" || answer == "KIKU")  { similar.push("KIKUNOJO"); }
+            if(answer == "KIKUNOJO")  { similar.push("KIKU"); similar.push("O KIKU");}
+
+            if(answer == "KOZUKI HIYORI" || answer == "HIYORI")  { similar.push("KOMURASAKI"); }
+            if(answer == "KOMURASAKI")  { similar.push("KOZUKI HIYORI"); similar.push("HIYORI");}
+
+            if(answer == "ASHURA DOJI" || answer == "DOJI")  { similar.push("SHUTENMARU"); }
+            if(answer == "SHUTENMARU")  { similar.push("DOJI"); similar.push("ASHURA DOJI");}
+
+            if(answer == "HYOGORO")  { similar.push("HYOUGOROU"); similar.push("HYOGOROU");}
+            if(answer == "HYOUGOROU")  { similar.push("HYOGORO"); similar.push("HYOGOROU");}
+            if(answer == "HYOGOROU")  { similar.push("HYOGORO"); similar.push("HYOUGOROU");}
+
+            if(answer == "KYOSHIRO")  { similar.push("DENJIRO"); similar.push("KYOUSHIROU");}
+            if(answer == "KYOUSHIROU")  { similar.push("DENJIRO"); similar.push("KYOSHIRO");}
+            if(answer == "DENJIRO")  { similar.push("KYOUSHIROU"); similar.push("KYOSHIRO");}
+            
+            if(answer == "KILLER")  { similar.push("KAMAZOU"); }
+            if(answer == "KAMAZOU")  { similar.push("KILLER"); }
+            
+
+
+
+
+
+            
+        }
        
 
     }    
 
 
 
-    console.log("similar char -> " , similar)
+    // console.log("similar char -> " , similar)
     similar.push(answer);
 
     for(var i = 0 ; i < similar.length ; i++) {

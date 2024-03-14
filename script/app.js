@@ -672,6 +672,7 @@ function editBombPic(step) {
 function displayWinner2(winner) {
     app.gwinner = winner;
 
+
     $('.opponentdiv').hide();
     $('.p1div').hide();
     $('.bombdiv').hide();
@@ -683,6 +684,8 @@ function displayWinner2(winner) {
 
 
 function displayWinner(winner) {
+    playExplode();
+
     var body = {
         val: winner
     };
@@ -711,6 +714,24 @@ function displayWinner(winner) {
     ta.pause();
 
 
+}
+
+
+function playExplode() {
+    
+    var ta = document.getElementById('audio4');
+     ta.volume = 0.3;
+     const promise = ta.play();  
+                
+     let playedOnLoad;
+
+     if (promise !== undefined) {
+         promise.then(_ => {
+             playedOnLoad = true;
+         }).catch(error => {
+             playedOnLoad = true;
+         });
+     }
 }
 
 
