@@ -248,6 +248,10 @@ var app = new Vue({
             
         },
 
+        kickPlayer: function() {
+            socket.emit('kickPlayerEvent');
+        }
+
     },
 
     created:  function() {
@@ -343,7 +347,12 @@ var app = new Vue({
 
 
         socket.on('notifHostCancelFromPlayer' , () => {
-            $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 0/1");
+            document.getElementById("waitid").innerHTML = "EN ATTENTE D'UN JOUEUR : 0/1";
+        });
+
+
+        socket.on('notifKickPlayerEvent' , () => {
+            handleKick();
         });
 
 
@@ -366,7 +375,7 @@ var app = new Vue({
 
         socket.on('testEvent' , () => {
             alert('WONDER');
-            location.reload();
+            
         });
 
 
@@ -489,6 +498,26 @@ $('.soundpic').on('click' , function() {
     
 })
 
+
+function handleKick() {
+    var body = {
+        val: 'val'
+    };
+
+    var config = {
+        method: 'post',
+        url: '/kickPlayer',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        location.reload();
+    })
+    .catch(function (err) {
+        
+    });
+}
 
 
 function playTimer() {

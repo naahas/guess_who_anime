@@ -25,8 +25,9 @@ const io = new Server(server , {
 
 
 
-//TODO : add input or bomb effect when anwer is right (pulse...)
 //TODO : make replay button working 
+//TODO : kick option
+//TODO : cadenas effect when answer has already been given
 
 
 //session middleware
@@ -229,6 +230,13 @@ app.post('/confirmSetting' , function(req,res) {
     res.end();
 });
 
+
+app.post('/kickPlayer' , function(req,res) {
+
+    req.session.rid = null;
+    req.session.joined = false;
+    res.end();
+});
 
 
 app.post('/returnBackJoin' , function(req,res) {
@@ -530,6 +538,16 @@ io.on('connection' , (socket) => {
             mapgametimer.set(ioroomid , x+1);
     
         }, 1000);
+    });
+
+
+    socket.on('kickPlayerEvent' , () => {
+        socket.emit('notifHostCancelFromPlayer');
+        for (let [key, value] of mapcode) {
+            if(key!=iousername) mapcode.delete(key);
+            mapcodefull = mapcodefull.filter(item => item!=ioroomid);
+            socket.broadcast.to(ioroomid).emit('notifKickPlayerEvent');
+        }
     });
     
 

@@ -50,7 +50,12 @@
                 <button @click="launchGame()" class="startbtn disablemode"> COMMENCER </button> <br>
 
                 <hr>
-                <p class="waittxt"> EN ATTENTE D'UN JOUEUR : 0/1</p>
+
+                <div class="kickdiv">
+                    <span id="waitid" class="waittxt"> EN ATTENTE D'UN JOUEUR : 0/1</span>
+                    <img @click="kickPlayer" title="KICK" class="kickpic" src="kick.png">
+                </div>
+                
                 <span class="loader"></span>
             </div>
 
