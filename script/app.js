@@ -379,8 +379,9 @@ var app = new Vue({
         });
 
 
-        socket.on('answerErrorEvent' , () => {
-            editAnswerError();
+        socket.on('answerErrorEvent' , (errtype) => {
+            if(errtype == 0) editAnswerError2();
+            else editAnswerError1()
         });
 
 
@@ -561,7 +562,7 @@ function errorCodeInput() {
 }
 
 
-function editAnswerError() {
+function editAnswerError1() {
     $('#p1inputid').addClass('tmpshake');
     $("#p1inputid").animate({'border-bottom-color': '#e26381'}, 400);
     setTimeout(function(){
@@ -591,6 +592,50 @@ function editAnswerError() {
      $('#p1inputid').focus();
 
 }
+
+function editAnswerError2() {
+
+
+    //SHAKE AND INPUT RED EFFECT
+    $('#p1inputid').addClass('tmpshake');
+    $("#p1inputid").animate({'border-bottom-color': '#e26381'}, 400);
+    setTimeout(function(){
+        $('#p1inputid').removeClass('tmpshake');
+     },300);    
+
+     setTimeout(function(){
+        $("#p1inputid").css('border-bottom-color' , '#e0cbcb');
+     },500);  
+
+     $("#p1inputid").trigger('blur'); 
+
+
+     //LOCK EFFECT
+     $('.lockpic').show();
+     
+     setTimeout(() => {
+        $('.lockpic').hide();
+     }, 700);
+
+
+     var ta = document.getElementById('audio5');
+     ta.volume = 0.8;
+     const promise = ta.play();  
+                
+     let playedOnLoad;
+
+     if (promise !== undefined) {
+         promise.then(_ => {
+             playedOnLoad = true;
+         }).catch(error => {
+             playedOnLoad = true;
+         });
+     }
+     
+     $('#p1inputid').focus();
+
+}
+
 
 
 function ingameRequest() {
@@ -747,7 +792,6 @@ function displayWinner(winner) {
 
 
 function playExplode() {
-    
     var ta = document.getElementById('audio4');
      ta.volume = 0.3;
      const promise = ta.play();  
@@ -767,6 +811,8 @@ function playExplode() {
 function displayPostToHost() {
     $('.replaybtn').show();
 }
+
+
 
 
 
