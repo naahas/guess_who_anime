@@ -218,7 +218,9 @@ app.post('/confirmSetting' , function(req,res) {
     if(theme == 'Dragon Ball') mapgamedata.set(req.session.rid , profile.Character.Dbz);
     if(theme == 'Hunter x Hunter') mapgamedata.set(req.session.rid , profile.Character.Hxh);
     if(theme == 'Attaque des Titans') mapgamedata.set(req.session.rid , profile.Character.Snk);
-    if(theme == 'Tout') mapgamedata.set(req.session.rid , profile.Character.Tout);
+    if(theme == 'Pokemon') mapgamedata.set(req.session.rid , profile.Character.Pokemon);
+
+    mapgamedata.set(req.session.rid ,  mapgamedata.get(req.session.rid).map(chara => chara.toUpperCase()));
 
     mapgametime.set(req.session.rid , btime);
     mapgametheme.set(req.session.rid , theme);
@@ -464,7 +466,7 @@ io.on('connection' , (socket) => {
         var ctheme = mapgametheme.get(ioroomid);
         var banktab = profile.Character.Naruto;
 
-        if(ctheme != null) banktab = mapgamedata.get(ioroomid).map(chara => chara.toUpperCase());
+        if(ctheme != null) banktab = mapgamedata.get(ioroomid);
        
         //IF ANSWER IS RIGHT
         if(banktab.includes(canswer)) {
@@ -1125,6 +1127,14 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "CHRISTA LENZ" || answer == "CHRISTA") { similar.push("HISTORIA"); similar.push("HISTORIA REISS");}
                 if(answer == "HISTORIA REISS" || answer == "HISTORIA") { similar.push("CHRISTA LENZ"); similar.push("CHRISTA");}
 
+            }
+
+            if(theme == 'Pokemon') {
+                if(answer == "HO-OH")  similar.push("HO OH");
+                if(answer == "HO OH")  similar.push("HO-OH");
+
+                if(answer == "PORYGON-Z")  similar.push("PORYGON Z");
+                if(answer == "PORYGON Z")  similar.push("PORYGON-Z");
             }
 
     

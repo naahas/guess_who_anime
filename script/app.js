@@ -140,7 +140,7 @@ var app = new Vue({
             var bombtime = $('#rangeid').val();
             var themechoice = $('.cselect').find(":selected").val();
 
-            
+
             var body = {
                 val1: bombtime,
                 val2: themechoice
@@ -251,6 +251,10 @@ var app = new Vue({
 
         kickPlayer: function() {
             socket.emit('kickPlayerEvent');
+        },
+
+        testFunction: function() {
+            alert('TESTOO');
         }
 
     },
