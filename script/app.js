@@ -220,7 +220,7 @@ var app = new Vue({
             this.canswer = '';
             $('.p1input').val('');
 
-            socket.emit('sendAnswerEvent' , player_answer)
+            socket.emit('sendAnswerEvent' , player_answer);
         },
 
 
@@ -453,6 +453,12 @@ var app = new Vue({
 
 
 //JS AND JQUERY SECTION
+
+$('#subbtn').on('touchend click', function(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    app.checkAnswer();
+})
 
 
 $('.p1input').on('input' , function(e) {
