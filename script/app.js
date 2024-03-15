@@ -139,6 +139,7 @@ var app = new Vue({
         sendGameSetting: function() {
             var bombtime = $('#rangeid').val();
             var themechoice = $('.cselect').find(":selected").val();
+
             
             var body = {
                 val1: bombtime,
@@ -612,7 +613,7 @@ function editAnswerError2() {
 
      //LOCK EFFECT
      $('.lockpic').show();
-     
+
      setTimeout(() => {
         $('.lockpic').hide();
      }, 700);
