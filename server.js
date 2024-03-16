@@ -1002,6 +1002,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "PEGGY") { similar.push("PEGUI"); }
                 if(answer == "PEGUI") { similar.push("PEGGY"); }
 
+                if(answer == "LEORIO") { similar.push("YOUPI"); similar.push("LEORIO"); similar.push("LEORIO"); }
+                if(answer == "LEOLIO" || answer == "LEOLIO PARADINAITO")  similar.push("LEORIO"); 
+
                 if(answer == "MELEOLON") { similar.push("MELEORON"); }
                 if(answer == "MELEORON") { similar.push("MELEOLON"); }
 
@@ -1245,7 +1248,7 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "IZUKU")  similar.push("DEKU");
                 if(answer == "DEKU")  { similar.push("IZUKU"); similar.push("MIDORIYA IZUKU");  }
 
-                
+
             }
 
     
