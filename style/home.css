@@ -20,14 +20,14 @@ body{
 
 .maingame::before {    
   content: "";
-  background-image: url('back1.jpg');
+  /* background-image: url('back1.jpg'); */
   /* background-size: cover; */
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  filter: brightness(40%);
+  filter: brightness(50%);
 }
 
 
@@ -53,8 +53,8 @@ body{
 }
 
 .pbtn {
-    width: 70%;
-    font-size: 1.5em;
+    width: 60%;
+    font-size: 100%;
     font-family: Georgia, 'Times New Roman', Times, serif;
     padding: 0.8em;
     margin: 1em;
@@ -246,7 +246,7 @@ body{
     border: 0.2em double rgb(3, 15, 24);
     padding: 0.5em;
     transition: all .2s ease-in;
-	-webkit-transition: all .2s ease-in;
+	  -webkit-transition: all .2s ease-in;
 }
 
 

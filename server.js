@@ -218,7 +218,9 @@ app.post('/confirmSetting' , function(req,res) {
     if(theme == 'Dragon Ball') mapgamedata.set(req.session.rid , profile.Character.Dbz);
     if(theme == 'Hunter x Hunter') mapgamedata.set(req.session.rid , profile.Character.Hxh);
     if(theme == 'Attaque des Titans') mapgamedata.set(req.session.rid , profile.Character.Snk);
+    if(theme == 'Bleach') mapgamedata.set(req.session.rid , profile.Character.Bleach);
     if(theme == 'Pokemon') mapgamedata.set(req.session.rid , profile.Character.Pokemon);
+    if(theme == 'My Hero Academia') mapgamedata.set(req.session.rid , profile.Character.Mha);
 
     mapgamedata.set(req.session.rid ,  mapgamedata.get(req.session.rid).map(chara => chara.toUpperCase()));
 
@@ -1135,6 +1137,115 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "PORYGON-Z")  similar.push("PORYGON Z");
                 if(answer == "PORYGON Z")  similar.push("PORYGON-Z");
+            }
+
+
+            if(theme == 'Bleach') {
+                if(answer == "KUROSAKI ICHIGO")  similar.push("ICHIGO KUROSAKI");
+                if(answer == "ICHIGO KUROSAKI")  similar.push("KUROSAKI ICHIGO");
+
+                if(answer == "KUROSAKI ISSHIN")  similar.push("ISSHIN KUROSAKI");
+                if(answer == "ISSHIN KUROSAKI")  similar.push("KUROSAKI ISSHIN");
+
+                if(answer == "RENJI ABARAI")  similar.push("ABARAI RENJI");
+                if(answer == "ABARAI RENJI")  similar.push("RENJI ABARAI");
+
+                if(answer == "URAHARA") similar.push("KISUKE");
+                if(answer == "KISUKE") similar.push("URAHARA");
+
+                if(answer == "YAMAMOTO") similar.push("GENRYUSAI");
+                if(answer == "GENRYUSAI") similar.push("YAMAMOTO");
+
+                if(answer == "INOUE ORIHIME")  similar.push("ORIHIME INOUE");
+                if(answer == "ORIHIME INOUE")  similar.push("INOUE ORIHIME");
+                if(answer == "INOUE") similar.push("ORIHIME");
+                if(answer == "ORIHIME") similar.push("INOUE");
+
+                if(answer == "SADO YASUTORA" || answer == "SADO")  similar.push("CHAD");
+                if(answer == "CHAD") { similar.push("SADO YASUTORA"); similar.push("SADO");  }
+
+                if(answer == "ISHIDA URYU")  similar.push("URYU ISHIDA");
+                if(answer == "URYU ISHIDA")  similar.push("ISHIDA URYU");
+                if(answer == "URYU") similar.push("ISHIDA");
+                if(answer == "ISHIDA") similar.push("URYU");
+
+                if(answer == "HITSUGAYA TOSHIRO")  similar.push("TOSHIRO HITSUGAYA");
+                if(answer == "TOSHIRO HITSUGAYA")  similar.push("HITSUGAYA TOSHIRO");
+                if(answer == "TOSHIRO") similar.push("HITSUGAYA");
+                if(answer == "HITSUGAYA") similar.push("TOSHIRO");
+
+                if(answer == "SHINJI HIRAKO")  similar.push("HIRAKO SHINJI");
+                if(answer == "HIRAKO SHINJI")  similar.push("SHINJI HIRAKO");
+                if(answer == "SHINJI") similar.push("HIRAKO");
+                if(answer == "HIRAKO") similar.push("SHINJI");
+
+                if(answer == "RANGIKU MATSUMOTO")  similar.push("MATSUMOTO RANGIKU");
+                if(answer == "MATSUMOTO RANGIKU")  similar.push("RANGIKU MATSUMOTO");
+                if(answer == "MATSUMOTO") similar.push("RANGIKU");
+                if(answer == "RANGIKU") similar.push("MATSUMOTO");
+
+                if(answer == "UCHIDA HACHIGEN" || answer == "UCHIDA")  similar.push("HACHI");
+                if(answer == "HACHI")  { similar.push("UCHIDA HACHIGEN"); similar.push("HACHIGEN"); }
+
+                if(answer == "ICHIMARU GIN")  similar.push("GIN ICHIMARU");
+                if(answer == "GIN ICHIMARU")  similar.push("ICHIMARU GIN");
+
+                if(answer == "SHIBA KAIEN")  similar.push("KAIEN SHIBA");
+                if(answer == "KAIEN SHIBA")  similar.push("SHIBA KAIEN");
+
+                if(answer == "HISAGI")  similar.push("HISAGI");
+                if(answer == "SHUHEI")  similar.push("SHUHEI");
+
+                if(answer == "APACHE")  similar.push("APACCI");
+                if(answer == "APACCI")  similar.push("APACHE");
+
+                if(answer == "KIRINJI")  similar.push("TENJIRO");
+                if(answer == "TENJIRO")  similar.push("KIRINJI");
+
+                if(answer == "KIRIO")  similar.push("HIKIFUNE");
+                if(answer == "HIKIFUNE")  similar.push("KIRIO");
+
+                if(answer == "ULQUIORRA SCHIFFER")  similar.push("ULQUIORRA CIFER");
+                if(answer == "ULQUIORRA CIFER")  similar.push("ULQUIORRA SCHIFFER");
+
+                if(answer == "BAZZARD BLACK")  { similar.push("BAZZ B"); similar.push("BAZZ-B"); }
+                if(answer == "BAZZ B")  { similar.push("BAZZ-B"); similar.push("BAZZARD BLACK"); }
+                if(answer == "BAZZ-B")  { similar.push("BAZZ B"); similar.push("BAZZARD BLACK"); }
+                
+
+                if(answer == "SUNG SUN")  similar.push("SUNG-SUN");
+                if(answer == "SUNG-SUN")  similar.push("SUNG SUN");
+
+                if(answer == "ROI DES ESPRITS")  { similar.push("ROI SPIRITUEL"); similar.push("SOUL KING"); }
+                if(answer == "ROI SPIRITUEL")  { similar.push("ROI DES ESPRITS"); similar.push("SOUL KING"); }
+                if(answer == "SOUL KING")  { similar.push("ROI SPIRITUEL"); similar.push("ROI DES ESPRITS"); }
+
+                if(answer == "SZAYELAPORRO GRANDZ" || answer == "SZAYELAPORRO")  similar.push("SZAYEL");
+                if(answer == "SZAYEL")  { similar.push("SZAYELAPORRO"); similar.push("SZAYELAPORRO GRANDZ"); }
+
+                if(answer == "NELLIEL TU ODELSCHWANCK" || answer == "NELLIEL")  { similar.push("NEL"); similar.push("NEL TU"); }
+                if(answer == "NEL TU" || answer == "NEL") { similar.push("NELLIEL TU ODELSCHWANCK"); similar.push("NELLIEL"); }
+
+                if(answer == "PESSHE GATIISHE")  { similar.push("PESCHE GUATICHE"); similar.push("PESCHE"); }
+                if(answer == "PESCHE GUATICHE")  { similar.push("PESSHE GATIISHE"); similar.push("PESSHE"); }
+                if(answer == "PESCHE") similar.push("PESSHE");
+                if(answer == "PESSHE") similar.push("PESCHE");
+
+                if(answer == "TIER HARRIBEL")  { similar.push("TIA HALLIBEL"); similar.push("HALLIBEL"); }
+                if(answer == "TIA HALLIBEL")  { similar.push("TIER HARRIBEL"); similar.push("HARRIBEL"); }
+                if(answer == "HALLIBEL") similar.push("HARRIBEL");
+                if(answer == "HARRIBEL") similar.push("HALLIBEL");
+
+
+
+            }
+
+            if(theme == 'My Hero Academia') {
+                if(answer == "MIDORIYA IZUKU")  similar.push("DEKU");
+                if(answer == "IZUKU")  similar.push("DEKU");
+                if(answer == "DEKU")  { similar.push("IZUKU"); similar.push("MIDORIYA IZUKU");  }
+
+                
             }
 
     
