@@ -220,7 +220,7 @@ app.post('/confirmSetting' , function(req,res) {
     if(theme == 'Attaque des Titans') mapgamedata.set(req.session.rid , profile.Character.Snk);
     if(theme == 'Bleach') mapgamedata.set(req.session.rid , profile.Character.Bleach);
     if(theme == 'Pokemon') mapgamedata.set(req.session.rid , profile.Character.Pokemon);
-    if(theme == 'My Hero Academia') mapgamedata.set(req.session.rid , profile.Character.Mha);
+    if(theme == 'Demon Slayer') mapgamedata.set(req.session.rid , profile.Character.DemonSlayer);
 
     mapgamedata.set(req.session.rid ,  mapgamedata.get(req.session.rid).map(chara => chara.toUpperCase()));
 
@@ -1070,8 +1070,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "MOREL MCCARNATHY" || answer == "MOREL") { similar.push("MORAU"); similar.push("MORAU MCCARNATHY");}
                 if(answer == "MORAU MCCARNATHY" || answer == "MORAU") { similar.push("MOREL"); similar.push("MOREL MCCARNATHY");}
 
-                if(answer == "PAM SHIBERIA" || answer == "PAM") { similar.push("PAMU"); similar.push("PAMU SHIBERIA");}
-                if(answer == "PAMU SHIBERIA" || answer == "PAMU") { similar.push("PAM"); similar.push("PAM SHIBERIA");}
+                if(answer == "PAM SHIBERIA" || answer == "PAM") { similar.push("PAMU"); similar.push("PALM"); similar.push("PAMU SHIBERIA");}
+                if(answer == "PAMU SHIBERIA" || answer == "PAMU") { similar.push("PALM"); similar.push("PAM"); similar.push("PAM SHIBERIA");}
+                if(answer == "PALM") { similar.push("PAM"); similar.push("PAM SHIBERIA"); similar.push("PAMU"); similar.push("PAMU SHIBERIA");}
 
                 if(answer == "SPIN" || answer == "SPIN CRO") { similar.push("SPINNER"); similar.push("SPINNER CLOW");}
                 if(answer == "SPINNER" || answer == "SPINNER CLOW") { similar.push("SPIN"); similar.push("SPIN CRO");}
@@ -1248,6 +1249,11 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "IZUKU")  similar.push("DEKU");
                 if(answer == "DEKU")  { similar.push("IZUKU"); similar.push("MIDORIYA IZUKU");  }
 
+            }
+
+            if(theme == 'Demon Slayer') {
+                if(answer == "KAMADO TANJIRO")  similar.push("TANJIRO KAMADO");
+                if(answer == "TANJIRO KAMADO")  similar.push("KAMADO TANJIRO");
 
             }
 
