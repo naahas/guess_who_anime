@@ -25,10 +25,11 @@ const io = new Server(server , {
 
 
 
-
 //TODO : striker point (count character)
 //TODO : flame animation
 //TODO : multiplayer (>2 player)
+//TODO : RECORD CHARACTER COUNT 30s/1min
+//TODO : BOT SOLO GAME
 
 
 //session middleware
@@ -245,7 +246,9 @@ app.post('/confirmSetting' , function(req,res) {
     if(theme == 'Attaque des Titans') mapgamedata.set(req.session.rid , profile.Character.Snk);
     if(theme == 'Bleach') mapgamedata.set(req.session.rid , profile.Character.Bleach);
     if(theme == 'Pokemon') mapgamedata.set(req.session.rid , profile.Character.Pokemon);
-    if(theme == 'Demon Slayer') mapgamedata.set(req.session.rid , profile.Character.DemonSlayer);
+    if(theme == 'Kpop') mapgamedata.set(req.session.rid , profile.Character.Kpop);
+    if(theme == 'Reborn') mapgamedata.set(req.session.rid , profile.Character.Reborn);
+    if(theme == 'Death Note') mapgamedata.set(req.session.rid , profile.Character.DeathNote);
 
     mapgamedata.set(req.session.rid ,  mapgamedata.get(req.session.rid).map(chara => chara.toUpperCase()));
 
@@ -824,8 +827,11 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
             if(theme == 'One Piece') {
 
-                if(answer == "MONKEY D LUFFY")  { similar.push("MONKEY D. LUFFY");  }
-                if(answer == "MONKEY D. LUFFY")  { similar.push("MONKEY D LUFFY");  }
+                if(answer == "MONKEY D LUFFY")  similar.push("MONKEY D. LUFFY");  
+                if(answer == "MONKEY D. LUFFY")  similar.push("MONKEY D LUFFY");  
+
+                if(answer == "LUCKY ROO")  similar.push("LUCKY ROUX"); 
+                if(answer == "LUCKY ROUX")  similar.push("LUCKY ROO"); 
 
                 if(answer == "AOKIJI")  similar.push("KUZAN");
                 if(answer == "KUZAN")  similar.push("AOKIJI");
@@ -846,8 +852,8 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "BAGGY")  { similar.push("BUGGY"); }
                 if(answer == "BUGGY")  { similar.push("BAGGY"); }
 
-                if(answer == "CAESAR CLOWN" || answer == "CAESAR" )  { similar.push("CESAR"); }
-                if(answer == "CESAR")  { similar.push("CAESAR CLOWN"); similar.push("CAESAR");  }
+                if(answer == "CAESAR CLOWN" || answer == "CAESAR" )  { similar.push("CESAR CLOWN"); similar.push("CESAR"); }
+                if(answer == "CESAR" ||  answer == "CESAR CLOWN")  { similar.push("CAESAR CLOWN"); similar.push("CAESAR");  }
 
                 if(answer == "CHOUCHOU")  { similar.push("SHUSHU"); }
                 if(answer == "SHUSHU")  { similar.push("CHOUCHOU"); }
@@ -931,6 +937,19 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "ZEPHYR")  { similar.push("Z"); }
                 if(answer == "Z")  { similar.push("ZEPHYR"); }
+
+                if(answer == "ICEBERG")  { similar.push("ICEBURG"); }
+                if(answer == "ICEBURG")  { similar.push("ICEBERG"); }
+
+                if(answer == "HATCHAN")  { similar.push("OCTO"); similar.push("HACHI"); }
+                if(answer == "OCTO")  { similar.push("HATCHAN"); similar.push("HACHI"); }
+                if(answer == "HACHI")  { similar.push("OCTO"); similar.push("HATCHAN");  }
+
+                if(answer == "OARS" || answer == "OARS JR")  { similar.push("OZ"); similar.push("OZ JR");}
+                if(answer == "OZ" || answer == "OZ JR")  { similar.push("OARS"); similar.push("OARS JR");}
+
+                if(answer == "KOHZA")  { similar.push("KOZA"); }
+                if(answer == "KOZA")  { similar.push("KOHZA"); }
 
                 if(answer == "JOZU")  { similar.push("JOZ"); }
                 if(answer == "JOZ")  { similar.push("JOZU"); }
@@ -1293,6 +1312,79 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "GIYU TOMIOKA" || answer == "GIYU")  { similar.push("GIYUU TOMIOKA"); similar.push("GIYUU"); similar.push("TOMIOKA"); }
                 if(answer == "GIYUU TOMIOKA" || answer == "GIYUU")  { similar.push("GIYU TOMIOKA"); similar.push("GIYU"); similar.push("TOMIOKA"); }
                 if(answer == "TOMIOKA")  { similar.push("GIYU"); similar.push("GIYUU"); similar.push("GIYUU TOMIOKA"); similar.push("GIYU TOMIOKA"); }
+            }
+
+
+            if(theme == 'Reborn') {
+                if(answer == "GIOTTO")  similar.push("VONGOLA PRIMO");
+                if(answer == "VONGOLA PRIMO")  similar.push("GIOTTO");
+                
+                if(answer == "SIMORA")  similar.push("VONGOLA SESTO");
+                if(answer == "VONGOLA SESTO")  similar.push("SIMORA");
+
+                if(answer == "VONGOLA SETTIMO")  similar.push("FABIO");
+                if(answer == "FABIO")  similar.push("VONGOLA SETTIMO");
+
+                if(answer == "VONGOLA OTTAVO")  similar.push("DANIELA");
+                if(answer == "DANIELA")  similar.push("VONGOLA OTTAVO");
+
+                if(answer == "VONGOLA NONO")  similar.push("TIMOTEO");
+                if(answer == "TIMOTEO")  similar.push("VONGOLA NONO");
+
+                if(answer == "VONGOLA NONO")  similar.push("TIMOTEO");
+                if(answer == "TIMOTEO")  similar.push("VONGOLA NONO");
+
+                if(answer == "VONGOLA DECIMO")  { similar.push("TSUNAYOSHI SAWADA"); similar.push("TSUNA"); similar.push("SAWADA"); }
+                if(answer == "TSUNAYOSHI SAWADA" || answer == "SAWADA")  { similar.push("TSUNA"); similar.push("VONGOLA DECIMO"); }
+                if(answer == "TSUNA")  { similar.push("SAWADA"); similar.push("TSUNAYOSHI SAWADA"); similar.push("VONGOLA DECIMO"); }
+
+                if(answer == "DEMON SPADE")  similar.push("DAEMON SPADE");
+                if(answer == "DAEMON SPADE")  similar.push("DEMON SPADE");
+
+                if(answer == "VONGOLA SETTIMO")  similar.push("FABIO");
+                if(answer == "FABIO")  similar.push("VONGOLA SETTIMO");
+
+                if(answer == "MM")  { similar.push("M.M"); similar.push("M M");}
+                if(answer == "M.M")  { similar.push("M M"); similar.push("MM"); }
+                if(answer == "M M")  { similar.push("MM"); similar.push("M.M"); }
+
+            }
+
+            if(theme == 'Kpop') {
+                if(answer == "SUA")  similar.push("SU A");
+                if(answer == "SU A")  similar.push("SUA");
+
+                if(answer == "DO")  similar.push("D.O.");
+                if(answer == "D.O.")  similar.push("DO");
+
+                if(answer == "G DRAGON")  similar.push("G-DRAGON");
+                if(answer == "G-DRAGON")  similar.push("G DRAGON");
+            }
+
+            if(theme == 'Death Note') {
+                if(answer == "KIRA")  {similar.push("LIGHT"); similar.push("LIGHT YAGAMI");}
+                if(answer == "LIGHT" || answer == "LIGHT YAGAMI")  similar.push("KIRA");
+
+                if(answer == "MISA MISA")  similar.push("AMANE MISA");
+                if(answer == "AMANE MISA" || answer == "MISA")  similar.push("MISA MISA");
+
+                if(answer == "L" || answer == "L LAWLIET") similar.push("RYUSAKI"); 
+                if(answer == "RYUSAKI" || answer == "MISA")  {similar.push("L LAWLIET"); similar.push("L"); }
+
+                if(answer == "NATE RIVER" || answer == "NATE") {similar.push("NEAR"); similar.push("N"); }
+                if(answer == "NEAR")  {similar.push("NATE RIVER"); similar.push("NATE"); similar.push("N"); }
+                if(answer == "N")  {similar.push("NATE RIVER"); similar.push("NATE"); similar.push("NEAR"); }
+
+                if(answer == "MIHAEL KEEHL" || answer == "MIHAEL") {similar.push("M"); similar.push("MELLO"); }
+                if(answer == "MELLO")  {similar.push("MIHAEL KEEHL"); similar.push("MIHAEL"); similar.push("M"); }
+                if(answer == "M")  {similar.push("MIHAEL KEEHL"); similar.push("MIHAEL"); similar.push("MELLO"); }
+
+                if(answer == "QUILLSH WAMMY" || answer == "QUILLSH") similar.push("WATARI");
+                if(answer == "WATARI")  {similar.push("QUILLSH WAMMY"); similar.push("QUILLSH"); }
+
+                if(answer == "ROI DE LA MORT")  similar.push('KING OF DEATH')
+                if(answer == "KING OF DEATH")  similar.push('ROI DE LA MORT')
+
             }
 
     
