@@ -26,7 +26,9 @@ const io = new Server(server , {
 
 
 
-//TODO : make replay button working 
+//TODO : striker point (count character)
+//TODO : flame animation
+//TODO : multiplayer (>2 player)
 
 
 //session middleware
@@ -153,6 +155,29 @@ app.post('/codeCheck' , function(req,res) {
 });
 
 
+app.post('/replay' , function(req,res) {
+
+    req.session.isplaying = false;
+    req.session.endgame = false;
+    req.session.replayed = true;
+
+    mapgamewinner.delete(req.session.rid); 
+
+
+
+    res.end();
+});
+
+
+app.post('/replayPlayer' , function(req,res) {
+    req.session.isplaying = null;
+    req.session.endgame = null;
+
+    console.log('loll')
+
+    res.end();
+});
+
 
 app.post('/game' , function(req,res) {
 
@@ -231,6 +256,7 @@ app.post('/confirmSetting' , function(req,res) {
     mapgamestack.set(req.session.rid , []);
 
     req.session.isplaying = true;
+    req.session.replayed = false;
 
     io.once('connection' , (socket) => {
         socket.to(req.session.rid).emit('makePlayerPlayingEvent');
@@ -346,7 +372,6 @@ io.on('connection' , (socket) => {
     })
 
 
-
     const iocreate = socket.request.session.created;
     const iojoin = socket.request.session.joined;
     const iousername= socket.request.session.username;
@@ -354,6 +379,7 @@ io.on('connection' , (socket) => {
     const ioingame = socket.request.session.ingame;
     const ioplaying = socket.request.session.isplaying;
     const ioendgame = socket.request.session.endgame;
+    const ioreplay = socket.request.session.replayed;
 
 
     socket.emit('showSettingEvent' , iousername);
@@ -451,6 +477,11 @@ io.on('connection' , (socket) => {
 
     if(ioendgame && iocreate) {
         socket.emit('displayRePlay');
+    }
+
+
+    if(ioreplay) {
+        socket.broadcast.to(ioroomid).emit('replayNotifPlayerEvent');
     }
 
 

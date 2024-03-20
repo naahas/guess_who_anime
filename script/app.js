@@ -245,7 +245,23 @@ var app = new Vue({
 
 
         replay: function() {
-            
+            var body = {
+                val : 'val'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/replay',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.reload();
+            })
+            .catch(function (err) {
+                
+            });
         },
 
         kickPlayer: function() {
@@ -437,9 +453,19 @@ var app = new Vue({
 
 
         socket.on('displayRePlay' , () => {
-            console.log("elelel")
             $('.replaybtn').show();
-        })
+        });
+
+
+        socket.on('replayPostEvent', () => {
+            $('.replaybtn').hide();
+        });
+
+
+        socket.on('replayNotifPlayerEvent' , () => {
+            console.log('lol')
+            replayRequest();
+        });
 
      
 
@@ -798,6 +824,27 @@ function displayWinner(winner) {
     ta.pause();
 
 
+}
+
+
+function replayRequest() {
+    var body = {
+        val: 'val'
+    };
+
+    var config = {
+        method: 'post',
+        url: '/replayPlayer',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        location.reload();
+    })
+    .catch(function (err) {
+        
+    });
 }
 
 

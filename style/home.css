@@ -188,6 +188,21 @@ body{
 }
 
 
+@media (max-width:431px) {
+  .currentxt {
+    font-size: 0.7em;
+  }
+}
+
+
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+  .currentxt {
+    font-size: 0.7em;
+  }
+  
+}
+
+
 .cjdiv {
     display: none;
 }
@@ -691,9 +706,24 @@ body{
   }
 
 
+  @media (max-width:431px) {
+    .bombpic {
+      width: 85%;
+    }
+  }
+  
+  
+  @media screen and (orientation:landscape) and (max-width:950px)  { 
+    .bombpic {
+      width: 65%;
+    }
+  }
+
+
 
   #subbtn {
     display: none;
+    right: 10%;
     position: absolute;
     background-color: #dfc6c6d2;
     color:black;
@@ -789,8 +819,6 @@ body{
   color: rgb(179, 241, 247);
   padding:1em 0.7em 0.7em 1em;
   background-color: transparent;
-  
-  
 }
 
 
@@ -869,9 +897,21 @@ body{
   position: absolute;
   z-index: 99;
   width: 20%;
-  height: 100%;
+  height: 90%;
   background-color: #1b1a1a;
   text-align: center;
+  overflow-y:auto;
+  scrollbar-color: red;
+}
+
+.navdiv::-webkit-scrollbar {
+  background-color: rgb(138, 124, 124);
+  width: 5px;
+} 
+
+.navdiv::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
 
 .postnavdiv {
@@ -1171,7 +1211,6 @@ select::-ms-expand {
 
 
 .subsettingbtn {
-  position: absolute;
   bottom: 0;
   left: 0;
   background-color: #d8bebe9a;
@@ -1343,4 +1382,59 @@ select::-ms-expand {
 .returnjoinbtn:hover {
   opacity: 1;
   transform: scale(1.05);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width:431px) {
+  .bombpic {
+    width: 85%;
+  }
+
+  .p1div {
+    top:60%;
+    
+  }
+}
+
+
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+  #subbtn {
+    right: 0;
+    width: 15%;
+    height: fit-content;
+  }
+
+  .bombpic {
+    width: 65%;
+  }
 }
