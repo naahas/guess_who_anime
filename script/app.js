@@ -2,7 +2,6 @@
 var socket = io();
 socket.on('connect' , () => { console.log(socket.id)});
 
-
 var app = new Vue({
 
     el: '#app',

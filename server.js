@@ -370,7 +370,7 @@ io.on('connection' , (socket) => {
         socket.emit('displayCodeEvent' , rid);
         if(mapcodefull.includes(ioroomid)) {
             for (let [key, value] of mapcode) {
-                if(key!=iousername) socket.emit('joinNotificationEvent' , (key));
+                if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
             }
             
         }
@@ -482,9 +482,9 @@ io.on('connection' , (socket) => {
             mapgametimer.set(ioroomid , 1);
             io.to(ioroomid).emit('changeBombStepEvent' , 1);
             
-            // GAME TURN IS THE OTHER PLAYER'S
+            // CHANGE TURN
             for (let [key, value] of mapcode) {
-                if(key!=iousername) mapgameturn.set(ioroomid , key ); 
+                if(key!=iousername && mapcode.get(key) == ioroomid) mapgameturn.set(ioroomid , key ); 
             }
 
             socket.emit('playRightAudio');
@@ -494,9 +494,10 @@ io.on('connection' , (socket) => {
 
             var given2 = mapgamestack.get(ioroomid);
 
-            //0 -> answer already given => play lock sound else wrong answer => play error sound
+            //0 -> answer already given => play lock sound , else wrong answer => play error sound
             if(given2.includes(canswer)) socket.emit('answerErrorEvent' , 0);
             else socket.emit('answerErrorEvent' , 1);
+            
             
         }
 
@@ -760,6 +761,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "ICHIBI") { similar.push("SHUKAKU");}
                 if(answer == "SHUKAKU") { similar.push("ICHIBI");}
+
+                if(answer == "KILLER B") { similar.push("KILLER BEE");}
+                if(answer == "KILLER BEE") { similar.push("KILLER B");}
 
                 if(answer == "NIBI") { similar.push("MATATABI");}
                 if(answer == "MATATABI") { similar.push("NIBI");}
@@ -1255,6 +1259,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "KAMADO TANJIRO")  similar.push("TANJIRO KAMADO");
                 if(answer == "TANJIRO KAMADO")  similar.push("KAMADO TANJIRO");
 
+                if(answer == "GIYU TOMIOKA" || answer == "GIYU")  { similar.push("GIYUU TOMIOKA"); similar.push("GIYUU"); similar.push("TOMIOKA"); }
+                if(answer == "GIYUU TOMIOKA" || answer == "GIYUU")  { similar.push("GIYU TOMIOKA"); similar.push("GIYU"); similar.push("TOMIOKA"); }
+                if(answer == "TOMIOKA")  { similar.push("GIYU"); similar.push("GIYUU"); similar.push("GIYUU TOMIOKA"); similar.push("GIYU TOMIOKA"); }
             }
 
     

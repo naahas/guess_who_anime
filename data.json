@@ -223,6 +223,7 @@
                            "SAKON",
                            "UKON",
                            "KILLER B",
+                           "KILLER BEE",
                            "KIMIMARO",
                            "KINKAKU",
                            "KINSHIKI OTSUTSUKI",
@@ -376,6 +377,7 @@
                            "YUDACHI",
                            "YUGAO UZUKI",
                            "YUGAO",
+                           "MOMOSHIKI",
                            "YUKIMARU",
                            "YURA",
                            "ZABUZA MOMOCHI",
@@ -426,6 +428,7 @@
                            "JUUBI",
                            "MATATABI",
                            "ISOBU",
+                           "ASUMA",
                            "RETO",
                            "SHAMON",
                            "RASA",
@@ -687,7 +690,6 @@
                   "TAMBOURINE",
                   "CYMBAL",
                   "CHAMPA",
-                  "ASUMA",
                   "DRUM",
                   "TONINJINKA",
                   "MAI",
@@ -3764,11 +3766,12 @@
        
         ],
 
-
         "DemonSlayer" : [
 
          "KAGAYA UBUYASHIKI",
          "KAGAYA",
+         "ZENITSU AGATSUMA",
+         "ZENITSU",
          "AMANE UBUYASHIKI",
          "AMANE",
          "HINAKI UBUYASHIKI",
@@ -3783,6 +3786,9 @@
          "KANATA",
          "GIYU TOMIOKA",
          "GIYU",
+         "GIYUU",
+         "GIYUU TOMIOKA",
+         "TOMIOKA",
          "MITSURI KANROJI",
          "MITSURI",
          "OBANAI IGURO",
