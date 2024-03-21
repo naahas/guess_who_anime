@@ -145,6 +145,15 @@
 
             <p class="currentxt"> {{username}} </p>
 
+            <div @click="hideTool()" class="strikerdiv" title="Masquer">
+                  <span id="strikertxt" class="striker">  </span>
+                  <div class="tooltip">
+                    <span>Masquer</span>
+                  </div>
+            </div>
+
+          
+
 
             <div class="winnerdiv">
                 <div class="subwinnerdiv">
@@ -165,7 +174,7 @@
                 <div class="p1div">
                     <img class="lockpic" src="padlock5.png" alt="LOCK">
                     <input id="p1inputid" autocomplete="off" disabled v-model="canswer" @keyup.enter = "checkAnswer" autofocus type="text" class="p1input disablemode2">
-                    <button id="subbtn"> <img width="25" height="20" src="sub.png" alt="VALIDER"> </button>
+                    <button id="subbtn"> <img width="20" height="20" src="sub.png" alt="VALIDER"> </button>
                 </div>    
 
         
@@ -184,7 +193,7 @@
 
 
         <audio id="audio1">
-            <source src="timer.mp3" type="audio/mp3">
+            <!-- <source src="timer.mp3" type="audio/mp3"> -->
         </audio>
 
         <audio id="audio2">

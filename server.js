@@ -30,7 +30,8 @@ const io = new Server(server , {
 //TODO : multiplayer (>2 player)
 //TODO : RECORD CHARACTER COUNT 30s/1min
 //TODO : BOT SOLO GAME
-
+//TODO : dont reset bomb timer after replay
+//TODO : JJK FAIRY TAIL MHA HAIKYUU
 
 //session middleware
 var tsec = 1000;
@@ -81,6 +82,7 @@ var mapgametimer = new Map();
 var mapgamewinner = new Map();
 var mapgamedata = new Map();
 var mapgamestack = new Map();
+var mapgametotal = new Map();
 
 //path handle
 app.get('/' , function(req,res) {
@@ -143,6 +145,7 @@ app.post('/codeCheck' , function(req,res) {
     var codeUp = code.toUpperCase();
 
     var resnb = "non";
+
 
     for (let [key, value] of mapcode) {
         if(codeUp == value && !mapcodefull.includes(codeUp))  {
@@ -259,6 +262,9 @@ app.post('/confirmSetting' , function(req,res) {
     mapgametimer.set(req.session.rid , 1);
     mapgamestack.set(req.session.rid , []);
 
+    var total_chara = mapgamedata.get(req.session.rid).length;
+    mapgametotal.set(req.session.rid , total_chara);
+
     req.session.isplaying = true;
     req.session.replayed = false;
 
@@ -349,6 +355,7 @@ app.post('/exitGame' , function(req,res) {
         mapgamewinner.delete(req.session.rid);
         mapgamedata.delete(req.session.rid);
         mapgamestack.delete(req.session.rid);
+        mapgametotal.delete(req.session.rid);
     }
 
     req.session.created = null;
@@ -359,7 +366,7 @@ app.post('/exitGame' , function(req,res) {
 
 
 app.get('*' , function(req,res) {
-    res.send('pikine error');
+    res.sendFile(__dirname + '/error.html');
 });
 
 
@@ -447,6 +454,8 @@ io.on('connection' , (socket) => {
         socket.emit('displayPostRule' , time , theme);
         socket.emit('startSoundEvent');
 
+        socket.emit('displayStrikerEvent' , mapgamestack.get(ioroomid).length ,  mapgametotal.get(ioroomid));
+
         if(mapgameturn.get(ioroomid) == iousername) socket.emit('denableTurnInput' , 0)
         else socket.emit('denableTurnInput' , 1);
 
@@ -467,6 +476,7 @@ io.on('connection' , (socket) => {
         if((yy-xx) <= 1) {
             socket.emit('changeBombStepEvent' , 3);
         }     
+
 
 
     }
@@ -496,7 +506,6 @@ io.on('connection' , (socket) => {
 
 
     // CHECK ANSWER HERE 
-
     socket.on('sendAnswerEvent' , (answer) => {
         
         var canswer = answer.toUpperCase();
@@ -514,8 +523,10 @@ io.on('connection' , (socket) => {
             var givenfusion = similarChar.concat(given);
             mapgamestack.set(ioroomid , givenfusion);
 
+
             mapgametimer.set(ioroomid , 1);
             io.to(ioroomid).emit('changeBombStepEvent' , 1);
+            io.to(ioroomid).emit('displayStrikerEvent' ,  mapgamestack.get(ioroomid).length  , mapgametotal.get(ioroomid));
             
             // CHANGE TURN
             for (let [key, value] of mapcode) {
@@ -864,6 +875,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "ISSHO")  { similar.push("FUJITORA"); }
                 if(answer == "FUJITORA")  { similar.push("ISSHO"); }
+
+                if(answer == "ARAMAKI")  { similar.push("RYOKUGYU"); }
+                if(answer == "RYOKUGYU")  { similar.push("ARAMAKI"); }
 
                 if(answer == "JABRA")  { similar.push("JABURA"); }
                 if(answer == "JABURA")  { similar.push("JABRA"); }
@@ -1408,7 +1422,11 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "KANNA" || answer == 'KANNA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
                 if(answer == "CANA" || answer == 'CANA ALBERONA')  {similar.push("KANNA ALBERONA"); similar.push("KANNA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
                 if(answer == "KANA" || answer == 'KANA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANNA ALBERONA"); similar.push("KANNA");}
-                
+              
+                if(answer == "SHERRIA" || answer == 'KANNA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
+                if(answer == "CANA" || answer == 'CANA ALBERONA')  {similar.push("KANNA ALBERONA"); similar.push("KANNA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
+                if(answer == "KANA" || answer == 'KANA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANNA ALBERONA"); similar.push("KANNA");}
+
             }
 
     

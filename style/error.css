@@ -1,0 +1,62 @@
+
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+}
+
+body {
+	background: linear-gradient(#111, #333, #111);
+	background-repeat: no-repeat;
+	background-size: cover;
+	color: #eee;
+	position: relative;
+	font-family: 'Roboto', sans-serif;
+}
+
+.message {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	
+
+	
+	h2, h3 {
+		font-weight: 300;
+		color: #C8FFF4;
+	}
+	
+	h1 {
+		font-weight: 700;
+		color: #03DAC6;
+		font-size: 6em;
+	}
+	
+	
+	
+	h3 {
+		font-size: 2.5em;
+	}
+
+	
+	button {
+		background: transparent;
+		border: 2px solid #C8FFF4;
+		color: #C8FFF4;
+		padding: 5px 15px;
+		font-size: 1.25em;
+		transition: all 0.15s ease;
+		border-radius: 3px;
+	}
+	
+	button:hover {
+		background: #03DAC6;
+		border: 2px solid #03DAC6;
+		color: #111;
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+}

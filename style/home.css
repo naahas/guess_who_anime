@@ -624,6 +624,60 @@ body{
   }
 
 
+  .strikerdiv {
+    display: none;
+    position: absolute;
+    margin: auto;
+    bottom: 1em;
+    right: 0;
+    left: 0;
+    width: fit-content;
+    height: fit-content;
+    cursor:pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+
+
+
+/*tooltip */
+.tooltip {
+  visibility: hidden;
+  z-index: 1;
+  opacity: .40;
+  padding: 0px 20px;
+  margin: 0.2em;
+  background-color: rgba(39, 52, 52, 0.2);
+  color: aliceblue;
+  /* position: absolute; */
+  border-radius: 9px;
+  box-shadow: 0 0 3px rgba(56, 54, 54, 0.86);
+}
+
+
+.blurclass {
+  filter: blur(0.35em);
+}
+
+
+
+.strikerdiv:hover .tooltip{
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+  .striker {
+    width: fit-content;
+    height: fit-content;
+    color:aliceblue;
+    font-size: 0.9em;
+    text-shadow: rgb(25, 26, 28) 1px 0 10px; 
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+
+
   .p1div {
     display: none;
     position: absolute;
@@ -885,6 +939,20 @@ body{
 .disablemode2 {
   pointer-events: none;
   opacity: 0.5;
+}
+
+
+@media (max-width:431px) {
+  
+}
+
+
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+  .p1input {
+    width: 70%;
+    font-size: 1.2rem;
+    padding:1em 0.7em 0.7em 1em;
+  }
 }
 
 
@@ -1291,8 +1359,8 @@ select::-ms-expand {
 
 
 .imgop {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
 }
 
 
@@ -1306,6 +1374,10 @@ select::-ms-expand {
 
 
 @media (max-width:431px) {
+  .opponentdiv {
+    top:9%;
+  }
+
   .opponentdiv img {
     width: 60px;
     height: 60px;
@@ -1422,17 +1494,50 @@ select::-ms-expand {
     top:60%;
     
   }
+
+
+  @keyframes moveTurn {
+    0% {
+      transform: translateY(-3em);
+    }
+  
+    100% {
+      transform: translateY(7em);
+    }
+  }
+  
+  
+  @keyframes moveTurn2 {
+    0% {
+      transform: translateY(3em);
+    }
+  
+    100% {
+      transform: translateY(-7em);
+    }
+  }
+
+
 }
 
 
 @media screen and (orientation:landscape) and (max-width:950px)  { 
   #subbtn {
-    right: 0;
+    right: -2em;
     width: 15%;
     height: fit-content;
   }
 
-  .bombpic {
-    width: 65%;
+  .strikerdiv {
+    margin: none;
+    left:auto;
+    top:10%;
+    bottom:auto ;
+    width: fit-content;
+    height: fit-content;
+    cursor:pointer;
+    transition: all 0.3s ease-in-out;
   }
 }
+
+

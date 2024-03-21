@@ -16,7 +16,7 @@ var app = new Vue({
             currenttheme:'',
             opponentres:'',
             canswer:'',
-            gwinner: 'SLAYER'
+            gwinner: 'SLAYER',
             
             
         }
@@ -467,6 +467,10 @@ var app = new Vue({
             replayRequest();
         });
 
+
+        socket.on('displayStrikerEvent' , (wchara , totalchara) => {
+            editStriker(wchara , totalchara);
+        });
      
 
     },
@@ -870,7 +874,17 @@ function displayPostToHost() {
 }
 
 
+function editStriker(wchara , totalchara) {
 
+    var stxt = document.getElementById('strikertxt');
+    stxt.innerHTML = wchara + " ノ " + totalchara; 
+    $('.strikerdiv').show();
+}
+
+
+function hideTool() {
+    $('#strikertxt').addClass('blurclass');
+}
 
 
 var taudio = document.getElementById('audio1');
