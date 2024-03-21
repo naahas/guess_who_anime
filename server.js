@@ -246,6 +246,7 @@ app.post('/confirmSetting' , function(req,res) {
     if(theme == 'Attaque des Titans') mapgamedata.set(req.session.rid , profile.Character.Snk);
     if(theme == 'Bleach') mapgamedata.set(req.session.rid , profile.Character.Bleach);
     if(theme == 'Pokemon') mapgamedata.set(req.session.rid , profile.Character.Pokemon);
+    if(theme == 'Demon Slayer') mapgamedata.set(req.session.rid , profile.Character.DemonSlayer);
     if(theme == 'Kpop') mapgamedata.set(req.session.rid , profile.Character.Kpop);
     if(theme == 'Reborn') mapgamedata.set(req.session.rid , profile.Character.Reborn);
     if(theme == 'Death Note') mapgamedata.set(req.session.rid , profile.Character.DeathNote);
@@ -1369,7 +1370,7 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "AMANE MISA" || answer == "MISA")  similar.push("MISA MISA");
 
                 if(answer == "L" || answer == "L LAWLIET") similar.push("RYUSAKI"); 
-                if(answer == "RYUSAKI" || answer == "MISA")  {similar.push("L LAWLIET"); similar.push("L"); }
+                if(answer == "RYUSAKI")  {similar.push("L LAWLIET"); similar.push("L"); }
 
                 if(answer == "NATE RIVER" || answer == "NATE") {similar.push("NEAR"); similar.push("N"); }
                 if(answer == "NEAR")  {similar.push("NATE RIVER"); similar.push("NATE"); similar.push("N"); }
@@ -1382,9 +1383,32 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "QUILLSH WAMMY" || answer == "QUILLSH") similar.push("WATARI");
                 if(answer == "WATARI")  {similar.push("QUILLSH WAMMY"); similar.push("QUILLSH"); }
 
+                if(answer == "THIERRY MORELLO" || answer == "THIERRY") similar.push("AIBER");
+                if(answer == "AIBER")  {similar.push("THIERRY MORELLO"); similar.push("THIERRY"); }
+
                 if(answer == "ROI DE LA MORT")  similar.push('KING OF DEATH')
                 if(answer == "KING OF DEATH")  similar.push('ROI DE LA MORT')
 
+                if(answer == "SHIDOH")  similar.push('SIDOH')
+                if(answer == "SIDOH")  similar.push('SHIDOH')
+
+                if(answer == "MATT")  similar.push('MAIL')
+                if(answer == "MAIL")  similar.push('MATT')
+
+                if(answer == "MERRY KENWOOD" || answer == "MERRY")  similar.push('MARY')
+                if(answer == "MARY")  {similar.push("MERRY KENWOOD"); similar.push("MERRY"); }
+
+            }
+
+
+            if(theme == 'Fairy Tail') {
+                if(answer == "GREY" || answer == 'GREY FULLBUSTER')  {similar.push("GRAY FULLBUSTER"); similar.push("GRAY");}
+                if(answer == "GRAY" || answer == 'GRAY FULLBUSTER')  {similar.push("GREY FULLBUSTER"); similar.push("GREY");}
+
+                if(answer == "KANNA" || answer == 'KANNA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
+                if(answer == "CANA" || answer == 'CANA ALBERONA')  {similar.push("KANNA ALBERONA"); similar.push("KANNA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
+                if(answer == "KANA" || answer == 'KANA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANNA ALBERONA"); similar.push("KANNA");}
+                
             }
 
     
