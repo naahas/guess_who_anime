@@ -159,6 +159,7 @@ app.post('/codeCheck' , function(req,res) {
 });
 
 
+//HOST CLICK ON REPLAY
 app.post('/replay' , function(req,res) {
 
     req.session.isplaying = false;
@@ -496,6 +497,7 @@ io.on('connection' , (socket) => {
 
     if(ioreplay) {
         socket.broadcast.to(ioroomid).emit('replayNotifPlayerEvent');
+        socket.emit('keepSettingEvent' , mapgametheme.get(ioroomid) , mapgametime.get(ioroomid));
     }
 
 

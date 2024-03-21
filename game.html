@@ -100,7 +100,7 @@
                 <div class="subsetdiv rangediv">
                     <p >💣​ TEMPS BOMBE (sec)</p>
                     <hr>
-                    <input id="rangeid" class="secrange" type="range" value="5" min="3" max="9">
+                    <input id="rangeid" class="secrange" type="range" value="5" min="3" max="15">
                     <span id="secvalid" class="secval"> 5 </span>
                   </div>
 
@@ -110,7 +110,7 @@
                     <hr>
                     
                     <div class="themeop dropdown dropdown-dark">
-                        <select name="two" class="cselect dropdown-select">
+                        <select id="selectid" name="two" class="cselect dropdown-select">
                             <optgroup label = "Personnages">
                                 <option selected="selected" value="Naruto">Naruto</option>
                                 <option value="One Piece">One Piece</option>
@@ -147,9 +147,9 @@
 
             <div @click="hideTool()" class="strikerdiv" title="Masquer">
                   <span id="strikertxt" class="striker">  </span>
-                  <div class="tooltip">
+                  <!-- <div class="tooltip">
                     <span>Masquer</span>
-                  </div>
+                  </div> -->
             </div>
 
           

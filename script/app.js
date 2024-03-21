@@ -471,6 +471,11 @@ var app = new Vue({
         socket.on('displayStrikerEvent' , (wchara , totalchara) => {
             editStriker(wchara , totalchara);
         });
+
+
+        socket.on('keepSettingEvent' , (btheme , btime) => {
+            editSelect(btheme , btime);   
+        });
      
 
     },
@@ -882,8 +887,26 @@ function editStriker(wchara , totalchara) {
 }
 
 
+function editSelect(btheme , btime) {
+    var ss = document.getElementById('selectid');
+    ss.value = btheme;
+
+    var ii = document.getElementById('rangeid');
+    ii.value = btime;
+
+    var iitxt = document.getElementById('secvalid');
+    iitxt.innerHTML = btime;
+
+
+}
+
+
 function hideTool() {
-    $('#strikertxt').addClass('blurclass');
+
+    var hasblur = $('#strikertxt').hasClass('blurclass');
+    if(hasblur) $('#strikertxt').removeClass('blurclass');
+    else $('#strikertxt').addClass('blurclass');
+    
 }
 
 
