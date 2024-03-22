@@ -67,6 +67,7 @@ app.use(express.static(__dirname + "/script/"));
 app.use(express.static(__dirname + "/style/"));
 app.use(express.static(__dirname + "/img/"));
 app.use(express.static(__dirname + "/sound/"));
+app.use(express.static(__dirname + "/icon/"));
 
 
 
@@ -1466,6 +1467,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
 
             if(theme == 'Fairy Tail') {
+                if(answer == "LAXUS DREYAR" || answer == 'LAXUS')  {similar.push("LUXUS"); similar.push("LUXUS DREYAR");}
+                if(answer == "LUXUS" || answer == 'LUXUS DREYAR')  {similar.push("LAXUS DREYAR"); similar.push("LAXUS");}
+
                 if(answer == "GREY" || answer == 'GREY FULLBUSTER')  {similar.push("GRAY FULLBUSTER"); similar.push("GRAY");}
                 if(answer == "GRAY" || answer == 'GRAY FULLBUSTER')  {similar.push("GREY FULLBUSTER"); similar.push("GREY");}
 
