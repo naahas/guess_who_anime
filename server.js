@@ -25,13 +25,10 @@ const io = new Server(server , {
 
 
 
-//TODO : striker point (count character)
-//TODO : flame animation
 //TODO : multiplayer (>2 player)
 //TODO : RECORD CHARACTER COUNT 30s/1min
 //TODO : BOT SOLO GAME
-//TODO : dont reset bomb timer after replay
-//TODO : JJK FAIRY TAIL MHA HAIKYUU
+//TODO : JJK MHA HAIKYUU
 
 //session middleware
 var tsec = 1000;
@@ -87,7 +84,6 @@ var mapgametotal = new Map();
 //path handle
 app.get('/' , function(req,res) {
 
-    
     if(req.session.ingame == true) {
         res.redirect('/game');
     } else {
@@ -178,7 +174,6 @@ app.post('/replayPlayer' , function(req,res) {
     req.session.isplaying = null;
     req.session.endgame = null;
 
-    console.log('loll')
 
     res.end();
 });
@@ -254,6 +249,7 @@ app.post('/confirmSetting' , function(req,res) {
     if(theme == 'Kpop') mapgamedata.set(req.session.rid , profile.Character.Kpop);
     if(theme == 'Reborn') mapgamedata.set(req.session.rid , profile.Character.Reborn);
     if(theme == 'Death Note') mapgamedata.set(req.session.rid , profile.Character.DeathNote);
+    if(theme == 'Fairy Tail') mapgamedata.set(req.session.rid , profile.Character.FairyTail);
 
     mapgamedata.set(req.session.rid ,  mapgamedata.get(req.session.rid).map(chara => chara.toUpperCase()));
 
@@ -277,8 +273,24 @@ app.post('/confirmSetting' , function(req,res) {
 });
 
 
-app.post('/kickPlayer' , function(req,res) {
 
+app.post('/playSolo' , function(req,res) {
+    req.session.created = true;
+    req.session.ingame = true;
+    req.session.solop = true;
+    
+    var rid = generateRoomID(5);
+    req.session.rid = rid;
+
+    mapcode.set(req.session.username , rid);
+    mapcode.set('bot [' + rid + ']', rid);
+
+    res.end();
+});
+
+
+
+app.post('/kickPlayer' , function(req,res) {
     req.session.rid = null;
     req.session.joined = false;
     res.end();
@@ -287,6 +299,7 @@ app.post('/kickPlayer' , function(req,res) {
 
 app.post('/returnBackJoin' , function(req,res) {
     req.session.joined = false;
+    req.session.solop = false;
 
     if(req.session.rid != null) {
         mapcode.delete(req.session.username);
@@ -304,6 +317,7 @@ app.post('/returnBackJoin' , function(req,res) {
 app.post('/returnBackCreate' , function(req,res) {
     mapcode.delete(req.session.username);
     req.session.created = false;
+    req.session.solop = false;
     var tmpid = req.session.rid;
     req.session.rid = null;
 
@@ -331,11 +345,18 @@ app.post('/endGame' , function(req,res) {
     req.session.endgame = true;
 
     var winner = req.body.val;
-    console.log("winner : " , winner)
+    // console.log("winner : " , winner)
     mapgamewinner.set(req.session.rid , winner);
 
     res.end();
 });
+
+
+app.post('/editUsername' , function(req,res) {
+    req.session.destroy();
+
+    res.end();
+}); 
 
 
 
@@ -345,8 +366,13 @@ app.post('/exitGame' , function(req,res) {
     req.session.ingame = null;
     req.session.isplaying = false;
     req.session.joined = null;
+    req.session.solop = null;
     
     if(req.session.created) {
+        
+        for (let [key, value] of mapcode) {
+            if(mapcode.get(key) == req.session.rid) mapcode.delete(key);
+        }
         mapcode.delete(req.session.username);
         mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
         mapgametime.delete(req.session.rid)
@@ -392,6 +418,7 @@ io.on('connection' , (socket) => {
     const ioplaying = socket.request.session.isplaying;
     const ioendgame = socket.request.session.endgame;
     const ioreplay = socket.request.session.replayed;
+    const iosolo = socket.request.session.solop;
 
 
     socket.emit('showSettingEvent' , iousername);
@@ -434,9 +461,9 @@ io.on('connection' , (socket) => {
     }
 
     if(ioingame == true) {
-        var oplayer = 'undefined';
+        var oplayer = 'SLAYERBOT';
             for (let [key, value] of mapcode) {
-                if(key!=iousername) oplayer = key;
+                if(key!=iousername && mapcode.get(key) == ioroomid) oplayer = key;
             }
         socket.emit('displayOpponent' , oplayer);
     }
@@ -508,8 +535,10 @@ io.on('connection' , (socket) => {
 
 
     // CHECK ANSWER HERE 
-    socket.on('sendAnswerEvent' , (answer) => {
+    socket.on('sendAnswerEvent' , (answer , stat) => {
+
         
+       
         var canswer = answer.toUpperCase();
         var ctheme = mapgametheme.get(ioroomid);
         var banktab = profile.Character.Naruto;
@@ -518,7 +547,6 @@ io.on('connection' , (socket) => {
        
         //IF ANSWER IS RIGHT
         if(banktab.includes(canswer)) {
-
             var similarChar = removeJsonAnswer(ctheme , canswer , ioroomid , banktab);
 
             var given = mapgamestack.get(ioroomid);
@@ -531,11 +559,31 @@ io.on('connection' , (socket) => {
             io.to(ioroomid).emit('displayStrikerEvent' ,  mapgamestack.get(ioroomid).length  , mapgametotal.get(ioroomid));
             
             // CHANGE TURN
-            for (let [key, value] of mapcode) {
-                if(key!=iousername && mapcode.get(key) == ioroomid) mapgameturn.set(ioroomid , key ); 
+            if(stat == 0) {
+                for (let [key, value] of mapcode) {
+                    if(key!=iousername && mapcode.get(key) == ioroomid) {
+                        mapgameturn.set(ioroomid , key ); 
+                    }
+                }
+                //AFTER BOT ANSWER -> SET TURN TO HOST
+            } else {
+                mapgameturn.set(ioroomid , iousername );
             }
 
             socket.emit('playRightAudio');
+
+
+            //SET BOT ANSWER
+            if(iosolo == true && stat != 1) {
+                var rnb =  Math.floor(Math.random() * mapgamedata.get(ioroomid).length)
+                var relem = mapgamedata.get(ioroomid)[rnb];
+
+                socket.emit('setBotAnswerEvent' , relem);
+            }
+
+
+
+
 
             // WRONG ANSWER
         } else {
@@ -581,7 +629,7 @@ io.on('connection' , (socket) => {
 
             //GAME IS OVER
             if(x>=y) {
-                console.log('BOOM')
+                // console.log('BOOM')
                 clearInterval(btimer);
                 // mapgameturn.delete(req.session.rid);
 
@@ -589,7 +637,7 @@ io.on('connection' , (socket) => {
                 
                 var player_turn = mapgameturn.get(ioroomid);
                 for (let [key, value] of mapcode) {
-                    if(key!=player_turn) winner = key; 
+                    if(key!=player_turn && mapcode.get(key) == ioroomid) winner = key; 
                 }
 
                 io.to(ioroomid).emit('endGameEvent' , winner , iousername + " (vous)");
@@ -610,7 +658,7 @@ io.on('connection' , (socket) => {
     socket.on('kickPlayerEvent' , () => {
         socket.emit('notifHostCancelFromPlayer');
         for (let [key, value] of mapcode) {
-            if(key!=iousername) mapcode.delete(key);
+            if(key!=iousername && mapcode.get(key) == ioroomid) mapcode.delete(key);
             mapcodefull = mapcodefull.filter(item => item!=ioroomid);
             socket.broadcast.to(ioroomid).emit('notifKickPlayerEvent');
         }
@@ -1425,9 +1473,54 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "CANA" || answer == 'CANA ALBERONA')  {similar.push("KANNA ALBERONA"); similar.push("KANNA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
                 if(answer == "KANA" || answer == 'KANA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANNA ALBERONA"); similar.push("KANNA");}
               
-                if(answer == "SHERRIA" || answer == 'KANNA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
-                if(answer == "CANA" || answer == 'CANA ALBERONA')  {similar.push("KANNA ALBERONA"); similar.push("KANNA"); similar.push("KANA ALBERONA"); similar.push("KANA");}
-                if(answer == "KANA" || answer == 'KANA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANNA ALBERONA"); similar.push("KANNA");}
+                if(answer == "SHERRIA" || answer == 'SHERRIA BLENDY')  {similar.push("CHERRYA BLENDY"); similar.push("CHERRYA"); similar.push("SHERIA");}
+                if(answer == "CHERRYA" || answer == 'CHERRYA Blendy')  {similar.push("SHERRIA Blendy"); similar.push("SHERRIA"); similar.push("SHERIA");}
+                if(answer == "SHERIA")  {similar.push("SHERRIA BLENDY"); similar.push("SHERRIA"); similar.push("CHERRYA BLENDY"); similar.push("CHERRYA");}
+
+                if(answer == "BIXROW")  similar.push('BIXLOW')
+                if(answer == "BIXLOW")  similar.push('BIXROW')
+
+                if(answer == "CHARLES")  similar.push('CARLA')
+                if(answer == "CARLA")  similar.push('CHARLES')
+
+                if(answer == "ERIK")  similar.push('COBRA')
+                if(answer == "COBRA")  similar.push('ERIK')
+
+                if(answer == "DORANBOLT")  { similar.push('MEST');  similar.push('MEST GRYDER') }
+                if(answer == "MEST"  || answer == "MEST GRYDER")  similar.push('DORANBOLT')
+
+                if(answer == "HISUI")  { similar.push('JADE');  similar.push('JADE FIORE') }
+                if(answer == "JADE"  || answer == "JADE FIORE")  similar.push('HISUI')
+
+                if(answer == "PRECHT")  similar.push('HADES')
+                if(answer == "HADES")  similar.push('PRECHT')
+
+                if(answer == "SAWYER")  similar.push('RACER')
+                if(answer == "RACER")  similar.push('SAWYER')
+
+                if(answer == "ANGEL")  similar.push('SORANO')
+                if(answer == "SORANO")  similar.push('ANGEL')
+
+                if(answer == "MAKAROV" || answer == 'MAKAROV DREYAR')  {similar.push("MAKAROF");}
+                if(answer == "MAKAROF")  {similar.push("MAKAROV DREYAR"); similar.push("MAKAROV");}
+
+                if(answer == "LISANNA STRAUSS" || answer == 'LISANNA')  {similar.push("LISANA"); similar.push("LISANA STRAUSS");}
+                if(answer == "LISANA STRAUSS" || answer == 'LISANA')  {similar.push("LISANNA"); similar.push("LISANNA STRAUSS");}
+
+                if(answer == "EILEEN" || answer == 'EILEEN BELSERION')  {similar.push("IRENE"); similar.push("IRENE BELSERION");}
+                if(answer == "IRENE" || answer == 'IRENE BELSERION')  {similar.push("EILEEN"); similar.push("EILEEN BELSERION");}
+
+                if(answer == "LARCADE" || answer == 'LARCADE DRAGNEEL')  {similar.push("RAHKEID");}
+                if(answer == "RAHKEID")  {similar.push("LARCADE"); similar.push("LARCADE DRAGNEEL");}
+
+                if(answer == "NATSU" || answer == 'NATSU DRAGNEEL')  {similar.push("E.N.D"); similar.push("END"); answer == 'NATSU DRAGNIR'}
+                if(answer == "E.N.D")  {similar.push("NATSU"); similar.push("NATSU DRAGNEEL"); similar.push("END");}
+                if(answer == "END")  {similar.push("NATSU"); similar.push("NATSU DRAGNEEL"); similar.push("E.N.D");}
+
+
+                
+
+
 
             }
 

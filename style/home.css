@@ -168,17 +168,49 @@ body{
 }
 
 
+.userdiv {
+  display: none;
+  position: absolute;
+  top:0;
+  right: 0;
+  margin: 0.6em;
+  border-radius: 50%;
+}
+
+
+.userdivhome {
+  cursor:pointer;
+  background-color: rgb(110, 129, 129 ,0.3);
+}
+
+
+.userdivhome:hover {
+  color:#48174f;
+  opacity: 0.5;
+}
+
+
+
+
+.userdiv img {
+  background-color: rgb(110, 129, 129 , 0.6);
+  border-radius: 50%;
+  width: 10%;
+}
+
+
+
+.currenthometxt {
+  
+}
+
 .currentxt {
     display: none;
-    position: absolute;
     font-size: 1em;
     font-family: Georgia, 'Times New Roman', Times, serif;
     color:aliceblue;
-    margin: 0.7em;
     letter-spacing: 0.2em;
     font-weight: 600;
-    top:0;
-    right: 0;
     text-shadow: .0.7em .1em 0 hsl(200, 51%, 58%);
 }
 
@@ -381,7 +413,7 @@ body{
     border: 0px;
     cursor: pointer;
     display: inline-block;
-    background-color:#5b215b96;
+    background-color:#00000096;
     color: rgb(255, 239, 239);
     border-radius: 4px;
     font-weight: bold;
@@ -545,7 +577,6 @@ body{
 
 
   .backigbtn {
-    display: none;
     position: absolute;
     bottom: 0;
     left:0;

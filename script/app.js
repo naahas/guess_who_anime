@@ -69,6 +69,29 @@ var app = new Vue({
         },
 
 
+        playSolo: function() {
+            var body = {
+                val: 'solo'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/playSolo',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.reload();
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+
+
+        },
+
+
         submitUsername: function() {
             var body = {
                 val: this.username
@@ -165,6 +188,27 @@ var app = new Vue({
         },
 
 
+        editUsername: function() {
+            var body = {
+                val: 'edit'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/editUsername',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.reload();
+            })
+            .catch(function (err) {
+                
+            });
+        },
+
+
         returnBack: function(backval) {
 
             if(backval == 'join')  {
@@ -219,7 +263,8 @@ var app = new Vue({
             this.canswer = '';
             $('.p1input').val('');
 
-            socket.emit('sendAnswerEvent' , player_answer);
+            //0 -> emit by player , 1-> emit by bot
+            socket.emit('sendAnswerEvent' , player_answer , 0);
         },
 
 
@@ -289,6 +334,7 @@ var app = new Vue({
         
         socket.on('displayUsernameEvent' , (iouser) => {
             this.username = iouser + " (vous)";
+            $('.userdiv').show();
             $('.currentxt').show();
         });
 
@@ -475,6 +521,11 @@ var app = new Vue({
 
         socket.on('keepSettingEvent' , (btheme , btime) => {
             editSelect(btheme , btime);   
+        });
+
+
+        socket.on('setBotAnswerEvent' , (botanswer) => {
+            editBotAnswer(botanswer);
         });
      
 
@@ -680,6 +731,7 @@ function editAnswerError2() {
      $('#p1inputid').focus();
 
 }
+
 
 
 
@@ -908,6 +960,20 @@ function hideTool() {
     else $('#strikertxt').addClass('blurclass');
     
 }
+
+
+
+function editBotAnswer(botanswer) {
+    
+    $('.p2input').val(botanswer);
+    setTimeout(() => {
+        socket.emit('sendAnswerEvent' , botanswer , 1);
+        $('.p2input').val('');
+    }, 500);
+    
+    
+}
+
 
 
 var taudio = document.getElementById('audio1');

@@ -39,7 +39,13 @@
             
 
             <img id="mainback" src="op2.jpg" amt="backpic">
-            <p class="currentxt"> {{username}} </p>
+
+
+
+            <div class="userdiv userdivhome" @click="editUsername()">
+                <img src="edit2.png" alt="edit"> &nbsp; &nbsp;
+                <span class="currenthometxt currentxt"> {{username}} </span>
+            </div>
 
             <div class="btndiv">
                 
@@ -54,6 +60,7 @@
             </div>
 
             <div class="cjdiv">
+                <button class="pbtn" @click="playSolo()" > JOUER SOLO</button> <br>
                 <button class="pbtn" @click="createLobby()" >CRÉER SALON</button> <br>
                 <button class="pbtn" @click="joinLobby()">REJOINDRE SALON</button>
             </div>

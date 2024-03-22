@@ -100,7 +100,7 @@
                 <div class="subsetdiv rangediv">
                     <p >💣​ TEMPS BOMBE (sec)</p>
                     <hr>
-                    <input id="rangeid" class="secrange" type="range" value="5" min="3" max="15">
+                    <input id="rangeid" class="secrange" type="range" value="5" min="3" max="300">
                     <span id="secvalid" class="secval"> 5 </span>
                   </div>
 
@@ -143,7 +143,9 @@
 
             </div>
 
-            <p class="currentxt"> {{username}} </p>
+            <div class="userdiv">
+                <span class="currentxt"> {{username}} </span>
+            </div>
 
             <div @click="hideTool()" class="strikerdiv" title="Masquer">
                   <span id="strikertxt" class="striker">  </span>
