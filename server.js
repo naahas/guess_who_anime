@@ -26,9 +26,10 @@ const io = new Server(server , {
 
 
 //TODO : multiplayer (>2 player)
-//TODO : RECORD CHARACTER COUNT 30s/1min
-//TODO : BOT SOLO GAME
-//TODO : JJK MHA HAIKYUU
+//TODO : MHA HAIKYUU
+//TODO : ENABLE BOMB SOUND
+//TODO : add A uppercase to bombanime
+//TODO : enable bomb movement
 
 //session middleware
 var tsec = 1000;
@@ -81,6 +82,8 @@ var mapgamewinner = new Map();
 var mapgamedata = new Map();
 var mapgamestack = new Map();
 var mapgametotal = new Map();
+var mapgamenbp = new Map();
+var mapgamepid = new Map();
 
 //path handle
 app.get('/' , function(req,res) {
@@ -95,9 +98,10 @@ app.get('/' , function(req,res) {
             res.sendFile(__dirname + "/join.html");
         } else res.sendFile(__dirname + "/home.html");
 
-
     }
 
+    
+   
  
 });
 
@@ -121,6 +125,7 @@ app.post('/create' , function(req,res) {
 
     var roomID = generateRoomID(5);
     mapcode.set(req.session.username , roomID);
+    mapgamepid.set(req.session.username , 1);
     req.session.rid = roomID;
 
     res.end();
@@ -180,6 +185,14 @@ app.post('/replayPlayer' , function(req,res) {
 });
 
 
+app.post('/resetID' , function(req,res)  {
+
+    req.session.rid = null;
+    req.session.back = null;
+    res.end();
+});
+
+
 app.post('/game' , function(req,res) {
 
     io.once('connection' , (socket) => {
@@ -187,8 +200,18 @@ app.post('/game' , function(req,res) {
     });  
 
 
+    var nbp = 0;
+    for (let [key, value] of mapcode) {
+        if(mapcode.get(key) == req.session.rid) nbp++;
+    }
+
+
+    mapgametheme.set(req.session.rid , 'Naruto');
+    mapgametime.set(req.session.rid , 5);
+    mapgamenbp.set(req.session.rid , nbp);
 
     req.session.ingame = true;
+
     res.redirect('/game');
 
     
@@ -230,8 +253,6 @@ app.post('/ipstatus' , function(req,res) {
     res.end();
 });
 
-var arr1 = [];
-var arr2 = [];
 
 
 // GAME START AFTER CONFIRM SETTING
@@ -251,6 +272,7 @@ app.post('/confirmSetting' , function(req,res) {
     if(theme == 'Reborn') mapgamedata.set(req.session.rid , profile.Character.Reborn);
     if(theme == 'Death Note') mapgamedata.set(req.session.rid , profile.Character.DeathNote);
     if(theme == 'Fairy Tail') mapgamedata.set(req.session.rid , profile.Character.FairyTail);
+    if(theme == 'Jujutsu Kaisen') mapgamedata.set(req.session.rid , profile.Character.JujutsuKaisen);
 
     mapgamedata.set(req.session.rid ,  mapgamedata.get(req.session.rid).map(chara => chara.toUpperCase()));
 
@@ -270,6 +292,7 @@ app.post('/confirmSetting' , function(req,res) {
         socket.to(req.session.rid).emit('makePlayerPlayingEvent');
     });  
 
+
     res.end();
 });
 
@@ -285,6 +308,8 @@ app.post('/playSolo' , function(req,res) {
 
     mapcode.set(req.session.username , rid);
     mapcode.set('bot [' + rid + ']', rid);
+    mapgametheme.set(req.session.rid , 'Naruto');
+    mapgametime.set(req.session.rid , 5)
 
     res.end();
 });
@@ -298,17 +323,17 @@ app.post('/kickPlayer' , function(req,res) {
 });
 
 
-app.post('/returnBackJoin' , function(req,res) {
+app.post('/returnBackJoin' , async function(req,res) {
     req.session.joined = false;
     req.session.solop = false;
+    req.session.back = true;
 
-    if(req.session.rid != null) {
-        mapcode.delete(req.session.username);
-        mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
-        io.once('connection' , (socket) => {
-            socket.to(req.session.rid).emit('notifHostCancelFromPlayer');
-        });  
-    }
+    mapcode.delete(req.session.username);
+    mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
+
+
+
+    
 
     res.end();
 });
@@ -386,6 +411,7 @@ app.post('/exitGame' , function(req,res) {
         mapgametotal.delete(req.session.rid);
     }
 
+    mapcode.delete(req.session.username);
     req.session.created = null;
     req.session.rid = null;
     res.redirect('/');
@@ -420,6 +446,7 @@ io.on('connection' , (socket) => {
     const ioendgame = socket.request.session.endgame;
     const ioreplay = socket.request.session.replayed;
     const iosolo = socket.request.session.solop;
+    const ioback = socket.request.session.back;
 
 
     socket.emit('showSettingEvent' , iousername);
@@ -430,27 +457,38 @@ io.on('connection' , (socket) => {
 
     //show raher username input or create/join button , and keep screen notified when there is a player 
     if(iocreate) {
-     
-        var rid = mapcode.get(iousername);
         socket.join(ioroomid);
-        socket.emit('displayCodeEvent' , rid);
-        if(mapcodefull.includes(ioroomid)) {
-            for (let [key, value] of mapcode) {
-                if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
-            }
-            
+        socket.emit('displayCodeEvent' , ioroomid);
+        
+        var nbplayer = 0;
+        for (let [key, value] of mapcode) {
+            if(key!=iousername && mapcode.get(key) == ioroomid) nbplayer++;
+            // if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
         }
+
+        socket.emit('joinCountNotificationEvent' , (nbplayer));   
+            
     }
+
+    
 
 
     if(iojoin == true && ioroomid) {
         if(io.sockets.adapter.rooms.get(ioroomid)) {
             var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
-            if(roomsize == 1) mapcodefull.push(ioroomid);
-            if(roomsize<=1) {
+            if(roomsize == 9) mapcodefull.push(ioroomid);
+            if(roomsize<=9) {
                 mapcode.set(iousername , ioroomid);
                 socket.join(ioroomid);
-                socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , iousername);
+
+                var nbplayer = 0;
+                for (let [key, value] of mapcode) {
+                    if(key!=iousername && mapcode.get(key) == ioroomid) nbplayer++;
+                    // if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
+                }
+
+         
+                socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , nbplayer);
             }
         }
 
@@ -463,10 +501,15 @@ io.on('connection' , (socket) => {
 
     if(ioingame == true) {
         var oplayer = 'SLAYERBOT';
+        var nbplayer = 0;
+        var playertab = [];
             for (let [key, value] of mapcode) {
-                if(key!=iousername && mapcode.get(key) == ioroomid) oplayer = key;
+                if(mapcode.get(key) == ioroomid) nbplayer++;
+                playertab.push(key);
             }
-        socket.emit('displayOpponent' , oplayer);
+
+        if(ioplaying) socket.emit('displayOpponents' , playertab , iousername );
+        
     }
 
 
@@ -485,8 +528,22 @@ io.on('connection' , (socket) => {
 
         socket.emit('displayStrikerEvent' , mapgamestack.get(ioroomid).length ,  mapgametotal.get(ioroomid));
 
+
+        //ENABLE OR DISABLE TURN FOR THE CURRENT SOCKET ACCORDING TO MAPGAMETURN AFTER LOAD AND RELOAD
         if(mapgameturn.get(ioroomid) == iousername) socket.emit('denableTurnInput' , 0)
         else socket.emit('denableTurnInput' , 1);
+
+        //SHOW TURNPIC TO PLAYERS
+        var index_player = 0;
+        for (let [key, value] of mapcode) {
+            if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
+                
+                break;
+            } 
+            index_player++; 
+        }
+
+        socket.emit('displayTurnPicEvent' , index_player);
 
 
         //CHANGE BOMB PIC STEP AFTER RELOAD
@@ -529,17 +586,31 @@ io.on('connection' , (socket) => {
     }
 
 
+    if(ioback) {
+        socket.to(ioroomid).emit('notifHostCancelFromPlayer');
+        socket.emit('resetid');
+    }
+
+
 
     socket.on('showTypingEvent' , (msg) => {
-        socket.broadcast.to(ioroomid).emit('showTypingOpponentEvent' , msg)
+
+        var index_player = 0;
+        for (let [key, value] of mapcode) {
+            if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
+                
+                break;
+            } 
+            index_player++; 
+        }
+        socket.broadcast.to(ioroomid).emit('showTypingOpponentEvent' , msg  , index_player)
     });
 
 
     // CHECK ANSWER HERE 
     socket.on('sendAnswerEvent' , (answer , stat) => {
 
-        
-       
+
         var canswer = answer.toUpperCase();
         var ctheme = mapgametheme.get(ioroomid);
         var banktab = profile.Character.Naruto;
@@ -559,22 +630,77 @@ io.on('connection' , (socket) => {
             io.to(ioroomid).emit('changeBombStepEvent' , 1);
             io.to(ioroomid).emit('displayStrikerEvent' ,  mapgamestack.get(ioroomid).length  , mapgametotal.get(ioroomid));
             
+            
+            
+            
             // CHANGE TURN
             if(stat == 0) {
+                var turn_array = [];
+
+                //FIRST LOOP TO PUSH PLAYERS TO TURNARRAY
                 for (let [key, value] of mapcode) {
-                    if(key!=iousername && mapcode.get(key) == ioroomid) {
-                        mapgameturn.set(ioroomid , key ); 
-                    }
+                    if(mapcode.get(key) == ioroomid) turn_array.push(key);
                 }
+
+                var index_player = 0;
+                for (let [key, value] of mapcode) {
+                    if(key == iousername && mapcode.get(key) == ioroomid) {
+                        
+                        break;
+                    } 
+                    index_player++; 
+                }
+
+
+                var next_index_player = index_player + 1;
+                if(next_index_player >= turn_array.length) next_index_player = 0;
+
+                var next_player = turn_array[next_index_player];
+                
+                /////////////////////////////// JUST FOR RESETINPUT
+                var index_player2 = 0;
+                for (let [key, value] of mapcode) {
+                    if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
+                        
+                        break;
+                    } 
+                    index_player2++; 
+                }
+
+                socket.broadcast.to(ioroomid).emit('resetInputForOpponent' , index_player2);
+                /////////////////////////////// JUST FOR RESETINPUT
+
+                mapgameturn.set(ioroomid , next_player);
+        
+                
+                var index_player = 0;
+                for (let [key, value] of mapcode) {
+                    if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
+                        
+                        break;
+                    } 
+                    index_player++; 
+                }
+
+
+                io.to(ioroomid).emit('displayTurnPicEvent' , index_player);
+                socket.broadcast.to(ioroomid).emit('resetInputForOpponent' , index_player);
+                
+
                 //AFTER BOT ANSWER -> SET TURN TO HOST
             } else {
-                mapgameturn.set(ioroomid , iousername );
+                mapgameturn.set(ioroomid , iousername);
+                io.to(ioroomid).emit('displayTurnPicEvent' , 0);
             }
 
-            socket.emit('playRightAudio');
 
 
-            //SET BOT ANSWER
+            //0 -> rightanswer by player , 1 -> rightanswer by bot
+            if(stat == 0) socket.emit('playRightAudio');
+            else socket.emit('playRightAudio2');
+
+
+            //SET BOT ANSWER AFTER PLAYER ANSWER
             if(iosolo == true && stat != 1) {
                 var rnb =  Math.floor(Math.random() * mapgamedata.get(ioroomid).length)
                 var relem = mapgamedata.get(ioroomid)[rnb];
@@ -584,28 +710,38 @@ io.on('connection' , (socket) => {
 
 
 
-
-
             // WRONG ANSWER
         } else {
 
             var given2 = mapgamestack.get(ioroomid);
 
+            var index_player = 0;
+            for (let [key, value] of mapcode) {
+                if(key == iousername && mapcode.get(key) == ioroomid) {
+                    
+                    break;
+                } 
+                index_player++; 
+            }
+            
+            
+            
+
             //0 -> answer already given => play lock sound , else wrong answer => play error sound
-            if(given2.includes(canswer)) socket.emit('answerErrorEvent' , 0);
-            else socket.emit('answerErrorEvent' , 1);
+            if(given2.includes(canswer)) socket.emit('answerErrorEvent' , 0 , index_player);
+            else socket.emit('answerErrorEvent' , 1 , index_player );
             
             
         }
 
-        
-        if(mapgameturn.get(ioroomid) == iousername) {
-            socket.emit('denableTurnInput' , 0);
-            socket.broadcast.to(ioroomid).emit('denableTurnInput' , 1);
-         }else {
+        // enable for next player and disable for current player
+        if(mapgameturn.get(ioroomid) != iousername) {
             socket.emit('denableTurnInput' , 1);
-            socket.broadcast.to(ioroomid).emit('denableTurnInput' , 0);
-         } 
+            socket.broadcast.to(ioroomid).emit('denableTurnInput2' , mapgameturn.get(ioroomid));
+        } else {
+            //AFTER BOT RIGHT ANSWER
+            socket.emit('denableTurnInput' , 0);
+        }
 
     });
 
@@ -640,6 +776,8 @@ io.on('connection' , (socket) => {
                 for (let [key, value] of mapcode) {
                     if(key!=player_turn && mapcode.get(key) == ioroomid) winner = key; 
                 }
+                
+                
 
                 io.to(ioroomid).emit('endGameEvent' , winner , iousername + " (vous)");
                
@@ -1521,6 +1659,29 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "E.N.D")  {similar.push("NATSU"); similar.push("NATSU DRAGNEEL"); similar.push("END");}
                 if(answer == "END")  {similar.push("NATSU"); similar.push("NATSU DRAGNEEL"); similar.push("E.N.D");}
 
+
+                
+
+
+
+            }
+
+            if(theme == 'Jujutsu Kaisen') {
+                if(answer == "YUJI ITADORI" || answer == 'YUJI')  {similar.push("ITADORI");}
+                if(answer == "ITADORI" || answer == 'ITADORI YUJI')  {similar.push("YUJI");}
+
+                if(answer == "TOGE")  {similar.push("INUMAKI");}
+                if(answer == "INUMAKI")  {similar.push("TOGE");}
+
+                if(answer == "KAMO NORITOSHI")  {similar.push("NORITOSHI KAMO");}
+                if(answer == "NORITOSHI KAMO")  {similar.push("KAMO NORITOSHI");}
+
+                if(answer == "TAKADA CHAN")  {similar.push("TAKADA-CHAN");}
+                if(answer == "TAKADA-CHAN")  {similar.push("TAKADA CHAN");}
+
+                if(answer == "RIKO AMANAI" || answer == 'RIKO')  {similar.push("AMANAI");}
+                if(answer == "AMANAI")  {similar.push("RIKO");}
+                
 
                 
 

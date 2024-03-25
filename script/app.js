@@ -10,13 +10,15 @@ var app = new Vue({
         return {
             testo:"pkm",
             username:'',
+            usernamedisplay: '',
             roomid: '',
-            opponent:'',
+            opponents:'',
             bombtime:'',
             currenttheme:'',
             opponentres:'',
             canswer:'',
             gwinner: 'SLAYER',
+            nbplayer: 0
             
             
         }
@@ -258,13 +260,12 @@ var app = new Vue({
         },
 
 
-        checkAnswer: function() {
-            var player_answer = this.canswer;
-            this.canswer = '';
-            $('.p1input').val('');
+        checkAnswer: function(elem) {
+            this.canswer = elem.value;
+            elem.value = '';
 
             //0 -> emit by player , 1-> emit by bot
-            socket.emit('sendAnswerEvent' , player_answer , 0);
+            socket.emit('sendAnswerEvent' , this.canswer , 0);
         },
 
 
@@ -333,7 +334,8 @@ var app = new Vue({
         });
         
         socket.on('displayUsernameEvent' , (iouser) => {
-            this.username = iouser + " (vous)";
+            this.usernamedisplay = iouser + " (vous)";
+            this.username = iouser;
             $('.userdiv').show();
             $('.currentxt').show();
         });
@@ -351,9 +353,19 @@ var app = new Vue({
         });
 
 
-        socket.on('joinNotificationEvent' , (player) => {
-            $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 1/1 (" + player + ")");
+        socket.on('joinNotificationEvent' , (nbplayer) => {
+            // $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 1/1 (" + player + ")");
+            this.nbplayer = nbplayer;
+            $('.kickdiv').show();
             $('.startbtn').removeClass('disablemode');
+        });
+
+
+        //AFTER RELOAD
+        socket.on('joinCountNotificationEvent' , (nbplayer) => {
+            this.nbplayer = nbplayer;
+            if(nbplayer > 0) $('.startbtn').removeClass('disablemode');
+            $('.kickdiv').show();
         });
 
 
@@ -373,9 +385,10 @@ var app = new Vue({
         });
 
 
-        socket.on('displayOpponent' , (opponent) => {   
-            this.opponent = opponent;
-            $('.opponentdiv').show();
+        socket.on('displayOpponents' , (opponents , ruser) => {   
+            this.opponents = opponents;
+
+            editOpponent(opponents , ruser);
         });
 
 
@@ -383,10 +396,6 @@ var app = new Vue({
             $('.waitgametxt').show();
         });
 
-
-        socket.on('enableInputEvent' , () => {
-            $('.p1div').removeClass('disablemode2');
-        });
 
 
         socket.on('displayPostRule' , (time , theme) => {
@@ -402,8 +411,9 @@ var app = new Vue({
         });
 
 
-        socket.on('showTypingOpponentEvent' , (msg) => {
-            this.opponentres = msg;
+        socket.on('showTypingOpponentEvent' , (msg , indexp) => {
+            console.log(msg);
+            $('.pindex' + indexp).val(msg);
         });
 
 
@@ -413,8 +423,31 @@ var app = new Vue({
 
 
         socket.on('notifHostCancelFromPlayer' , () => {
-            document.getElementById("waitid").innerHTML = "EN ATTENTE D'UN JOUEUR : 0/1";
+            this.nbplayer = 0;
+            $('.startbtn').addClass('disablemode');
+
         });
+
+
+        socket.on('resetid' , () => {
+            var body = {
+                val : 'val'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/resetID',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                
+            })
+            .catch(function (err) {
+                
+            });
+        })
 
 
         socket.on('notifKickPlayerEvent' , () => {
@@ -428,15 +461,11 @@ var app = new Vue({
             handleInput(nbturn);
         });
 
-        socket.on('enableForOpponent' , () => {
-            $('.p1div').removeClass('disablemode2');
-        });
 
-
-        socket.on('disableForSelf' , () => {
-            console.log("JE DESACTIVE");
-            $('.p1div').addClass('disablemode2');
-        });
+        socket.on('denableTurnInput2' , (turnplayer) => {
+            //IF GAME'S TURN IF THIS SOCKET PLAYER
+            if(this.username == turnplayer) handleInput(0)
+        }); 
 
 
         socket.on('testEvent' , () => {
@@ -445,8 +474,8 @@ var app = new Vue({
         });
 
 
-        socket.on('answerErrorEvent' , (errtype) => {
-            if(errtype == 0) editAnswerError2();
+        socket.on('answerErrorEvent' , (errtype  , indexp) => {
+            if(errtype == 0) editAnswerError2(indexp);
             else editAnswerError1()
         });
 
@@ -466,11 +495,17 @@ var app = new Vue({
                 });
             }
             
-            $('.p1input').addClass('pulseclass');
+            $('.tmpinputclass').addClass('pulseclass');
             setTimeout(() => {
-                $('.p1input').removeClass('pulseclass');
+                $('.tmpinputclass').removeClass('pulseclass');
             }, 500);
 
+        });
+
+
+        socket.on('playRightAudio2' , () => {
+           
+          
         });
 
 
@@ -481,8 +516,7 @@ var app = new Vue({
 
 
         socket.on('endGameEvent' , (winner , host) => {
-            if(this.username == host) displayPostToHost();
-            $('.backigbtn').show();
+            if(this.usernamedisplay == host) displayPostToHost();
             displayWinner(winner);
         });
 
@@ -500,11 +534,6 @@ var app = new Vue({
 
         socket.on('displayRePlay' , () => {
             $('.replaybtn').show();
-        });
-
-
-        socket.on('replayPostEvent', () => {
-            $('.replaybtn').hide();
         });
 
 
@@ -527,7 +556,19 @@ var app = new Vue({
         socket.on('setBotAnswerEvent' , (botanswer) => {
             editBotAnswer(botanswer);
         });
-     
+
+
+        socket.on('displayTurnPicEvent' , (indexp) => {
+            displayTurnPic(indexp);
+        });
+
+
+        socket.on('resetInputForOpponent' , (indexp) => {
+            console.log('wsh what ' , indexp)
+            $('.pindex' + indexp).val('');
+        });
+
+
 
     },
 
@@ -546,9 +587,7 @@ $('#subbtn').on('touchend click', function(event) {
 })
 
 
-$('.p1input').on('input' , function(e) {
-    socket.emit('showTypingEvent' , e.target.value);
-})
+
 
 
 $('.closeimg2').on('click' , function() {
@@ -659,17 +698,17 @@ function errorCodeInput() {
 
 
 function editAnswerError1() {
-    $('#p1inputid').addClass('tmpshake');
-    $("#p1inputid").animate({'border-bottom-color': '#e26381'}, 400);
+    $('.tmpinputclass').addClass('tmpshake');
+    $(".tmpinputclass").animate({'border-bottom-color': '#e26381'}, 400);
     setTimeout(function(){
-        $('#p1inputid').removeClass('tmpshake');
+        $('.tmpinputclass').removeClass('tmpshake');
      },300);    
 
      setTimeout(function(){
-        $("#p1inputid").css('border-bottom-color' , '#e0cbcb');
+        $(".tmpinputclass").css('border-bottom-color' , '#e0cbcb');
      },500);  
 
-     $("#p1inputid").trigger('blur'); 
+     $(".tmpinputclass").trigger('blur'); 
 
      var ta = document.getElementById('audio3');
      ta.volume = 0.5;
@@ -685,32 +724,33 @@ function editAnswerError1() {
          });
      }
      
-     $('#p1inputid').focus();
+     $('.tmpinputclass').focus();
 
 }
 
-function editAnswerError2() {
+function editAnswerError2(indexp) {
 
 
     //SHAKE AND INPUT RED EFFECT
-    $('#p1inputid').addClass('tmpshake');
-    $("#p1inputid").animate({'border-bottom-color': '#e26381'}, 400);
+    $('.tmpinputclass').addClass('tmpshake');
+    $(".tmpinputclass").animate({'border-bottom-color': '#e26381'}, 400);
     setTimeout(function(){
-        $('#p1inputid').removeClass('tmpshake');
+        $('.tmpinputclass').removeClass('tmpshake');
      },300);    
 
      setTimeout(function(){
-        $("#p1inputid").css('border-bottom-color' , '#e0cbcb');
+        $(".tmpinputclass").css('border-bottom-color' , '#e0cbcb');
      },500);  
 
-     $("#p1inputid").trigger('blur'); 
+     $(".tmpinputclass").trigger('blur'); 
 
 
      //LOCK EFFECT
-     $('.lockpic').show();
+     $('.tmplockclass').show();
+     
 
      setTimeout(() => {
-        $('.lockpic').hide();
+        $('.tmplockclass').hide();
      }, 700);
 
 
@@ -728,7 +768,7 @@ function editAnswerError2() {
          });
      }
      
-     $('#p1inputid').focus();
+     $('.tmpinputclass').focus();
 
 }
 
@@ -802,16 +842,12 @@ function cancelRequest() {
 
 function handleInput(nbturn) {
     if(nbturn == 0) {
-        $('.bombdiv').removeClass('movebomb2');
-        $('.bombdiv').addClass('movebomb');
-        $('#p1inputid').removeClass('disablemode2');
-        $("#p1inputid").removeAttr('disabled');
-        $('#p1inputid').focus();
+        $('.tmpinputclass').removeClass('disablemode2');
+        $(".tmpinputclass").removeAttr('disabled');
+        $('.tmpinputclass').focus();
     } else {
-        $('.bombdiv').removeClass('movebomb');
-        $('.bombdiv').addClass('movebomb2');
-        $('#p1inputid').addClass('disablemode2');
-        $("#p1inputid").prop("disabled", true);
+        $('.tmpinputclass').addClass('disablemode2');
+        $(".tmpinputclass").prop("disabled", true);
     } 
 
 }
@@ -844,8 +880,7 @@ function displayWinner2(winner) {
     app.gwinner = winner;
 
 
-    $('.opponentdiv').hide();
-    $('.p1div').hide();
+    $('.container').hide();
     $('.bombdiv').hide();
     $('.winnerdiv').show();
 
@@ -876,8 +911,7 @@ function displayWinner(winner) {
     });
 
     app.gwinner = winner;
-    $('.opponentdiv').hide();
-    $('.p1div').hide();
+    $('.container').hide();
     $('.bombdiv').hide();
     $('.winnerdiv').show();
 
@@ -961,18 +995,125 @@ function hideTool() {
     
 }
 
+function displayTurnPic(indexp) {
+    $('.turnpic').hide();
+    $('.turnpic' + indexp).show();
+}
 
 
 function editBotAnswer(botanswer) {
     
-    $('.p2input').val(botanswer);
+    $('.pindex' + 1).val(botanswer);
     setTimeout(() => {
         socket.emit('sendAnswerEvent' , botanswer , 1);
-        $('.p2input').val('');
-    }, 500);
+        $('.pindex' + 1).val('');
+    }, 700);
     
     
 }
+
+
+
+function editOpponent(players , username) {
+    
+    var container = document.getElementById('containerid');
+    var numberOfElements = players.length;
+
+
+    var angle = (2 * Math.PI) / numberOfElements;
+    var radius = 250; // Rayon du cercle
+
+    for(let i = 1 ; i <= numberOfElements ; i++) {
+
+        var playerdiv = document.createElement('div');
+        
+        
+        playerdiv.setAttribute('id' , 'playerdiv' + i);
+        playerdiv.classList.add('playerdiv');
+
+        
+        container.appendChild(playerdiv);
+
+    }
+
+
+
+    
+    for (var i = 0; i < numberOfElements; i++) {
+        var playerdiv = document.getElementById('playerdiv' + (i + 1));
+        var x = Math.cos(i * angle) * radius;
+        var y = Math.sin(i * angle) * radius;
+        playerdiv.style.top = container.clientHeight / 2 - playerdiv.offsetHeight / 2 + y + 'px';
+        playerdiv.style.left = container.clientWidth / 2 - playerdiv.offsetWidth / 2 + x + 'px';
+
+        var pinput = document.createElement('input');
+
+        pinput.classList.add('p0input');
+        pinput.classList.add('pindex' + i);
+        pinput.classList.add('disablemode2');
+        pinput.setAttribute('disabled' , 'true');
+        pinput.type = 'text';
+
+
+        var padlockpic = document.createElement('img');
+        
+        padlockpic.setAttribute('alt' , 'LOCKPIC');
+        padlockpic.setAttribute('src' , 'padlock5.png');
+        padlockpic.classList.add('lockpic');
+
+        var turnpic = document.createElement('img');
+
+        turnpic.classList.add('turnpic' + i);
+        turnpic.setAttribute('src' , 'turnpic3.png');
+        turnpic.setAttribute('alt' , 'TURNPIC');
+        turnpic.classList.add('turnpic');
+        
+
+        
+        if(players[i] == username) {
+       
+            pinput.classList.add('tmpinputclass');
+            padlockpic.classList.add('tmplockclass');
+            turnpic.classList.add('tmpturnclass');
+            pinput.setAttribute('v-model' , 'canswer');
+
+            pinput.addEventListener('keypress' , function(event) {
+                if(event.key === 'Enter') {
+                    app.checkAnswer(this);
+
+                }
+            });
+
+
+            pinput.addEventListener("input", function(e) {
+                socket.emit('showTypingEvent' , e.target.value);
+            });
+            
+            
+            
+        }
+
+
+        var playertxt = document.createElement('p');
+        playertxt.classList.add('ptxt');
+        playertxt.innerHTML = players[i];
+
+
+        
+        playerdiv.appendChild(turnpic);
+        playerdiv.appendChild(playertxt)
+        playerdiv.appendChild(padlockpic);
+        playerdiv.appendChild(pinput);
+
+        pinput.focus();
+        
+    }       
+}
+
+
+
+
+
 
 
 
@@ -1007,3 +1148,6 @@ if(sliderEl) {
 
 
 }
+
+
+

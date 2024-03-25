@@ -33,7 +33,7 @@ body{
 
 #mainback {
     z-index: -10;
-    filter: brightness(30%);
+    filter: brightness(80%);
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -333,7 +333,7 @@ body{
 
 
 .kickdiv {
-
+  display: none;
   
 }
 
@@ -534,6 +534,7 @@ body{
     position: absolute;
     width: fit-content;
     height: fit-content;
+    z-index: 101;
     top:0;
     bottom: 0;
     right: 0;
@@ -728,10 +729,39 @@ body{
     display: none;
     position: absolute;
     opacity: 0.3;
-    transform: rotate(-10deg) translate(-50% , -50%);
+    transform: rotate(-10deg);
+    left:0;
     animation: movelock 0.6s forwards;
   }
 
+
+  .turnpic {
+    display: none;
+    position: absolute;
+    left: -5%;
+    bottom: 50%;
+    width: 45px;
+    height: 45px;
+    animation: turnF .7s infinite;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  }
+
+
+  @keyframes turnF {
+
+    0% {
+      left: -5%;
+    }
+
+    50% {
+      left:-4%;
+    }
+
+    100% {
+      left: -5%;
+    }
+
+  }
 
 
   .movelockclass {
@@ -741,27 +771,60 @@ body{
 
   @keyframes movelock {
     0% {
-      transform: rotate(-5deg) translate(-50% , -50%);
+      transform: rotate(-10deg) translateY( -50%);
     }
 
     100% {
       opacity: 0;
-      transform: rotate(-5deg) translate(-50% , -100%);
+      transform: rotate(-10deg) translateY( -100%);
     }
   }
   
 
-  .bombdiv {
-    display: none;
-    z-index: 2;
-    width: fit-content;
-    height: fit-content;
+
+  .logopic {
     position: absolute;
     top:0;
-    right: 0;
     left:0;
-    bottom: 0;
+    margin: 0.5em;
+    width: 5%;
+    height: 10%;
+    border-radius: 50px;
+
+    padding: 5px;
+  }
+
+
+  .bombdiv {
+    display: none;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    align-self: center;
+    justify-content: center;
     margin: auto;
+    top:48%;
+    left:48%;
+    animation: popbomb 0.2s forwards;
+  }
+
+
+  @keyframes popbomb {
+    0% {
+      transform: scale(2);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+
+  .picpic {
+    width: 80%;
+    height: 80%;
   }
 
   .bombpic {
@@ -888,6 +951,26 @@ body{
 
 
 /* reset input */
+
+.p0input {
+  width: 70%;
+  text-align: center;
+  font-family:'Courier New', Courier, monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 0;
+  font-weight: 600;
+  text-shadow: .0.7em .1em 0 hsl(195, 10%, 8%);
+  border-bottom: 0.05em solid rgba(240, 248, 255, 0.591);
+  color:rgba(224, 203, 203, 0.694);
+  outline: 0;
+  font-size: 1.5rem;
+  color: rgb(179, 241, 247);
+  padding:1em 0.7em 0.7em 1em;
+  background-color: transparent;
+}
+
+
 .p1input{
   width: 70%;
   text-align: center;
@@ -989,6 +1072,8 @@ body{
 
 
 /* side menu */
+
+
 
 
 .navdiv {
@@ -1571,4 +1656,123 @@ select::-ms-expand {
   }
 }
 
+
+
+
+.container {
+  position: absolute ;
+  top:48%;
+}
+
+.playerdiv {
+  position: absolute;
+  width: fit-content; /* Largeur de vos éléments en cercle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-weight: bold;
+}
+
+
+.p0input {
+  text-align: center;
+  font-family:'Courier New', Courier, monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-shadow: .0.7em .1em 0 hsl(195, 10%, 8%);
+  color:rgba(224, 203, 203, 0.694);
+  outline: 0;
+  font-size: 1.2rem;
+  color: rgb(179, 241, 247);
+  padding:1em 0.7em 0.7em 1em;
+}
+
+
+.ptxt {
+  position: absolute;
+  top:-35%;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color:aliceblue;
+  text-shadow: rgb(52, 7, 47) 1px 0 10px;  
+  text-transform: uppercase;
+  font-size: 90%;
+}
+
+
+.tmpinputclass {
+
+}
+
+.tmplockclass {
+
+}
+
+.tmpturnclass {
+
+}
+
+
+.pindex0 {
+}
+
+.pindex1 {
+}
+
+.pindex2 {
+}
+
+.pindex3 {
+}
+
+.pindex4 {
+}
+
+.pindex5 {
+}
+
+.pindex6 {
+}
+
+.pindex7 {
+}
+
+.pindex8 {
+}
+
+.pindex9 {
+}
+
+
+
+.turnpic0 {
+}
+
+.turnpic1 {
+}
+
+.turnpic2 {
+}
+
+.turnpic3 {
+}
+
+.turnpic4 {
+}
+
+.turnpic5 {
+}
+
+.turnpic6 {
+}
+
+.turnpic7 {
+}
+
+.turnpic8 {
+}
+
+.turnpic9 {
+}
 
