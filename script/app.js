@@ -569,6 +569,11 @@ var app = new Vue({
         });
 
 
+        socket.on('clearAllInput' , () => {
+            $('.p0input').val('');
+        });
+
+
 
     },
 

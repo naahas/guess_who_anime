@@ -28,8 +28,6 @@ const io = new Server(server , {
 //TODO : multiplayer (>2 player)
 //TODO : MHA HAIKYUU
 //TODO : ENABLE BOMB SOUND
-//TODO : add A uppercase to bombanime
-//TODO : enable bomb movement
 
 //session middleware
 var tsec = 1000;
@@ -82,8 +80,6 @@ var mapgamewinner = new Map();
 var mapgamedata = new Map();
 var mapgamestack = new Map();
 var mapgametotal = new Map();
-var mapgamenbp = new Map();
-var mapgamepid = new Map();
 
 //path handle
 app.get('/' , function(req,res) {
@@ -125,7 +121,6 @@ app.post('/create' , function(req,res) {
 
     var roomID = generateRoomID(5);
     mapcode.set(req.session.username , roomID);
-    mapgamepid.set(req.session.username , 1);
     req.session.rid = roomID;
 
     res.end();
@@ -150,7 +145,7 @@ app.post('/codeCheck' , function(req,res) {
 
 
     for (let [key, value] of mapcode) {
-        if(codeUp == value && !mapcodefull.includes(codeUp))  {
+        if(codeUp == value && !mapcodefull.includes(codeUp) && !mapgametheme.has(codeUp))  {
             resnb = "oui";
             req.session.rid = codeUp;
         }   
@@ -208,7 +203,6 @@ app.post('/game' , function(req,res) {
 
     mapgametheme.set(req.session.rid , 'Naruto');
     mapgametime.set(req.session.rid , 5);
-    mapgamenbp.set(req.session.rid , nbp);
 
     req.session.ingame = true;
 
@@ -307,7 +301,7 @@ app.post('/playSolo' , function(req,res) {
     req.session.rid = rid;
 
     mapcode.set(req.session.username , rid);
-    mapcode.set('bot [' + rid + ']', rid);
+    mapcode.set('bot[' + rid + ']', rid);
     mapgametheme.set(req.session.rid , 'Naruto');
     mapgametime.set(req.session.rid , 5)
 
@@ -730,6 +724,8 @@ io.on('connection' , (socket) => {
             //0 -> answer already given => play lock sound , else wrong answer => play error sound
             if(given2.includes(canswer)) socket.emit('answerErrorEvent' , 0 , index_player);
             else socket.emit('answerErrorEvent' , 1 , index_player );
+
+            socket.broadcast.to(ioroomid).emit('clearAllInput');
             
             
         }
@@ -829,7 +825,7 @@ function generateRoomID(code_length) {
 function checkUsername(username) {
     if(username.length < 4) return "TROP COURT (4-15)";
     if(username.length > 15) return "TROP LONG (4-15)";
-    // if(username.indexOf(' ') >= 0) return "FORMAT INVALIDE";
+    if(username.indexOf(' ') >= 0) return "FORMAT INVALIDE";
 
     return "good";
 }
@@ -863,6 +859,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "BACTERIAN")  similar.push("BACTERIE");
                 if(answer == "BACTERIE")  similar.push("BACTERIAN");
+
+                if(answer == "GINYU")  similar.push("GINYUU");
+                if(answer == "GINYUU")  similar.push("GINYU");
 
                 if(answer == "C18")  { similar.push("C 18"); similar.push("C-18"); similar.push("LAZULI");}
                 if(answer == "C 18")  { similar.push("C18"); similar.push("C-18"); similar.push("LAZULI");}
@@ -915,8 +914,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "C 19")  { similar.push("C19"); similar.push("C-19");}
                 if(answer == "C-19")  { similar.push("C 19"); similar.push("C19");}
 
-                if(answer == "HERCULE")  { similar.push("SATAN"); similar.push("MISTER SATAN");}
-                if(answer == "SATAN" || answer == "MISTER SATAN")  { similar.push("HERCULE");}
+                if(answer == "HERCULE")  { similar.push("SATAN"); similar.push("MISTER SATAN"); similar.push("MR SATAN");}
+                if(answer == "SATAN" || answer == "MISTER SATAN")  { similar.push("HERCULE"); similar.push("MR SATAN");}
+                if(answer == "MR SATAN") {similar.push("HERCULE"); similar.push("MISTER SATAN"); }
 
                 if(answer == "TAO PAI PAI")  similar.push("TAOPAIPAI");
                 if(answer == "TAOPAIPAI")  similar.push("TAO PAI PAI");
@@ -1033,6 +1033,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "LUCKY ROO")  similar.push("LUCKY ROUX"); 
                 if(answer == "LUCKY ROUX")  similar.push("LUCKY ROO"); 
+
+                if(answer == "BEN BECKMAN")  similar.push("BENN BECKMAN"); 
+                if(answer == "BENN BECKMAN")  similar.push("BEN BECKMAN"); 
 
                 if(answer == "AOKIJI")  similar.push("KUZAN");
                 if(answer == "KUZAN")  similar.push("AOKIJI");
@@ -1672,6 +1675,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "TOGE")  {similar.push("INUMAKI");}
                 if(answer == "INUMAKI")  {similar.push("TOGE");}
+
+                if(answer == "JUNPEI")  {similar.push("JUMPEI"); similar.push("JUMPEI YOSHINO");}
+                if(answer == "JUMPEI" || answer == "JUMPEI YOSHINO")  {similar.push("JUNPEI");}
 
                 if(answer == "KAMO NORITOSHI")  {similar.push("NORITOSHI KAMO");}
                 if(answer == "NORITOSHI KAMO")  {similar.push("KAMO NORITOSHI");}

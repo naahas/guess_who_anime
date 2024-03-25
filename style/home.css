@@ -735,34 +735,6 @@ body{
   }
 
 
-  .turnpic {
-    display: none;
-    position: absolute;
-    left: -5%;
-    bottom: 50%;
-    width: 45px;
-    height: 45px;
-    animation: turnF .7s infinite;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
-  }
-
-
-  @keyframes turnF {
-
-    0% {
-      left: -5%;
-    }
-
-    50% {
-      left:-4%;
-    }
-
-    100% {
-      left: -5%;
-    }
-
-  }
-
 
   .movelockclass {
     animation: movelock 1s infinite;
@@ -800,11 +772,11 @@ body{
     position: absolute;
     width: fit-content;
     height: fit-content;
-    align-self: center;
-    justify-content: center;
+    top:0;
+    left:0;
+    right: 0;
+    bottom: 0;
     margin: auto;
-    top:48%;
-    left:48%;
     animation: popbomb 0.2s forwards;
   }
 
@@ -1661,12 +1633,16 @@ select::-ms-expand {
 
 .container {
   position: absolute ;
-  top:48%;
+  top:0;
+  bottom: 7%;
+  right: 0;
+  left: 0;
+  margin: auto;
 }
 
 .playerdiv {
   position: absolute;
-  width: fit-content; /* Largeur de vos éléments en cercle */
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1676,6 +1652,7 @@ select::-ms-expand {
 
 
 .p0input {
+  width: 9em;
   text-align: center;
   font-family:'Courier New', Courier, monospace;
   letter-spacing: 0.05em;
@@ -1692,12 +1669,37 @@ select::-ms-expand {
 
 .ptxt {
   position: absolute;
-  top:-35%;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  top:-40%;
+  font-family: Arial, Helvetica, sans-serif;
   color:aliceblue;
-  text-shadow: rgb(52, 7, 47) 1px 0 10px;  
+  text-shadow: rgb(52, 7, 47) 5px 0 10px;  
   text-transform: uppercase;
   font-size: 90%;
+}
+
+.turnpic {
+  display: none;
+  width: 30px;
+  height: 30px;
+  animation: turnF .7s infinite;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+
+@keyframes turnF {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-10%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+
 }
 
 
