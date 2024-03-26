@@ -412,7 +412,7 @@ var app = new Vue({
 
 
         socket.on('showTypingOpponentEvent' , (msg , indexp) => {
-            console.log(msg);
+            // console.log(msg);
             $('.pindex' + indexp).val(msg);
         });
 
@@ -503,12 +503,6 @@ var app = new Vue({
         });
 
 
-        socket.on('playRightAudio2' , () => {
-           
-          
-        });
-
-
 
         socket.on('changeBombStepEvent' , (step) => {
             editBombPic(step);
@@ -538,7 +532,6 @@ var app = new Vue({
 
 
         socket.on('replayNotifPlayerEvent' , () => {
-            console.log('lol')
             replayRequest();
         });
 
@@ -564,7 +557,6 @@ var app = new Vue({
 
 
         socket.on('resetInputForOpponent' , (indexp) => {
-            console.log('wsh what ' , indexp)
             $('.pindex' + indexp).val('');
         });
 
@@ -573,7 +565,11 @@ var app = new Vue({
             $('.p0input').val('');
         });
 
-
+        
+        socket.on('hakaiPlayerEvent' , (indexp) => {
+            $('.pindex' + indexp).addClass('disablemode2');
+            $('.pindex' + indexp).prop("disabled", true);
+        });
 
     },
 
@@ -1001,6 +997,7 @@ function hideTool() {
 }
 
 function displayTurnPic(indexp) {
+    console.log("passez la fleche a " , indexp)
     $('.turnpic').hide();
     $('.turnpic' + indexp).show();
 }
@@ -1026,7 +1023,7 @@ function editOpponent(players , username) {
 
 
     var angle = (2 * Math.PI) / numberOfElements;
-    var radius = 250; // Rayon du cercle
+    var radius = 220; // Rayon du cercle
 
     for(let i = 1 ; i <= numberOfElements ; i++) {
 

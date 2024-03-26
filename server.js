@@ -28,6 +28,7 @@ const io = new Server(server , {
 //TODO : multiplayer (>2 player)
 //TODO : MHA HAIKYUU
 //TODO : ENABLE BOMB SOUND
+//TODO : ADD OST FOR EACH ANIME
 
 //session middleware
 var tsec = 1000;
@@ -80,9 +81,12 @@ var mapgamewinner = new Map();
 var mapgamedata = new Map();
 var mapgamestack = new Map();
 var mapgametotal = new Map();
+var mapcodecopy = new Map();
 
 //path handle
 app.get('/' , function(req,res) {
+
+    console.log(mapcode)
 
     if(req.session.ingame == true) {
         res.redirect('/game');
@@ -190,16 +194,13 @@ app.post('/resetID' , function(req,res)  {
 
 app.post('/game' , function(req,res) {
 
+
     io.once('connection' , (socket) => {
         socket.to(req.session.rid).emit('changeGamePlayerStatusEvent');
     });  
 
 
-    var nbp = 0;
-    for (let [key, value] of mapcode) {
-        if(mapcode.get(key) == req.session.rid) nbp++;
-    }
-
+  
 
     mapgametheme.set(req.session.rid , 'Naruto');
     mapgametime.set(req.session.rid , 5);
@@ -276,6 +277,12 @@ app.post('/confirmSetting' , function(req,res) {
     mapgametimer.set(req.session.rid , 1);
     mapgamestack.set(req.session.rid , []);
 
+    
+    for (let [key, value] of mapcode) {
+        if(value == req.session.rid) mapcodecopy.set(key, value);
+        
+    }
+
     var total_chara = mapgamedata.get(req.session.rid).length;
     mapgametotal.set(req.session.rid , total_chara);
 
@@ -335,7 +342,9 @@ app.post('/returnBackJoin' , async function(req,res) {
 
 
 app.post('/returnBackCreate' , function(req,res) {
+
     mapcode.delete(req.session.username);
+    
     req.session.created = false;
     req.session.solop = false;
     var tmpid = req.session.rid;
@@ -393,6 +402,7 @@ app.post('/exitGame' , function(req,res) {
         for (let [key, value] of mapcode) {
             if(mapcode.get(key) == req.session.rid) mapcode.delete(key);
         }
+
         mapcode.delete(req.session.username);
         mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
         mapgametime.delete(req.session.rid)
@@ -667,6 +677,7 @@ io.on('connection' , (socket) => {
                 mapgameturn.set(ioroomid , next_player);
         
                 
+                /////RESET INPUT AND DISPLAY TURN TO CURRENT PLAYER (WHO IS THE NEXT ONE ALREADY)
                 var index_player = 0;
                 for (let [key, value] of mapcode) {
                     if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
@@ -745,46 +756,96 @@ io.on('connection' , (socket) => {
 
     socket.on('handleTimerEvent' , () => {
         var btimer = setInterval(() => {
-            var x = mapgametimer.get(ioroomid);
-            var y = mapgametime.get(ioroomid);
-            var step2 = Math.floor(y/2);
-            // console.log(x);
+            var current_time = mapgametimer.get(ioroomid);
+            var game_time = mapgametime.get(ioroomid);
+            var step2 = Math.floor(game_time/2);
+
+            console.log('current timer -> ' , current_time)
+            console.log('game time -> ' , game_time)
 
             //CHANGE BOMB PIC STEP
-            if((y-x) == step2 && y!=2 && y!=3) {
+            if((game_time-current_time) == step2 && game_time!=2 && game_time!=3) {
                 io.to(ioroomid).emit('changeBombStepEvent' , 2);
             }
 
-            if((y-x) == 1) {
+            if((game_time-current_time) == 1) {
                 io.to(ioroomid).emit('changeBombStepEvent' , 3);
             }
 
 
-            //GAME IS OVER
-            if(x>=y) {
+            //BOMB EXPLODE (ENDGAME OR NOT)
+            if(current_time>=game_time) {
                 // console.log('BOOM')
-                clearInterval(btimer);
-                // mapgameturn.delete(req.session.rid);
 
+
+                //RESET TIMER
+                mapgametimer.set(ioroomid , 0);
+                
+                
                 var winner;
-                
                 var player_turn = mapgameturn.get(ioroomid);
-                for (let [key, value] of mapcode) {
-                    if(key!=player_turn && mapcode.get(key) == ioroomid) winner = key; 
-                }
-                
                 
 
-                io.to(ioroomid).emit('endGameEvent' , winner , iousername + " (vous)");
+                var nbplayer = 0;
+                for (let [key, value] of mapcodecopy) if(mapcodecopy.get(key) == ioroomid) nbplayer++;
+                   
+
+                if(nbplayer <= 2) {
+                    for (let [key, value] of mapcodecopy) {
+                        if(key!=player_turn && mapcodecopy.get(key) == ioroomid) winner = key; 
+                    }
+                    io.to(ioroomid).emit('endGameEvent' , winner , iousername + " (vous)");
+                    clearInterval(btimer);
+                } 
+
+               
+
+                //ELIMINATE CURRENT PLAYER
+            
+
+                
+                //SET TURN TO NEXT PLAYER AND THEN ELIMINATE CURRENT PLAYER
+                var turn_array = [];
+
+                //FIRST LOOP TO PUSH PLAYERS TO TURNARRAY
+                for (let [key, value] of mapcode) {
+                    if(mapcode.get(key) == ioroomid) turn_array.push(key);
+                }
+
+                var index_player = 0;
+                for (let [key, value] of mapcode) {
+                    if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
+                        
+                        break;
+                    } 
+                    index_player++; 
+                }
+
+
+                var next_index_player = index_player + 1;
+                if(next_index_player >= turn_array.length) next_index_player = 0;
+
+                var next_player = turn_array[next_index_player];
+
+                mapgameturn.set(ioroomid , next_player);
+
+                mapcodecopy.delete(player_turn);
+
+                console.log(mapcodecopy)
+
+                io.to(ioroomid).emit('hakaiPlayerEvent' , index_player);
+                io.to(ioroomid).emit('changeBombStepEvent' , 1);
+                io.to(ioroomid).emit('displayTurnPicEvent' , next_index_player);
+                socket.broadcast.to(ioroomid).emit('resetInputForOpponent' , index_player);
+
+
                
             }
             
             
-            
-            // console.log("step2 : " , step2);
     
     
-            mapgametimer.set(ioroomid , x+1);
+            mapgametimer.set(ioroomid , mapgametimer.get(ioroomid)+1);
     
         }, 1000);
     });
@@ -854,8 +915,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "TORTUE GENIAL") { similar.push("MUTEN ROSHI"); similar.push("ROSHI"); }
                 if(answer == "MUTEN ROSHI" || answer == "ROSHI")  similar.push("TORTUE GENIAL");
 
-                if(answer == "KAKAROT")  { similar.push("GOKU"); similar.push("SON GOKU"); similar.push("BLACK GOKU"); }
-                if(answer == "GOKU" || answer == "SON GOKU" || answer == "BLACK GOKU")  similar.push("KAKAROT");
+                if(answer == "KAKAROT")  { similar.push("GOKU"); similar.push("SON GOKU"); similar.push("SONGOKU"); similar.push("BLACK GOKU"); }
+                if(answer == "GOKU" || answer == "SON GOKU" || answer == "BLACK GOKU") { similar.push("KAKAROT"); similar.push("SONGOKU"); }
+                if(answer == "SONGOKU")  { similar.push("GOKU"); similar.push("SON GOKU"); similar.push("BLACK GOKU"); similar.push("KAKAROT"); }
 
                 if(answer == "BACTERIAN")  similar.push("BACTERIE");
                 if(answer == "BACTERIE")  similar.push("BACTERIAN");
@@ -905,6 +967,13 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "NAM")  similar.push("NAMU");
                 if(answer == "NAMU")  similar.push("NAM");
+
+                if(answer == "SONGOHAN") { similar.push("SON GOHAN"); similar.push("GOHAN");}
+                if(answer == "SON GOHAN")  similar.push("SONGOHAN");
+                if(answer == "GOHAN")  { similar.push("SONGOHAN"); }
+
+                if(answer == "SONGOTEN") { similar.push("SON GOTEN"); similar.push("GOTEN");}
+                if(answer == "SON GOTEN" || answer == "GOTEN") { similar.push("SONGOTEN");}
 
                 if(answer == "C16")  { similar.push("C 16"); similar.push("C-16");}
                 if(answer == "C 16")  { similar.push("C16"); similar.push("C-16");}
@@ -1698,7 +1767,6 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
     
 
     }    
-
 
 
     similar.push(answer);
