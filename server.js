@@ -505,11 +505,9 @@ io.on('connection' , (socket) => {
 
     if(ioingame == true) {
         var oplayer = 'SLAYERBOT';
-        var nbplayer = 0;
         var playertab = [];
             for (let [key, value] of mapcode) {
-                if(mapcode.get(key) == ioroomid) nbplayer++;
-                playertab.push(key);
+                if(mapcode.get(key) == ioroomid) playertab.push(key);
             }
 
         if(ioplaying) socket.emit('displayOpponents' , playertab , iousername );
