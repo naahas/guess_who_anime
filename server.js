@@ -86,7 +86,7 @@ var mapcodecopy = new Map();
 //path handle
 app.get('/' , function(req,res) {
 
-    console.log(mapcode)
+    // console.log(mapcode)
 
     if(req.session.ingame == true) {
         res.redirect('/game');
@@ -658,9 +658,14 @@ io.on('connection' , (socket) => {
 
                 var next_index_player = index_player + 1;
                 if(next_index_player >= turn_array.length) next_index_player = 0;
-
                 var next_player = turn_array[next_index_player];
                 
+                while(!mapcodecopy.has(next_player)) {
+                    next_index_player+=1
+                    if(next_index_player >= turn_array.length) next_index_player = 0;
+                    next_player = turn_array[next_index_player];
+                }
+
                 /////////////////////////////// JUST FOR RESETINPUT
                 var index_player2 = 0;
                 for (let [key, value] of mapcode) {
@@ -777,10 +782,8 @@ io.on('connection' , (socket) => {
             if(current_time>=game_time) {
                 // console.log('BOOM')
 
-
                 //RESET TIMER
                 mapgametimer.set(ioroomid , 0);
-                
                 
                 var winner;
                 var player_turn = mapgameturn.get(ioroomid);
@@ -790,6 +793,7 @@ io.on('connection' , (socket) => {
                 for (let [key, value] of mapcodecopy) if(mapcodecopy.get(key) == ioroomid) nbplayer++;
                    
 
+                //GAME IS OVER
                 if(nbplayer <= 2) {
                     for (let [key, value] of mapcodecopy) {
                         if(key!=player_turn && mapcodecopy.get(key) == ioroomid) winner = key; 
@@ -799,15 +803,10 @@ io.on('connection' , (socket) => {
                 } 
 
                
-
-                //ELIMINATE CURRENT PLAYER
-            
-
                 
                 //SET TURN TO NEXT PLAYER AND THEN ELIMINATE CURRENT PLAYER
                 var turn_array = [];
 
-                //FIRST LOOP TO PUSH PLAYERS TO TURNARRAY
                 for (let [key, value] of mapcode) {
                     if(mapcode.get(key) == ioroomid) turn_array.push(key);
                 }
@@ -827,18 +826,19 @@ io.on('connection' , (socket) => {
 
                 var next_player = turn_array[next_index_player];
 
-                mapgameturn.set(ioroomid , next_player);
+                mapgameturn.set(ioroomid , next_player)
 
                 mapcodecopy.delete(player_turn);
 
-                console.log(mapcodecopy)
+                // console.log(mapcodecopy)
 
                 io.to(ioroomid).emit('hakaiPlayerEvent' , index_player);
+                io.to(ioroomid).emit('denableTurnInput2' , mapgameturn.get(ioroomid));
                 io.to(ioroomid).emit('changeBombStepEvent' , 1);
                 io.to(ioroomid).emit('displayTurnPicEvent' , next_index_player);
                 socket.broadcast.to(ioroomid).emit('resetInputForOpponent' , index_player);
 
-
+                
                
             }
             
@@ -1236,6 +1236,12 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "KAIDO")  { similar.push("KAIDOU"); }
                 if(answer == "KAIDOU")  { similar.push("KAIDO"); }
 
+                if(answer == "SQUARD")  { similar.push("SQUARDO"); }
+                if(answer == "SQUARDO")  { similar.push("SQUARD"); }
+
+                if(answer == "JACKSONBANNER")  { similar.push("JACKSON"); }
+                if(answer == "JACKSON")  { similar.push("JACKSONBANNER"); }
+
                 if(answer == "CHADROS HIGELYGES")  { similar.push("BARBE BRUNE");  similar.push("CHAHIGE");}
                 if(answer == "BARBE BRUNE")  { similar.push("CHAHIGE"); similar.push("CHADROS HIGELYGES"); }
                 if(answer == "CHAHIGE")  { similar.push("BARBE BRUNE"); similar.push("CHADROS HIGELYGES"); }
@@ -1616,6 +1622,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "DEMON SPADE")  similar.push("DAEMON SPADE");
                 if(answer == "DAEMON SPADE")  similar.push("DEMON SPADE");
+
+                if(answer == "I PIN")  similar.push("I-PIN");
+                if(answer == "I-PIN")  similar.push("I PIN");
 
                 if(answer == "VONGOLA SETTIMO")  similar.push("FABIO");
                 if(answer == "FABIO")  similar.push("VONGOLA SETTIMO");

@@ -469,7 +469,8 @@ var app = new Vue({
 
 
         socket.on('testEvent' , () => {
-            alert('WONDER');
+            // alert('WONDER');
+            console.log('wshhhhh')
             
         });
 
