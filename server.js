@@ -2113,41 +2113,42 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "GENTLE CRIMINAL")  {similar.push("DANJURO TOBITA"); similar.push("DANJURO");}
                 if(answer == "DANJURO TOBITA" || answer == "DANJURO")  {similar.push("GENTLE CRIMINAL");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "LA BRAVA")  {similar.push("MANAMI AIBA"); similar.push("MANAMI");}
+                if(answer == "MANAMI AIBA" || answer == "MANAMI")  {similar.push("LA BRAVA");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "PEERLESS THIEF")  {similar.push("OJI HARIMA"); similar.push("OJI");}
+                if(answer == "OJI HARIMA" || answer == "OJI")  {similar.push("PEERLESS THIEF");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "MUSCULAR")  {similar.push("GOTO IMASUJI"); similar.push("GOTO");}
+                if(answer == "GOTO IMASUJI" || answer == "GOTO")  {similar.push("MUSCULAR");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "CHIMERA")  {similar.push("CHOJURO KON"); similar.push("CHOJURO");}
+                if(answer == "CHOJURO KON" || answer == "CHOJURO")  {similar.push("CHIMERA");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "MUMMY")  {similar.push("HOYO MAKIHARA"); similar.push("HOYO");}
+                if(answer == "HOYO MAKIHARA" || answer == "HOYO")  {similar.push("MUMMY");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "SLICE")  {similar.push("KIRUKA HASAKI"); similar.push("KIRUKA");}
+                if(answer == "KIRUKA HASAKI" || answer == "KIRUKA")  {similar.push("SLICE");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "VOLCANO")  {similar.push("MAGUMA IAWATA"); similar.push("MAGUMA");}
+                if(answer == "MAGUMA IAWATA" || answer == "MAGUMA")  {similar.push("VOLCANO");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "DUSTY ASH")  {similar.push("ONAKO HAIZONO"); similar.push("ONAKO");}
+                if(answer == "ONAKO HAIZONO" || answer == "ONAKO")  {similar.push("DUSTY ASH");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "GUST BOY")  {similar.push("TSUMUJI KAZETANI"); similar.push("TSUMUJI");}
+                if(answer == "TSUMUJI KAZETANI" || answer == "TSUMUJI")  {similar.push("GUST BOY");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "TENKO SHIMURA" || answer == "TENKO")   {similar.push("SHIGARAKI TOMURA"); similar.push("TOMURA"); similar.push("SHIGARAKI"); similar.push("TOMURA");}
+                if(answer == "SHIGARAKI TOMURA" || answer == "SHIGARAKI" || answer == "TOMURA")  {similar.push("TENKO"); similar.push("TENKO SHIMURA"); similar.push("SHIGARAKI"); similar.push("TOMURA");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "DR KYUDAI" || answer == "KYUDAI")   {similar.push("KYUDAI GARAKI"); similar.push("DR TSUBASA"); similar.push("DARUMA UJIKO"); similar.push("DARUMA");}
+                if(answer == "DARUMA UJIKO" || answer == "DARUMA")   {similar.push("KYUDAI GARAKI"); similar.push("DR TSUBASA"); similar.push("DR KYUDAI"); similar.push("KYUDAI");}
+                if(answer == "KYUDAI GARAKI")   {similar.push("DR KYUDAI"); similar.push("DR TSUBASA"); similar.push("DARUMA UJIKO"); similar.push("DARUMA");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "GIRAN")  {similar.push("KAGERO OKUTA"); similar.push("KAGERO");}
+                if(answer == "KAGERO OKUTA" || answer == "KAGERO")  {similar.push("GIRAN");}
 
                 if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
                 if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
