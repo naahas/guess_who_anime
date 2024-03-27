@@ -1670,6 +1670,11 @@ select::-ms-expand {
   font-size: 90%;
 }
 
+.lostclass {
+  text-decoration:line-through;
+  filter: brightness(70%);
+}
+
 .turnpic {
   position: absolute;
   display: none;
@@ -1698,6 +1703,37 @@ select::-ms-expand {
 }
 
 
+.skullpic {
+  display: none;
+  filter: brightness(90%);
+  z-index: 99;
+  position: absolute;
+  top:-10%;
+  width: 4rem;
+  height: 4rem;
+  animation: skullA .3s forwards;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+
+@keyframes skullA {
+
+  0% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+
+  50% {
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+}
+
+
 .lockpic {
   display: none;
   position: absolute;
@@ -1718,6 +1754,15 @@ select::-ms-expand {
     opacity: 0;
     transform: rotate(-10deg) translateY( -100%) translateX(-5em);
   }
+}
+
+
+.loststyle {
+
+}
+
+.tmptxtclass {
+  
 }
 
 
@@ -1794,5 +1839,36 @@ select::-ms-expand {
 }
 
 .turnpic9 {
+}
+
+
+.ptxt0 {
+}
+
+.ptxt1 {
+}
+
+.ptxt2 {
+}
+
+.ptxt3 {
+}
+
+.ptxt4 {
+}
+
+.ptxt5 {
+}
+
+.ptxt6 {
+}
+
+.ptxt7 {
+}
+
+.ptxt8 {
+}
+
+.ptxt9 {
 }
 

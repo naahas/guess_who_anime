@@ -316,6 +316,11 @@ var app = new Vue({
 
         testFunction: function() {
             alert('TESTOO');
+        },
+
+
+        reload: function() {
+            location.reload();
         }
 
     },
@@ -516,6 +521,12 @@ var app = new Vue({
         });
 
 
+        socket.on('playSlashEvent' , () => {
+            playSlash();
+        });
+        
+
+
         socket.on('endGameEventAfterReload' , (winner) => {
             displayWinner2(winner);
         });
@@ -555,6 +566,11 @@ var app = new Vue({
         socket.on('displayTurnPicEvent' , (indexp) => {
             displayTurnPic(indexp);
         });
+
+        socket.on('displaySkullEvent' , (indexp) => {
+            displaySkullPic(indexp);
+        });
+
 
 
         socket.on('resetInputForOpponent' , (indexp) => {
@@ -962,6 +978,23 @@ function playExplode() {
 }
 
 
+function playSlash() {
+    var ta = document.getElementById('audio6');
+     ta.volume = 0.6;
+     const promise = ta.play();  
+                
+     let playedOnLoad;
+
+     if (promise !== undefined) {
+         promise.then(_ => {
+             playedOnLoad = true;
+         }).catch(error => {
+             playedOnLoad = true;
+         });
+     }
+}
+
+
 function displayPostToHost() {
     $('.replaybtn').show();
 }
@@ -998,10 +1031,16 @@ function hideTool() {
 }
 
 function displayTurnPic(indexp) {
-    console.log("passez la fleche a " , indexp)
+    // console.log("passez la fleche a " , indexp)
     $('.turnpic').hide();
     $('.turnpic' + indexp).show();
 }
+
+function displaySkullPic(indexp) {
+    $('.skullpic' + indexp).show();
+    $('.ptxt' + indexp).addClass('lostclass');
+}
+
 
 
 function editBotAnswer(botanswer) {
@@ -1049,6 +1088,12 @@ function editOpponent(players , username) {
         playerdiv.style.top = container.clientHeight / 2 - playerdiv.offsetHeight / 2 + y + 'px';
         playerdiv.style.left = container.clientWidth / 2 - playerdiv.offsetWidth / 2 + x + 'px';
 
+        var playertxt = document.createElement('p');
+
+        playertxt.classList.add('ptxt');
+        playertxt.classList.add('ptxt' + i);
+        playertxt.innerHTML = players[i];
+
         var pinput = document.createElement('input');
 
         pinput.classList.add('p0input');
@@ -1071,13 +1116,21 @@ function editOpponent(players , username) {
         turnpic.setAttribute('alt' , 'TURNPIC');
         turnpic.classList.add('turnpic');
         
+        var skullpic = document.createElement('img');
 
-        
+        skullpic.classList.add('skullpic' + i);
+        skullpic.setAttribute('src' , 'skull1.png');
+        skullpic.setAttribute('alt' , 'SKULLPIC');
+        skullpic.classList.add('skullpic');
+
+
         if(players[i] == username) {
        
+            playertxt.classList.add('tmptxtclass');
             pinput.classList.add('tmpinputclass');
             padlockpic.classList.add('tmplockclass');
             turnpic.classList.add('tmpturnclass');
+            skullpic.classList.add('tmpskullpic');
             pinput.setAttribute('v-model' , 'canswer');
 
             pinput.addEventListener('keypress' , function(event) {
@@ -1097,13 +1150,12 @@ function editOpponent(players , username) {
         }
 
 
-        var playertxt = document.createElement('p');
-        playertxt.classList.add('ptxt');
-        playertxt.innerHTML = players[i];
+        
 
 
         
         playerdiv.appendChild(turnpic);
+        playerdiv.appendChild(skullpic);
         playerdiv.appendChild(playertxt)
         playerdiv.appendChild(padlockpic);
         playerdiv.appendChild(pinput);
