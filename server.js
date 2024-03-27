@@ -25,7 +25,6 @@ const io = new Server(server , {
 
 
 //TODO : handle focus for game with 2 and more than 4 players when people lost focus once
-//TODO : MHA HAIKYUU
 
 //session middleware
 var tsec = 1000;
@@ -554,7 +553,7 @@ io.on('connection' , (socket) => {
             if(mapcode.get(key) == ioroomid) {
                 if(!mapcodecopy.has(key)) lostPlayer.push(index_lost);
             } 
-            index_lost++;
+            if(mapcode.get(key) == ioroomid) index_lost++;
         }
 
         if(lostPlayer.length > 0) {
@@ -2150,54 +2149,69 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "GIRAN")  {similar.push("KAGERO OKUTA"); similar.push("KAGERO");}
                 if(answer == "KAGERO OKUTA" || answer == "KAGERO")  {similar.push("GIRAN");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "OXY-MAN")  {similar.push("OXY MAN");}
+                if(answer == "OXY MAN")  {similar.push("OXY-MAN");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "DABI")  {similar.push("TOYA TODOROKI"); similar.push("TOYA");}
+                if(answer == "TOYA TODOROKI" || answer == "TOYA")  {similar.push("DABI");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "TWICE")  {similar.push("JIN BUDAIGAWARA"); similar.push("JIN");}
+                if(answer == "JIN BUDAIGAWARA" || answer == "JIN")  {similar.push("TWICE");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "SPINNER")  {similar.push("SHUICHI IGUCHI"); similar.push("SHUICHI");}
+                if(answer == "SHUICHI IGUCHI" || answer == "SHUICHI")  {similar.push("SPINNER");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "MR COMPRESS")  {similar.push("ATSUHIRO SAKO"); similar.push("ATSUHIRO");}
+                if(answer == "ATSUHIRO SAKO" || answer == "ATSUHIRO")  {similar.push("MR COMPRESS");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "MAGNE")  {similar.push("KENJI HIKIISHI"); similar.push("KENJI");}
+                if(answer == "KENJI HIKIISHI" || answer == "KENJI")  {similar.push("MAGNE");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "RE-DESTRO")  {similar.push("RIKIYA YOTSUBASHI"); similar.push("RIKIYA");}
+                if(answer == "RIKIYA YOTSUBASHI" || answer == "RIKIYA")  {similar.push("RE-DESTRO");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "CURIOUS")  {similar.push("CHITOSE KIZUKI"); similar.push("CHITOSE");}
+                if(answer == "CHITOSE KIZUKI" || answer == "CHITOSE")  {similar.push("CURIOUS");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "TRUMPET")  {similar.push("KOKU HANABATA"); similar.push("KOKU");}
+                if(answer == "KOKU HANABATA" || answer == "KOKU")  {similar.push("TRUMPET");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "SKEPTIC")  {similar.push("TOMOYASU CHIKAZOKU"); similar.push("TOMOYASU");}
+                if(answer == "TOMOYASU CHIKAZOKU" || answer == "TOMOYASU")  {similar.push("SKEPTIC");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "DESTRO")  {similar.push("CHIKARA YOTSUBASHI"); similar.push("CHIKARA");}
+                if(answer == "CHIKARA YOTSUBASHI" || answer == "CHIKARA")  {similar.push("DESTRO");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "GETEN")  {similar.push("HIMURA"); similar.push("ICEMAN");}
+                if(answer == "HIMURA")  {similar.push("ICEMAN"); similar.push("GETEN");}
+                if(answer == "ICEMAN")  {similar.push("GETEN"); similar.push("HIMURA");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "OVERHAUL")  {similar.push("KAI CHISAKI"); similar.push("CHISAKI");}
+                if(answer == "KAI CHISAKI" || answer == "CHISAKI")  {similar.push("OVERHAUL");}
 
-                if(answer == "GOGOGOGO")  {similar.push("GOGOGOGO"); similar.push("GOGOGOGO");}
-                if(answer == "GOGOGOGO" || answer == "GOGOGOGO")  {similar.push("GOGOGOGO");}
+                if(answer == "BAT VILLAIN")  {similar.push("BATTO YOBAYAKAWA"); similar.push("BATTO");}
+                if(answer == "BATTO YOBAYAKAWA" || answer == "BATTO")  {similar.push("BAT VILLAIN");}
 
+                if(answer == "OCTOID")  {similar.push("IKAJIRO TAKOBE"); similar.push("IKAJIRO");}
+                if(answer == "IKAJIRO TAKOBE" || answer == "IKAJIRO")  {similar.push("OCTOID");}
 
+                if(answer == "CHRONOSTASIS")  {similar.push("HARI KURONO"); similar.push("HARI");}
+                if(answer == "HARI KURONO" || answer == "HARI")  {similar.push("CHRONOSTASIS");}
 
+                if(answer == "MIMIC")  {similar.push("JOI IRINAKA"); similar.push("JOI");}
+                if(answer == "JOI IRINAKA" || answer == "JOI")  {similar.push("MIMIC");}
 
+                if(answer == "THE RAPPER")  {similar.push("KENDO RAPPA"); similar.push("KENDO");}
+                if(answer == "KENDO RAPPA" || answer == "KENDO")  {similar.push("THE RAPPER");}
 
+                if(answer == "POP STEP")  {similar.push("KAZUHO HANEYAMA"); similar.push("KAZUHO");}
+                if(answer == "KAZUHO HANEYAMA" || answer == "KAZUHO")  {similar.push("POP STEP");}
 
+                if(answer == "TRUE MAN")  {similar.push("NAOMASA TSUKAUCHI"); similar.push("NAOMASA");}
+                if(answer == "NAOMASA TSUKAUCHI" || answer == "NAOMASA")  {similar.push("TRUE MAN");}
 
+                if(answer == "KANIKO")  {similar.push("MONIKA KANIYASHIKI"); similar.push("MONIKA");}
+                if(answer == "MONIKA KANIYASHIKI" || answer == "MONIKA")  {similar.push("KANIKO");}
             }
 
     
