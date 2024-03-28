@@ -53,10 +53,10 @@ body{
 }
 
 .pbtn {
-    width: 60%;
+    width: 50%;
     font-size: 100%;
     font-family: Georgia, 'Times New Roman', Times, serif;
-    padding: 0.8em;
+    padding: 0.9em;
     margin: 1em;
     letter-spacing: 0.2em;
     color: #fff;
@@ -84,6 +84,10 @@ body{
     background: linear-gradient(0deg, rgb(228, 234, 240) 0%, rgb(229, 233, 237) 100%);
  }
 
+
+ .pbtn span {
+  float: left;
+ }
 
 
  @media (max-width:431px) {
@@ -918,7 +922,7 @@ body{
 /* reset input */
 
 .p0input {
-  width: 70%;
+  width: 50%;
   text-align: center;
   font-family:'Courier New', Courier, monospace;
   letter-spacing: 0.05em;
@@ -1322,7 +1326,7 @@ body{
 
 
 optgroup {
-  color: #a6d4f1;
+  color: #d4e6f1;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   background-color: #170520e4;
   padding: 1em;
@@ -1333,9 +1337,6 @@ optgroup {
   z-index: 3;
   width: 100%;
   color: #394349;
-  /* outline: 2px solid #49aff2;
-  outline: 2px solid -webkit-focus-ring-color;
-  outline-offset: -2px; */
   
 }
 
@@ -1350,9 +1351,12 @@ optgroup {
 }
 
 
+
 select::-ms-expand { 
   display: none; /* remove default arrow on ie10 and ie11 */
 }
+
+
 
 
 
@@ -1634,7 +1638,13 @@ select::-ms-expand {
 
 .playerdiv {
   position: absolute;
-  width: 100%;
+  top:0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 50%;
+  height: fit-content;
+  /* if height removed then zoom in and out bug resolved but mobile display still bad */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1661,18 +1671,21 @@ select::-ms-expand {
 
 .ptxt {
   position: absolute;
-  top:-40%;
-  font-family: Arial, Helvetica, sans-serif;
+  transform: translateY(-170%);
+  letter-spacing: 1.2px;
+  font-family:Georgia, 'Times New Roman', Times, serif;
   color:aliceblue;
-  text-shadow: rgb(52, 7, 47) 5px 0 10px;  
+  text-shadow: rgb(125, 145, 68) 5px 0 10px;  
   text-transform: uppercase;
-  font-size: 90%;
+  font-size: 80%;
 }
 
 .lostclass {
   text-decoration:line-through;
   filter: brightness(70%);
 }
+
+
 
 .turnpic {
   position: absolute;
@@ -1707,7 +1720,6 @@ select::-ms-expand {
   filter: brightness(90%);
   z-index: 99;
   position: absolute;
-  top:-10%;
   width: 4rem;
   height: 4rem;
   animation: skullA .3s forwards;
@@ -1870,4 +1882,6 @@ select::-ms-expand {
 
 .ptxt9 {
 }
+
+
 

@@ -94,6 +94,11 @@ var app = new Vue({
         },
 
 
+        redirectMode: function() {
+            
+        },
+
+
         submitUsername: function() {
             var body = {
                 val: this.username
@@ -605,7 +610,9 @@ $('#subbtn').on('touchend click', function(event) {
 })
 
 
-
+$('.p0input').on('click' , function() {
+    console.log('mdr')
+});
 
 
 $('.closeimg2').on('click' , function() {
@@ -1063,7 +1070,7 @@ function editOpponent(players , username) {
 
 
     var angle = (2 * Math.PI) / numberOfElements;
-    var radius = 220; // Rayon du cercle
+    var radius = 240; // Rayon du cercle
 
     for(let i = 1 ; i <= numberOfElements ; i++) {
 
@@ -1203,6 +1210,4 @@ if(sliderEl) {
 
 
 }
-
-
 

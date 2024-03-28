@@ -24,7 +24,6 @@ const io = new Server(server , {
 })
 
 
-//TODO : handle focus for game with 2 and more than 4 players when people lost focus once
 
 //session middleware
 var tsec = 1000;
@@ -34,7 +33,7 @@ const sessionMiddleware = session({
     resave: true,
     saveUninitialized: true,
     cookie: {
-        maxAge: 60*tmin,
+        maxAge: 30*tmin,
         sameSite: 'lax'
     }
 });
@@ -42,7 +41,8 @@ const sessionMiddleware = session({
 
 
 app.use(sessionMiddleware , function(req,res, next) {
-
+   
+    
     next();
 });
 
@@ -78,12 +78,12 @@ var mapgamedata = new Map();
 var mapgamestack = new Map();
 var mapgametotal = new Map();
 var mapcodecopy = new Map();
+var current_user = [];
 
 //path handle
 app.get('/' , function(req,res) {
 
-    // console.log(mapcode)
-
+    
     if(req.session.ingame == true) {
         res.redirect('/game');
     } else {
@@ -106,9 +106,13 @@ app.get('/' , function(req,res) {
 app.post('/launch' , function(req,res) {
     
     var nickname = req.body.val;
-    var cres = checkUsername(nickname);
+    var nicknameup = nickname.toUpperCase();
+    var cres = checkUsername(nicknameup);
 
-    if(cres == "good") req.session.username = nickname;
+    if(cres == "good") {
+        req.session.username = nickname;
+        current_user.push(nicknameup);
+    }
 
     res.end(cres);
 
@@ -148,6 +152,7 @@ app.post('/codeCheck' , function(req,res) {
         if(codeUp == value && !mapcodefull.includes(codeUp) && !mapgametheme.has(codeUp))  {
             resnb = "oui";
             req.session.rid = codeUp;
+            break;
         }   
     }
     
@@ -381,6 +386,9 @@ app.post('/endGame' , function(req,res) {
 
 
 app.post('/editUsername' , function(req,res) {
+    var upuser = req.session.username;
+    var upuser2 = upuser.toUpperCase();
+    current_user = current_user.filter(user => user != upuser2);
     req.session.destroy();
 
     res.end();
@@ -486,7 +494,6 @@ io.on('connection' , (socket) => {
                 var nbplayer = 0;
                 for (let [key, value] of mapcode) {
                     if(key!=iousername && mapcode.get(key) == ioroomid) nbplayer++;
-                    // if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
                 }
 
          
@@ -905,6 +912,8 @@ function checkUsername(username) {
     if(username.length < 4) return "TROP COURT (4-15)";
     if(username.length > 15) return "TROP LONG (4-15)";
     if(username.indexOf(' ') >= 0) return "FORMAT INVALIDE";
+
+    if (current_user.includes(username)) return "PEUDO ACTUELLEMENT INDISPONIBLE"
 
     return "good";
 }
@@ -1640,6 +1649,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "VONGOLA SETTIMO")  similar.push("FABIO");
                 if(answer == "FABIO")  similar.push("VONGOLA SETTIMO");
+
+                if(answer == "VIPER")  similar.push("MAMMON");
+                if(answer == "MAMMON")  similar.push("VIPER");
 
                 if(answer == "MM")  { similar.push("M.M"); similar.push("M M");}
                 if(answer == "M.M")  { similar.push("M M"); similar.push("MM"); }
