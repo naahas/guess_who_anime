@@ -279,6 +279,7 @@ app.post('/confirmSetting' , function(req,res) {
     if(theme == 'Reborn') mapgamedata.set(req.session.rid , profile.Character.Reborn);
     if(theme == 'My Hero Academia') mapgamedata.set(req.session.rid , profile.Character.Mha);
     if(theme == 'Death Note') mapgamedata.set(req.session.rid , profile.Character.DeathNote);
+    if(theme == 'Jojo') mapgamedata.set(req.session.rid , profile.Character.Jojo);
     if(theme == 'Fairy Tail') mapgamedata.set(req.session.rid , profile.Character.FairyTail);
     if(theme == 'Jujutsu Kaisen') mapgamedata.set(req.session.rid , profile.Character.JujutsuKaisen);
 
@@ -1496,6 +1497,9 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "CONNY SPRINGER" || answer == "CONNY") { similar.push("CONNIE SPRINGER"); similar.push("CONNIE");}
                 if(answer == "CONNIE SPRINGER" || answer == "CONNIE") { similar.push("CONNY SPRINGER"); similar.push("CONNY");}
 
+                if(answer == "DINA FRITZ" || answer == "DINA") { similar.push("DINAH"); similar.push("DINAH FRITZ"); similar.push("DINA"); similar.push("DINA FRITZ");}
+                if(answer == "DINAH FRITZ" || answer == "DINAH") { similar.push("DINA"); similar.push("DINA FRITZ"); similar.push("DINAH");  similar.push("DINAH FRITZ");}
+
                 if(answer == "LEVI") { similar.push("LIVAI");}
                 if(answer == "LIVAI") { similar.push("LEVI");}
 
@@ -2233,6 +2237,62 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "KANIKO")  {similar.push("MONIKA KANIYASHIKI"); similar.push("MONIKA");}
                 if(answer == "MONIKA KANIYASHIKI" || answer == "MONIKA")  {similar.push("KANIKO");}
+            }
+
+
+            if(theme == 'Jojo') {
+                if(answer == "WAMUU")  {similar.push("WAMU"); }
+                if(answer == "WAMU")  {similar.push("WAMUU");}
+
+                if(answer == "SOUNDMAN")  {similar.push("SANDMAN"); }
+                if(answer == "SANDMAN")  {similar.push("SOUNDMAN");}
+
+                if(answer == "D-I-S-C-O")  {similar.push("DISCO"); }
+                if(answer == "DISCO")  {similar.push("D-I-S-C-O");}
+
+                if(answer == "WAMUU")  {similar.push("WAMU"); }
+                if(answer == "WAMU")  {similar.push("WAMUU");}
+
+                if(answer == "HERMES")  {similar.push("ERMES"); similar.push("ERMES COSTELLO");}
+                if(answer == "ERMES" || answer == "ERMES COSTELLO")  {similar.push("HERMES");}
+
+                if(answer == "SPORTS MAXX")  {similar.push("SPORTS MAX"); }
+                if(answer == "SPORTS MAX")  {similar.push("SPORTS MAXX");}
+
+                if(answer == "GEORGE 2")  {similar.push("GEORGE II"); similar.push("GEORGE JOESTAR 2"); similar.push("GEORGE JOESTAR II");}
+                if(answer == "GEORGE JOESTAR 2")  { similar.push("GEORGE II"); similar.push("GEORGE JOESTAR II"); similar.push("GEORGE 2");}
+                if(answer == "GEORGE II")  {similar.push("GEORGE JOESTAR 2"); similar.push("GEORGE 2"); similar.push("GEORGE JOESTAR II");}
+                if(answer == "GEORGE JOESTAR II")  {similar.push("GEORGE JOESTAR 2"); similar.push("GEORGE II"); similar.push("GEORGE 2");}
+                
+                if(answer == "GEORGE 1")  {similar.push("GEORGE I"); similar.push("GEORGE JOESTAR 1"); similar.push("GEORGE JOESTAR I");}
+                if(answer == "GEORGE JOESTAR 1")  { similar.push("GEORGE I"); similar.push("GEORGE JOESTAR I"); similar.push("GEORGE 1");}
+                if(answer == "GEORGE I")  {similar.push("GEORGE JOESTAR 1"); similar.push("GEORGE 1"); similar.push("GEORGE JOESTAR I");}
+                if(answer == "GEORGE JOESTAR I")  {similar.push("GEORGE JOESTAR 1"); similar.push("GEORGE I"); similar.push("GEORGE 1");}
+            
+                if(answer == "NDOUL")  {similar.push("N DOUL"); similar.push("N'DOUL"); }
+                if(answer == "N DOUL")  {similar.push("NDOUL"); similar.push("N'DOUL"); }
+                if(answer == "N'DOUL")  {similar.push("NDOUL"); similar.push("N DOUL"); }
+
+                if(answer == "FF")  {similar.push("F.F"); similar.push("FOO FIGHTERS"); }
+                if(answer == "F.F")  {similar.push("FF"); similar.push("FOO FIGHTERS"); }
+                if(answer == "FOO FIGHTERS")  {similar.push("FF"); similar.push("F.F"); }
+
+                if(answer == "DARBY")  {similar.push("D ARBY"); similar.push("D'ARBY");  similar.push("DANIEL"); similar.push("DANIEL J DARBY");  }
+                if(answer == "D ARBY")  {similar.push("DARBY"); similar.push("D'ARBY");  similar.push("DANIEL"); similar.push("DANIEL J DARBY"); }
+                if(answer == "D'ARBY")  {similar.push("DARBY"); similar.push("D ARBY");  similar.push("DANIEL"); similar.push("DANIEL J DARBY"); }
+                if(answer == "DANIEL" || answer == "DANIEL J DARBY")  {similar.push("DARBY"); similar.push("D ARBY");  similar.push("D'ARBY"); similar.push("DANIEL J DARBY");similar.push("DANIEL"); }
+            
+                if(answer == "SHIGECHI")  {similar.push("SHIGEKIYO"); similar.push("SHIGEKIYO YANGUAWA");}
+                if(answer == "SHIGEKIYO YANGU" || answer == "SHIGEKIYO")  {similar.push("SHIGECHI");}
+            
+            
+            
+            
+            
+            
+            
+            
+            
             }
 
     
