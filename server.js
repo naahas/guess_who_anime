@@ -1517,6 +1517,13 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
                 if(answer == "PORYGON-Z")  similar.push("PORYGON Z");
                 if(answer == "PORYGON Z")  similar.push("PORYGON-Z");
+
+                if(answer == "LANCE") similar.push('PETER');
+                if(answer == "PETER") similar.push('LANCE');
+
+                if(answer == "ASH") similar.push('SACHA');
+                if(answer == "SACHA") similar.push('ASH');
+
             }
 
 
@@ -1734,7 +1741,7 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "KANA" || answer == 'KANA ALBERONA')  {similar.push("CANA ALBERONA"); similar.push("CANA"); similar.push("KANNA ALBERONA"); similar.push("KANNA");}
               
                 if(answer == "SHERRIA" || answer == 'SHERRIA BLENDY')  {similar.push("CHERRYA BLENDY"); similar.push("CHERRYA"); similar.push("SHERIA");}
-                if(answer == "CHERRYA" || answer == 'CHERRYA Blendy')  {similar.push("SHERRIA Blendy"); similar.push("SHERRIA"); similar.push("SHERIA");}
+                if(answer == "CHERRYA" || answer == 'CHERRYA BLENDY')  {similar.push("SHERRIA BLENDY"); similar.push("SHERRIA"); similar.push("SHERIA");}
                 if(answer == "SHERIA")  {similar.push("SHERRIA BLENDY"); similar.push("SHERRIA"); similar.push("CHERRYA BLENDY"); similar.push("CHERRYA");}
 
                 if(answer == "BIXROW")  similar.push('BIXLOW')

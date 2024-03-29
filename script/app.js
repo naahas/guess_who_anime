@@ -1054,7 +1054,6 @@ function displaySkullPic(indexp) {
 }
 
 
-
 function editBotAnswer(botanswer) {
     
     $('.pindex' + 1).val(botanswer);
