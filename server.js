@@ -176,6 +176,15 @@ app.post('/replay' , function(req,res) {
 });
 
 
+
+app.get('/mode' , function(req,res) {
+
+    if(req.session.username) res.sendFile(__dirname + '/mode.html');
+    else res.redirect('/');
+    
+});
+
+
 app.post('/replayPlayer' , function(req,res) {
     req.session.isplaying = null;
     req.session.endgame = null;

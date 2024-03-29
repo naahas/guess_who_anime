@@ -95,7 +95,7 @@ var app = new Vue({
 
 
         redirectMode: function() {
-            
+            location.href = '/mode';
         },
 
 
@@ -213,6 +213,11 @@ var app = new Vue({
             .catch(function (err) {
                 
             });
+        },
+
+
+        returnHome: function() {
+            location.href = '/';
         },
 
 
