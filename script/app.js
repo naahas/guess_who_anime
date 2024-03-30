@@ -18,7 +18,8 @@ var app = new Vue({
             opponentres:'',
             canswer:'',
             gwinner: 'SLAYER',
-            nbplayer: 0
+            nbplayer: 0,
+            currentmode: 'Bombanime'
             
             
         }
@@ -106,7 +107,7 @@ var app = new Vue({
 
             var config = {
                 method: 'post',
-                url: '/launch',
+                url: '/subUsername',
                 data: body
             };
 
@@ -331,6 +332,50 @@ var app = new Vue({
 
         reload: function() {
             location.reload();
+        },
+
+
+
+        selectMode: function(mode) {
+            this.currentmode = mode;
+            $('.modebtn').removeClass('disablemode2');
+            $('.modebtn').prop("disabled", false);
+
+            var gridbox = document.getElementById('gridboxdiv');
+
+            for(var i = 0 ; i < gridbox.children.length ; i ++) {
+                var modechild = gridbox.children[i];
+                if(modechild.getAttribute('name') == mode) {
+                    $('.casecontainer').removeClass('selectedclass');
+                    modechild.classList.add('selectedclass');
+                    break;
+                }
+            }
+
+        },
+
+
+        confirmMode: function() {
+                var cmode = this.currentmode;
+
+                var body = {
+                    val : cmode
+                };
+    
+                var config = {
+                    method: 'post',
+                    url: '/setMode',
+                    data: body
+                };
+    
+                axios(config)
+                .then(function (res) {
+                    location.href = '/';
+                })
+                .catch(function (err) {
+                    
+                });
+
         }
 
     },
@@ -394,13 +439,13 @@ var app = new Vue({
         });
 
 
-        socket.on('displaySetting', () => {
-            $('.navdiv').show();
+        socket.on('displaySetting', (nmode) => {
             $('.rdiv').show();
+            if(nmode == 1) $('.navdiv').show();
         });
 
 
-        socket.on('displayOpponents' , (opponents , ruser) => {   
+        socket.on('displayOpponentsM1' , (opponents , ruser) => {   
             this.opponents = opponents;
 
             editOpponent(opponents , ruser);
@@ -598,6 +643,29 @@ var app = new Vue({
             $('.pindex' + indexp).prop("disabled", true);
         });
 
+
+        socket.on('updateMode' , (mode) => {
+            this.currentmode = mode;
+            editMode(mode);
+        });
+
+
+        socket.on('updateMode' , (mode) => {
+            this.currentmode = mode;
+            $('.modetxtdiv').show();
+        });
+
+
+        socket.on('sendLinkEvent' , (ytblink) => {
+            console.log(ytblink)
+            var vid = document.getElementById('videof');
+            vid.src = ytblink
+            console.log(ytblink)
+        })
+
+
+        
+
     },
 
 
@@ -607,6 +675,7 @@ var app = new Vue({
 
 
 //JS AND JQUERY SECTION
+
 
 $('#subbtn').on('touchend click', function(event) {
     event.stopPropagation();
@@ -1177,7 +1246,16 @@ function editOpponent(players , username) {
 }
 
 
+function editMode(mode) {
+    var gridbox = document.getElementById('gridboxdiv');
 
+    if(gridbox) {
+
+      
+
+    }
+
+}
 
 
 
@@ -1215,3 +1293,30 @@ if(sliderEl) {
 
 }
 
+
+
+
+const opening = ["Dragon Ball Z- Opening 1",
+"One Piece - Opening 14",
+"My Hero Academia - Opening 2",
+"Vinland Saga - Opening 3",
+"One Punch Man - Opening 1",
+"Black Clover - Opening 3",
+"Naruto Shippuden - Opening 13",
+"HunterXHunter - Opening 1",
+"My Hero Academia - Opening 2"];
+
+if(btnAnswer) {
+
+for (let i = 0; i < opening.length; i++){
+    var btnAnswer = document.getElementById('choice' + (i));
+    var span = btnAnswer.childNodes[0]
+    span.innerHTML = opening[i];
+}
+
+const generateAnswers = () => {
+    Math.random(); //[]
+} 
+
+
+}

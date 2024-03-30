@@ -59,21 +59,21 @@
                         
 
 
-            <div class="gridmodediv">
-                <div class="casecontainer">
+            <div id="gridboxdiv" class="gridmodediv">
+                <div class="casecontainer" name = "Bombanime">
                     <i title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
-                    <div class="casemode"> <span>Bombanime &nbsp; <i class="fa fa-bomb" aria-hidden="true"></i></div>
+                    <div class="casemode"name = "Bombanime" id="bombanimecase" @click="selectMode('Bombanime')"> <span>Bombanime &nbsp; <i class="fa fa-bomb" aria-hidden="true"></i></div>
                 </div>
-                <div class="casecontainer">
+                <div class="casecontainer" name = "Opanime">
                     <i title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
-                    <div class="casemode"> <span>Opanime &nbsp; <i class="fa-solid fa-music" style="color: #5a4c85;"></i> </div>
+                    <div class="casemode"name = "Opanime" id="opanimecase" @click="selectMode('Opanime')"> <span>Opanime &nbsp; <i class="fa-solid fa-music" style="color: #5a4c85;"></i> </div>
                 </div>
                 
             </div>
 
 
 
-            <button @click="confirmMode()" class="modebtn">VALIDER</button>
+            <button disabled @click="confirmMode()" class="modebtn disablemode2">VALIDER</button>
 
             <span class="copyright"> Bombanime © Nahass 2024 </span>
 

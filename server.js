@@ -8,8 +8,27 @@ const { Server } = require('socket.io');
 const session = require('express-session');
 const { reset } = require('nodemon');
 const bodyParser = require('body-parser');
+const YouTube = require('youtube-node');
 require('dotenv').config();
 var _ = require('underscore');
+
+
+
+const youtube = new YouTube();
+
+// Configurez l'API YouTube avec votre clé d'API
+youtube.setKey('AIzaSyBPUh22vskxpNL868ZlrmAmy4QNzwuThsM');
+
+
+
+    
+    
+
+
+
+
+
+
 
 
 //main const
@@ -83,7 +102,6 @@ var current_user = [];
 //path handle
 app.get('/' , function(req,res) {
 
-    
     if(req.session.ingame == true) {
         res.redirect('/game');
     } else {
@@ -103,7 +121,7 @@ app.get('/' , function(req,res) {
 
 
 
-app.post('/launch' , function(req,res) {
+app.post('/subUsername' , function(req,res) {
     
     var nickname = req.body.val;
     var nicknameup = nickname.toUpperCase();
@@ -111,6 +129,7 @@ app.post('/launch' , function(req,res) {
 
     if(cres == "good") {
         req.session.username = nickname;
+        req.session.mode = 'Bombanime';
         current_user.push(nicknameup);
     }
 
@@ -185,6 +204,17 @@ app.get('/mode' , function(req,res) {
 });
 
 
+app.post('/setMode' , function(req,res) {
+    req.session.mode = req.body.val;
+
+
+
+
+
+    res.end();
+});
+
+
 app.post('/replayPlayer' , function(req,res) {
     req.session.isplaying = null;
     req.session.endgame = null;
@@ -210,7 +240,7 @@ app.post('/game' , function(req,res) {
     });  
 
 
-    console.log(mapcode)
+    console.log("current players : " , mapcode)
 
     mapgametheme.set(req.session.rid , 'Naruto');
     mapgametime.set(req.session.rid , 5);
@@ -219,7 +249,6 @@ app.post('/game' , function(req,res) {
 
     res.redirect('/game');
 
-    
 });
 
 
@@ -238,7 +267,8 @@ app.get('/game' , function(req,res) {
     if(mapgamewinner.get(req.session.rid)!=null) req.session.endgame = true;
 
     if(req.session.ingame == true) {
-        res.sendFile(__dirname + '/game.html');
+        var modfilename = req.session.mode.toLowerCase();
+        res.sendFile(__dirname + '/' + modfilename + '.html');
     } else res.redirect('/');
 
 });
@@ -260,7 +290,7 @@ app.post('/ipstatus' , function(req,res) {
 
 
 
-// GAME START AFTER CONFIRM SETTING
+// GAME START AFTER CONFIRM SETTING (BOMBANIME)
 app.post('/confirmSetting' , function(req,res) {
     var btime = req.body.val1;
     var theme = req.body.val2;
@@ -445,6 +475,7 @@ app.get('*' , function(req,res) {
 });
 
 
+
 //sockets handle
 io.on('connection' , (socket) => {
 
@@ -467,14 +498,17 @@ io.on('connection' , (socket) => {
     const ioreplay = socket.request.session.replayed;
     const iosolo = socket.request.session.solop;
     const ioback = socket.request.session.back;
+    const iomode = socket.request.session.mode;
 
 
     socket.emit('showSettingEvent' , iousername);
     socket.emit('displayJoinDiv' , ioroomid);
 
     
+
     if(iousername) socket.emit('displayUsernameEvent' , iousername);
 
+  
     //show raher username input or create/join button , and keep screen notified when there is a player 
     if(iocreate) {
         socket.join(ioroomid);
@@ -491,8 +525,43 @@ io.on('connection' , (socket) => {
     }
 
     
+    if(iomode) {
+        socket.emit('updateMode' , iomode);
+    }
 
 
+    if(iomode && iomode == "Opanime") {
+        var preurl = "https://www.youtube.com/v/";
+        youtube.search('jojo fighting gold', 2, function(error, result) {
+        if (error) {
+            console.log(result);
+            return error;
+        } else {
+            // var jres = JSON.stringify(result);
+            // console.log(jres)
+            socket.emit("sendLinkEvent" ,  preurl + result.items[0].id.videoId);
+            }
+        })
+    }
+
+
+    if(iomode && iomode == "Opanime") {
+        var preurl = "https://www.youtube.com/watch?v=";
+        youtube.search('one piece opening 14', 2, function(error, result) {
+        if (error) {
+            console.log(result);
+            return error;
+        } else {
+            var jres = JSON.stringify(result);
+            var completelink = preurl + 
+            socket.emit('ytbLinkEvent' , )
+            console.log(preurl + result.items[0].id.videoId);
+            }
+        })
+    }
+
+
+    //JOIN THE ROOM
     if(iojoin == true && ioroomid) {
         if(io.sockets.adapter.rooms.get(ioroomid)) {
             var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
@@ -514,28 +583,32 @@ io.on('connection' , (socket) => {
     }
 
 
-    if(iocreate && ioingame == true) {
-        if(!ioplaying) socket.emit('displaySetting');
+    //DISPLAY WAIT MSG TO JOINED PLAYERS
+    if(ioingame == true && iocreate!=true) {
+        if(!ioplaying) socket.emit('displayWaitMsgGameEvent')
     }
 
-    if(ioingame == true) {
+    
+    
+    if(iocreate && ioingame == true) {
+        if(!ioplaying && iomode == 'Bombanime') socket.emit('displaySetting' , (1));
+
+    }
+
+
+
+
+    //DISPLAY OPPONENT (BOMBANIME)
+    if(ioplaying && ioingame == true) {
         var oplayer = 'SLAYERBOT';
         var playertab = [];
             for (let [key, value] of mapcode) {
                 if(mapcode.get(key) == ioroomid) playertab.push(key);
             }
-
-        if(ioplaying) socket.emit('displayOpponents' , playertab , iousername );
-        
+        socket.emit('displayOpponentsM1' , playertab , iousername );
     }
 
-
-
-    if(ioingame == true && iocreate!=true) {
-        if(!ioplaying) socket.emit('displayWaitMsgGameEvent')
-    }
-
-
+    //DISPLAY SKULL , TURNPIC , AND BOMB AT GAME BEGINNING AND AFTER RELOAD (BOMBANIME)
     if(ioplaying && ioendgame != true) {
         var time = mapgametime.get(ioroomid);
         var theme = mapgametheme.get(ioroomid);
@@ -627,6 +700,7 @@ io.on('connection' , (socket) => {
 
 
 
+    // DISPLAY TYPING (BOMBANIME)
     socket.on('showTypingEvent' , (msg) => {
 
         var index_player = 0;
@@ -641,7 +715,7 @@ io.on('connection' , (socket) => {
     });
 
 
-    // CHECK ANSWER HERE 
+    // CHECK ANSWER HERE (BOMBANIME)
     socket.on('sendAnswerEvent' , (answer , stat) => {
 
 
@@ -788,7 +862,7 @@ io.on('connection' , (socket) => {
     });
 
 
-
+    // HANDLE TIMER (BOMBANIME)
     socket.on('handleTimerEvent' , () => {
         var btimer = setInterval(() => {
             var current_time = mapgametimer.get(ioroomid);
@@ -886,6 +960,7 @@ io.on('connection' , (socket) => {
     });
 
 
+    // HANDLE KICK PLAYER
     socket.on('kickPlayerEvent' , () => {
         socket.emit('notifHostCancelFromPlayer');
         for (let [key, value] of mapcode) {
