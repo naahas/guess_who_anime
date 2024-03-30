@@ -2279,34 +2279,7 @@ select::-ms-expand {
     box-shadow: none;
   }
   
-  .btn-6:hover:before {
-    transition: all 500ms ease;
-    height: 100%;
-  }
-  
-  .btn-6:hover:after {
-    transition: all 500ms ease;
-    height: 100%;
-  }
-  
-  .btn-6 span:before,
-  .btn-6 span:after {
-    position: absolute;
-    content: "";
-    box-shadow:
-      -1px -1px 20px 0px rgba(255, 255, 255, 1),
-      -4px -4px 5px 0px rgba(255, 255, 255, 1),
-      7px 7px 20px 0px rgba(0, 0, 0, .4),
-      4px 4px 5px 0px rgba(0, 0, 0, .3);
-  }
-  
-  .btn-6 span:before {
-    left: 0;
-    top: 0;
-    width: 0%;
-    height: .5px;
-    transition: all 500ms ease;
-  }
+
   
   .btn-6 span:after {
     right: 0;

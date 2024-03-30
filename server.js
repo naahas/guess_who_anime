@@ -5,30 +5,11 @@ const { createServer } = require('http');
 const path  = require('path');
 const { Http2ServerRequest } = require("http2");
 const { Server } = require('socket.io');
+const mysql = require('mysql2');
 const session = require('express-session');
 const { reset } = require('nodemon');
 const bodyParser = require('body-parser');
-const YouTube = require('youtube-node');
-require('dotenv').config();
 var _ = require('underscore');
-
-
-
-const youtube = new YouTube();
-
-// Configurez l'API YouTube avec votre clé d'API
-youtube.setKey('AIzaSyBPUh22vskxpNL868ZlrmAmy4QNzwuThsM');
-
-
-
-    
-    
-
-
-
-
-
-
 
 
 //main const
@@ -41,6 +22,7 @@ const io = new Server(server , {
         credentials: true
     }
 })
+
 
 
 
@@ -83,6 +65,7 @@ app.use(express.static(__dirname + "/style/"));
 app.use(express.static(__dirname + "/img/"));
 app.use(express.static(__dirname + "/sound/"));
 app.use(express.static(__dirname + "/icon/"));
+app.use(express.static(__dirname + "/song/"));
 
 
 
@@ -129,7 +112,7 @@ app.post('/subUsername' , function(req,res) {
 
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Bombanime';
+        req.session.mode = 'Opanime';
         current_user.push(nicknameup);
     }
 
@@ -533,33 +516,7 @@ io.on('connection' , (socket) => {
 
 
     if(iomode && iomode == "Opanime") {
-        var preurl = "https://www.youtube.com/v/";
-        youtube.search('jojo fighting gold', 2, function(error, result) {
-        if (error) {
-            console.log(result);
-            return error;
-        } else {
-            // var jres = JSON.stringify(result);
-            // console.log(jres)
-            socket.emit("sendLinkEvent" ,  preurl + result.items[0].id.videoId);
-            }
-        })
-    }
-
-
-    if(iomode && iomode == "Opanime") {
-        var preurl = "https://www.youtube.com/watch?v=";
-        youtube.search('one piece opening 14', 2, function(error, result) {
-        if (error) {
-            console.log(result);
-            return error;
-        } else {
-            var jres = JSON.stringify(result);
-            var completelink = preurl + 
-            socket.emit('ytbLinkEvent' , )
-            console.log(preurl + result.items[0].id.videoId);
-            }
-        })
+        
     }
 
 

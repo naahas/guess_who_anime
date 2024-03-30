@@ -656,10 +656,7 @@ var app = new Vue({
         });
 
 
-        socket.on('sendLinkEvent' , (ytblink) => {
-           
-        })
-
+      
 
         
 
@@ -1293,6 +1290,13 @@ if(sliderEl) {
 
 
 
+////////////// OPANIME PART //////////////
+
+
+
+
+
+
 const opening = ["Dragon Ball Z- Opening 1",
 "One Piece - Opening 14",
 "My Hero Academia - Opening 2",
@@ -1316,4 +1320,15 @@ const generateAnswers = () => {
 } 
 
 
+var video = document.getElemeentById("opvideo");
+
+  // Démarrer la vidéo une fois que la page est chargée
+
+    video.play();
+ 
+
+
 }
+
+
+
