@@ -657,10 +657,7 @@ var app = new Vue({
 
 
         socket.on('sendLinkEvent' , (ytblink) => {
-            console.log(ytblink)
-            var vid = document.getElementById('videof');
-            vid.src = ytblink
-            console.log(ytblink)
+           
         })
 
 

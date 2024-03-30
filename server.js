@@ -327,6 +327,8 @@ app.post('/confirmSetting' , function(req,res) {
         
     }
 
+    console.log('current players copy => ' , mapcodecopy)
+
     var total_chara = mapgamedata.get(req.session.rid).length;
     mapgametotal.set(req.session.rid , total_chara);
 
@@ -897,7 +899,7 @@ io.on('connection' , (socket) => {
                 for (let [key, value] of mapcodecopy) if(mapcodecopy.get(key) == ioroomid) nbplayer++;
                    
 
-                //GAME IS OVER
+                //GAME IS OVER (2 PLAYERS LEFT BEFORE ELIMINATION)
                 if(nbplayer <= 2) {
                     for (let [key, value] of mapcodecopy) {
                         if(key!=player_turn && mapcodecopy.get(key) == ioroomid) winner = key; 
@@ -905,47 +907,56 @@ io.on('connection' , (socket) => {
                     io.to(ioroomid).emit('endGameEvent' , winner , iousername + " (vous)");
                     clearInterval(btimer);
                 } else {
+
                     io.to(ioroomid).emit('playSlashEvent');
+
+                    //SET TURN TO NEXT PLAYER AND THEN ELIMINATE CURRENT PLAYER
+                    
+                    var turn_array = [];
+                    for (let [key, value] of mapcode) {
+                        if(mapcode.get(key) == ioroomid) turn_array.push(key);
+                    }
+
+                    var index_player = 0;
+                    for (let [key, value] of mapcode) {
+                        if(key == player_turn && mapcode.get(key) == ioroomid) {
+                            
+                            break;
+                        } 
+                        if(mapcode.get(key) == ioroomid) index_player++; 
+                    }
+
+
+                    var next_index_player = index_player + 1;
+                    if(next_index_player >= turn_array.length) next_index_player = 0;
+                    var next_player = turn_array[next_index_player];
+
+                    while(!mapcodecopy.has(next_player)) {
+                        next_index_player+=1
+                        if(next_index_player >= turn_array.length) next_index_player = 0;
+                        next_player = turn_array[next_index_player];
+                    }
+
+
+                    mapgameturn.set(ioroomid , next_player)
+
+                    mapcodecopy.delete(player_turn);
+
+                    // console.log(mapcodecopy)
+
+                    
+                    io.to(ioroomid).emit('displaySkullEvent' , index_player);
+                    io.to(ioroomid).emit('hakaiPlayerEvent' , index_player);
+                    io.to(ioroomid).emit('displaySkullEvent' , index_player);
+                    io.to(ioroomid).emit('denableTurnInput2' , mapgameturn.get(ioroomid));
+                    io.to(ioroomid).emit('changeBombStepEvent' , 1);
+                    io.to(ioroomid).emit('displayTurnPicEvent' , next_index_player);
+                    socket.broadcast.to(ioroomid).emit('resetInputForOpponent' , index_player);
                 }
 
                
                 
-                //SET TURN TO NEXT PLAYER AND THEN ELIMINATE CURRENT PLAYER
-                var turn_array = [];
-
-                for (let [key, value] of mapcode) {
-                    if(mapcode.get(key) == ioroomid) turn_array.push(key);
-                }
-
-                var index_player = 0;
-                for (let [key, value] of mapcode) {
-                    if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
-                        
-                        break;
-                    } 
-                    if(mapcode.get(key) == ioroomid) index_player++; 
-                }
-
-
-                var next_index_player = index_player + 1;
-                if(next_index_player >= turn_array.length) next_index_player = 0;
-
-                var next_player = turn_array[next_index_player];
-
-                mapgameturn.set(ioroomid , next_player)
-
-                mapcodecopy.delete(player_turn);
-
-                // console.log(mapcodecopy)
-
                 
-                io.to(ioroomid).emit('displaySkullEvent' , index_player);
-                io.to(ioroomid).emit('hakaiPlayerEvent' , index_player);
-                io.to(ioroomid).emit('displaySkullEvent' , index_player);
-                io.to(ioroomid).emit('denableTurnInput2' , mapgameturn.get(ioroomid));
-                io.to(ioroomid).emit('changeBombStepEvent' , 1);
-                io.to(ioroomid).emit('displayTurnPicEvent' , next_index_player);
-                socket.broadcast.to(ioroomid).emit('resetInputForOpponent' , index_player);
 
                 
                
