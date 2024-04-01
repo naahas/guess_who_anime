@@ -949,24 +949,6 @@ body{
 
 /* reset input */
 
-.p0input {
-  width: 50%;
-  text-align: center;
-  font-family:'Courier New', Courier, monospace;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border: 0;
-  font-weight: 600;
-  text-shadow: .0.7em .1em 0 hsl(195, 10%, 8%);
-  border-bottom: 0.05em solid rgba(240, 248, 255, 0.591);
-  color:rgba(224, 203, 203, 0.694);
-  outline: 0;
-  font-size: 1.5rem;
-  color: rgb(179, 241, 247);
-  padding:1em 0.7em 0.7em 1em;
-  background-color: transparent;
-}
-
 
 .p1input{
   width: 70%;
@@ -1858,18 +1840,21 @@ select::-ms-expand {
 
 
 .p0input {
-  width: 9em;
+  width: 8em;
   text-align: center;
   font-family:'Courier New', Courier, monospace;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  border: 0;
   font-weight: 600;
   text-shadow: .0.7em .1em 0 hsl(195, 10%, 8%);
+  border-bottom: 0.05em solid rgba(240, 248, 255, 0.591);
   color:rgba(224, 203, 203, 0.694);
   outline: 0;
   font-size: 1.2rem;
   color: rgb(179, 241, 247);
   padding:1em 0.7em 0.7em 1em;
+  background-color: transparent;
 }
 
 
@@ -2128,171 +2113,413 @@ select::-ms-expand {
 
 
 .modetxtdiv {
-  width: 20%;
-  height: fit-content;
+  width: 30%;
   display: none;
   position: absolute;
-  bottom: 0;
+  bottom: 0.5em;
   right: 0;
   left:0;
-  margin: 0.5em;
+  margin: auto;
   letter-spacing: 1.5px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color:rgba(240, 248, 255, 0.694);
   text-shadow: rgb(20, 97, 184) 1px 0 10px; 
+  overflow: hidden;
+  white-space: nowrap; 
+}
+
+
+@media (min-width:432px) {
+  .modetxt {
+    float: left;
+    animation: scrollmod2 10s linear infinite; 
+  }
+}
+
+
+
+
+@keyframes scrollmod2 {
+  0% { transform: translateX(-100%);} 
+  100% { transform: translateX(200%); } 
+}
+
+@media (max-width:431px) {
+  .modetxtdiv {
+    display: none;
+    width: 50%;
+    bottom: 10%;
+  }
+  .modetxt {
+    display: none;
+  }
+}
+
+
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+  .modetxtdiv {
+    
+  }
+
+  .modetxt {
+    display: none;
+  }
+
+
 }
 
 
 
 
 
-/*************************************
-******* BLIND TEST
-**************************************/
 
-/*
-.turnpic {
+/* CITANIME  */
+
+.citadiv {
+  display: none;
+  width: fit-content;
+  height: fit-content;
   position: absolute;
+  top:-10em;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  animation: citaPop 1.2s forwards;
+}
+
+.citatxt {
+  color:#12384f;
+  font-size: 1.7rem;
+  text-shadow: rgb(186, 206, 229) 1px 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  font-weight: 600;
+  font-family:'Courier New', Courier, monospace;
+}
+
+
+@keyframes citaPop {
+  0% {
+    transform: scale(1.2);
   }
 
-  @import url('https://fonts.googleapis.com/css?family=Montserrat:700');
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 
 
-  body {
-    background-color: #111;
-    background-image: radial-gradient(#333, #111);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: #fff;
-    text-align: center;
-    width: 100vw;
-    font-weight: 700;
-    overflow: hidden;
-    font-family: 'Montserrat', sans-serif;
+
+
+.jokerpic {
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  width: 11%;
+  margin: 1em;
+  opacity: 0.4;
+}
+
+
+.jokerpic:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+
+.jokerble {
+  pointer-events: none;
+  filter: brightness(20%);
+  opacity: 0.2;
+}
+
+
+
+.citainputdiv {
+  display: none;
+  position: absolute;
+  width: fit-content;
+  height: fit-content;
+  bottom: 20%;
+  right: 0;
+  left:0;
+  margin: auto;
+}
+
+
+
+
+.citaput {
+  width: 90%;
+  text-align: center;
+  font-family:'Courier New', Courier, monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 0;
+  font-weight: 600;
+  text-shadow: .0.7em .1em 0 hsl(195, 66%, 50%);
+  border-bottom: 0.05em solid rgba(240, 248, 255, 0.591);
+  color:rgba(224, 203, 203, 0.694);
+  outline: 0;
+  font-size: 1.35rem;
+  color: rgb(179, 241, 247);
+  padding:1em 0.7em 0.7em 1em;
+  background-color: transparent;
+}
+
+
+.citaputfoe {
+  text-align: center;
+  font-family:'Courier New', Courier, monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 0;
+  font-weight: 600;
+  text-shadow: .0.7em .1em 0 hsl(195, 66%, 50%);
+  border-bottom: 0.05em solid rgba(240, 248, 255, 0.591);
+  color:rgba(224, 203, 203, 0.694);
+  outline: 0;
+  font-size: 1rem;
+  color: rgb(179, 241, 247);
+  padding:1em 0.7em 0.7em 1em;
+  background-color: transparent;
+}
+
+
+
+.dropdown2 {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  width:55%;
+  background: #f2f2f2;
+  border: 1px solid;
+  border-color: white #f7f7f7 whitesmoke;
+  border-radius: 3px;
+  background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+  background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.06));
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+.dropdown2:before, .dropdown2:after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 9px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 4px dashed;
+  border-color: #888888 transparent;
+  pointer-events: none;
+}
+
+.dropdown2:before {
+  border-bottom-style: solid;
+  border-top: none;
+}
+
+.dropdown2:after {
+  margin-top: 7px;
+  border-top-style: solid;
+  border-bottom: none;
+}
+
+.dropdown2-select {
+  position: relative;
+  width: 130%;
+  margin: 0;
+  padding: 6px 8px 6px 10px;
+  height: 28px;
+  line-height: 14px;
+  font-size: 15px;
+  color: #62717a;
+  text-shadow: 0 1px white;
+  background: #f2f2f2; /* Fallback for IE 8 */
+  background: rgba(0, 0, 0, 0) !important; /* "transparent" doesn't work with Opera */
+  border: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+
+.dropdown2-select:focus {
+  z-index: 3;
+  width: 100%;
+  color: #394349;
+  outline: 2px solid #49aff2;
+  outline: 2px solid -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.dropdown2-select > option {
+  margin: 3px;
+  padding: 6px 8px;
+  text-shadow: none;
+  background: #f2f2f2;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Fix for IE 8 putting the arrows behind the select element. */
+
+.lt-ie9 .dropdown {
+  z-index: 1;
+}
+
+.lt-ie9 .dropdown2-select {
+  z-index: -1;
+}
+
+.lt-ie9 .dropdown2-select:focus {
+  z-index: 3;
+}
+
+/* Dirty fix for Firefox adding padding where it shouldn't. */
+
+@-moz-document url-prefix() {
+  .dropdown2-select {
+    padding-left: 6px;
   }
-  
-  #fly-in {
-    font-size: 4em;
-    margin: 40vh auto;
-    height: 20vh; 
-    text-transform: uppercase;
-  }
-  
-  #fly-in span {
-    display: block;
-    font-size: .4em;
-    opacity: .8;
-  }
-  
-  #fly-in div {
-   position: fixed;
-    margin: 2vh 0;
-    opacity: 0;
-    left: 10vw;
-    width: 80vw;
-    animation: switch 32s linear infinite;
-  }
-  
-  #fly-in div:nth-child(2) { animation-delay: 4s}
-  #fly-in div:nth-child(3) { animation-delay: 8s}
-  #fly-in div:nth-child(4) { animation-delay: 12s}
-  #fly-in div:nth-child(5) { animation-delay: 16s}
-  #fly-in div:nth-child(6) { animation-delay: 20s}
-  #fly-in div:nth-child(7) { animation-delay: 24s}
-  #fly-in div:nth-child(8) { animation-delay: 28s}
-  
-  @keyframes switch {
-      0% { opacity: 0;filter: blur(20px); transform:scale(12)}
-      3% { opacity: 1;filter: blur(0); transform:scale(1)}
-      10% { opacity: 1;filter: blur(0); transform:scale(.9)}
-      13% { opacity: 0;filter: blur(10px); transform:scale(.1)}
-      80% { opacity: 0}
-      100% { opacity: 0}
+}
+
+
+.dropdown2-select > option {
+  padding: 1em;
+  text-shadow: none;
+  background: #2a2626;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color:aliceblue;
+  border-radius: 3px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+
+
+
+
+#radios{
+  position:relative;
+  width:50%;
+  margin:0 auto;
+}
+
+.radioinput {
+  position:absolute;
+  right:1000%;
+}
+
+.radiolabel{
+  float:left;
+  width:15%; padding-bottom:15%;
+  margin:0 2.5%;
+  background:rgba(255,255,255,.2);
+  border-radius:50%;
+  cursor:pointer;
+}
+
+#slider{
+  position:absolute;
+  left:0%; top:0;
+  width:10%; padding-bottom:10%;
+  margin:2.5% 0 0 5%;
+  background:#fff;
+  transition:transform 1s;
+  border-radius:50%;
+  animation-timing-function: ease-in-out;
+  animation-duration:.3s;
+  animation-fill-mode: forwards;
+  transition: 0.2s left .05s ease-in-out;
+}
+#input1:checked  ~ #slider{ animation-name: input1; left:0; }
+#input2:checked  ~ #slider{ animation-name: input2; left:20%; }
+#input3:checked  ~ #slider{ animation-name: input3; left:40%; }
+
+@keyframes input1{ 30%, 70% { transform:scale(0.5); } }
+@keyframes input2{ 30%, 70% { transform:scale(0.5); } }
+@keyframes input3{ 30%, 70% { transform:scale(0.5); } }
+
+
+
+.navpara {
+  font-family: 'Courier New', Courier, monospace;
+  color:aliceblue;
+}
+
+.navdivhr {
+  width: 70%;
+  margin-left:15%;
+}
+
+
+
+.jokerdiv {
+  margin-top:1em;
+  padding: 1em;
+  letter-spacing: 0.1em;
+  background-color:rgba(71, 28, 92, 0.2);
+}
+
+
+.citaopponentdiv {
+  display: none;
+  position: absolute;
+  margin: auto;
+  top:0;
+  left: 1%;
+  bottom: 0;
+  height: fit-content;
+  text-align: left;
+}
+
+
+.citatxtfoe {
+  letter-spacing: 1.05px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color:aliceblue;
+  text-shadow: rgb(125, 145, 68) 5px 0 10px;  
+  text-transform: uppercase;
+  font-size: 65%;
+  padding: 1em;
+}
+
+
+
+.citapoint {
+  text-shadow: rgb(167, 225, 6) 5px 0 10px;  
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color:aliceblue;
+  float: right;
+  padding: 10px;
+}
+
+
+.citatxtfoepic {
+  animation: gojoA 2s infinite;
+  margin-right: 1em;
+  padding: 1px;
+}
+
+
+@keyframes gojoA {
+  0% {
+    transform: rotate(0deg);
   }
 
-  */
+  50% {
+    transform: rotate(10deg);
+  }
 
-  .title_BT {
-    color: #26d8db;
-    text-align: center
+  100% {
+    transform: rotate(0deg);
   }
-  
-  .h3 {
-    text-align: center
-  }
-  
-  #video {
-    margin: 0 auto;
-    display: block;
-    background-color: yellow;
-  }
-  
-  .table {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .btn-6 {
-    background: rgb(247, 150, 192);
-    background: radial-gradient(circle, rgba(247, 150, 192, 1) 0%, rgba(118, 174, 241, 1) 100%);
-    line-height: 42px;
-    padding: 0;
-    border: none;
-  }
-   .btn-6 span {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .btn-6:before,
-  .btn-6:after {
-    position: absolute;
-    content: "";
-    height: 0%;
-    width: 1px;
-    box-shadow:
-      -1px -1px 20px 0px rgba(255, 255, 255, 1),
-      -4px -4px 5px 0px rgba(255, 255, 255, 1),
-      7px 7px 20px 0px rgba(0, 0, 0, .4),
-      4px 4px 5px 0px rgba(0, 0, 0, .3);
-  }
-  
-  .btn-6:before {
-    right: 0;
-    top: 0;
-    transition: all 500ms ease;
-  }
-  
-  .btn-6:after {
-    left: 0;
-    bottom: 0;
-    transition: all 500ms ease;
-  }
-  
-  .btn-6:hover {
-    background: transparent;
-    color: #76aef1;
-    box-shadow: none;
-  }
-  
-
-  
-  .btn-6 span:after {
-    right: 0;
-    bottom: 0;
-    width: 0%;
-    height: .5px;
-    transition: all 500ms ease;
-  }
-  
-  .btn-6 span:hover:before {
-    width: 100%;
-  }
-  
-  .btn-6 span:hover:after {
-    width: 100%;
-  } 
+}

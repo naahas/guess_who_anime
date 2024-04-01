@@ -24,6 +24,8 @@ const io = new Server(server , {
 })
 
 
+//TODO : re-enable bombtime restriction (when bombtime > 15) for bombanime
+
 
 
 //session middleware
@@ -80,6 +82,9 @@ var mapgamedata = new Map();
 var mapgamestack = new Map();
 var mapgametotal = new Map();
 var mapcodecopy = new Map();
+var mapgamedifficulty = new Map();
+var mapgamecitaturn = new Map();
+var mapgameplayerpoint = new Map();
 var current_user = [];
 
 //path handle
@@ -104,6 +109,7 @@ app.get('/' , function(req,res) {
 
 
 
+
 app.post('/subUsername' , function(req,res) {
     
     var nickname = req.body.val;
@@ -112,7 +118,7 @@ app.post('/subUsername' , function(req,res) {
 
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Opanime';
+        req.session.mode = 'Bombanime';
         current_user.push(nicknameup);
     }
 
@@ -190,10 +196,6 @@ app.get('/mode' , function(req,res) {
 app.post('/setMode' , function(req,res) {
     req.session.mode = req.body.val;
 
-
-
-
-
     res.end();
 });
 
@@ -219,7 +221,7 @@ app.post('/game' , function(req,res) {
 
 
     io.once('connection' , (socket) => {
-        socket.to(req.session.rid).emit('changeGamePlayerStatusEvent');
+        socket.to(req.session.rid).emit('changeGamePlayerStatusEvent' , req.session.mode);
     });  
 
 
@@ -251,6 +253,7 @@ app.get('/game' , function(req,res) {
 
     if(req.session.ingame == true) {
         var modfilename = req.session.mode.toLowerCase();
+        console.log(modfilename)
         res.sendFile(__dirname + '/' + modfilename + '.html');
     } else res.redirect('/');
 
@@ -260,6 +263,7 @@ app.get('/game' , function(req,res) {
 
 app.post('/igstatus' , function(req,res) {
     req.session.ingame = true;
+    req.session.mode = req.body.val;
 
     res.end();
 });
@@ -274,9 +278,11 @@ app.post('/ipstatus' , function(req,res) {
 
 
 // GAME START AFTER CONFIRM SETTING (BOMBANIME)
-app.post('/confirmSetting' , function(req,res) {
+app.post('/confirmSettingBombanime' , function(req,res) {
     var btime = req.body.val1;
     var theme = req.body.val2;
+    if(btime < 3) btime = 3;
+    if(btime > 15) btime = 15;
 
     console.log(mapcode)
 
@@ -326,6 +332,40 @@ app.post('/confirmSetting' , function(req,res) {
     res.end();
 });
 
+
+// GAME START AFTER CONFIRM SETTING (CITANIME)
+app.post('/confirmSettingCitanime' , function(req,res) {
+    var btime = req.body.val1;
+    if(btime < 5) btime = 5;
+    if(btime > 30) btime = 30;
+    var difficulty = req.body.val2;
+    var nbturn = req.body.val3;
+
+    console.log(nbturn)
+
+    mapgametime.set(req.session.rid , btime);
+    mapgameturn.set(req.session.rid , req.session.username);
+    mapgametimer.set(req.session.rid , 1);
+    mapgamedifficulty.set(req.session.rid , difficulty);
+    mapgamecitaturn.set(req.session.rid , nbturn);
+
+    
+    for (let [key, value] of mapcode) {
+        if(value == req.session.rid) mapcodecopy.set(key, value);
+        if(value == req.session.rid) mapgameplayerpoint.set(key, 0);
+    }
+
+
+    req.session.isplaying = true;
+    req.session.replayed = false;
+
+    io.once('connection' , (socket) => {
+        socket.to(req.session.rid).emit('makePlayerPlayingEvent');
+    });  
+
+
+    res.end();
+});
 
 
 app.post('/playSolo' , function(req,res) {
@@ -489,7 +529,6 @@ io.on('connection' , (socket) => {
     socket.emit('showSettingEvent' , iousername);
     socket.emit('displayJoinDiv' , ioroomid);
 
-    
 
     if(iousername) socket.emit('displayUsernameEvent' , iousername);
 
@@ -514,10 +553,6 @@ io.on('connection' , (socket) => {
         socket.emit('updateMode' , iomode);
     }
 
-
-    if(iomode && iomode == "Opanime") {
-        
-    }
 
 
     //JOIN THE ROOM
@@ -550,87 +585,111 @@ io.on('connection' , (socket) => {
     
     
     if(iocreate && ioingame == true) {
-        if(!ioplaying && iomode == 'Bombanime') socket.emit('displaySetting' , (1));
+        if(!ioplaying && iomode == 'Bombanime') socket.emit('displaySetting');
+        if(!ioplaying && iomode == 'Citanime') socket.emit('displaySetting');
 
     }
 
 
 
+    if(iomode == "Bombanime") {
 
-    //DISPLAY OPPONENT (BOMBANIME)
-    if(ioplaying && ioingame == true) {
-        var oplayer = 'SLAYERBOT';
-        var playertab = [];
+        //DISPLAY OPPONENT (BOMBANIME)
+        if(ioplaying && ioingame == true) {
+            var oplayer = 'SLAYERBOT';
+            var playertab = [];
+                for (let [key, value] of mapcode) {
+                    if(mapcode.get(key) == ioroomid) playertab.push(key);
+                }
+            socket.emit('displayOpponents' , playertab , iousername );
+        }
+
+        //DISPLAY SKULL , TURNPIC , AND BOMB AT GAME BEGINNING AND AFTER RELOAD (BOMBANIME)
+        if(ioplaying && ioendgame != true) {
+            var time = mapgametime.get(ioroomid);
+            var theme = mapgametheme.get(ioroomid);
+            socket.emit('displayBeginning')
+            socket.emit('displayPostRule' , time , theme);
+            
+            socket.emit('startSoundEvent');
+
+            if(iomode == "Bombanime") socket.emit('displayStrikerEvent' , mapgamestack.get(ioroomid).length ,  mapgametotal.get(ioroomid));
+
+
+            //ENABLE OR DISABLE TURN FOR THE CURRENT SOCKET ACCORDING TO MAPGAMETURN AFTER LOAD AND RELOAD
+            if(mapgameturn.get(ioroomid) == iousername) socket.emit('denableTurnInput' , 0)
+            else socket.emit('denableTurnInput' , 1);
+
+            //SHOW TURNPIC TO PLAYERS
+            var index_player = 0;
             for (let [key, value] of mapcode) {
-                if(mapcode.get(key) == ioroomid) playertab.push(key);
+                if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
+                    
+                    break;
+                } 
+                if(mapcode.get(key) == ioroomid) index_player++; 
             }
-        socket.emit('displayOpponentsM1' , playertab , iousername );
+
+            socket.emit('displayTurnPicEvent' , index_player);
+            
+
+            //SHOW SKULL TO PLAYERS
+            var lostPlayer = [];
+            var index_lost = 0;
+            for (let [key, value] of mapcode) {
+                if(mapcode.get(key) == ioroomid) {
+                    if(!mapcodecopy.has(key)) lostPlayer.push(index_lost);
+                } 
+                if(mapcode.get(key) == ioroomid) index_lost++;
+            }
+
+            if(lostPlayer.length > 0) {
+                lostPlayer.forEach(index => {
+                    socket.emit('displaySkullEvent' , index);
+                });
+            }
+
+
+            //CHANGE BOMB PIC STEP AFTER RELOAD
+            var xx = mapgametimer.get(ioroomid);
+            var yy = mapgametime.get(ioroomid);
+            var step2 = Math.floor(yy/2);
+
+            if((yy-xx) > step2) {
+                socket.emit('changeBombStepEvent' , 1);
+            }
+
+            if((yy-xx) > 1 && (yy-xx) <= step2) {
+                socket.emit('changeBombStepEvent' , 2);
+            }
+
+            if((yy-xx) <= 1) {
+                socket.emit('changeBombStepEvent' , 3);
+            }     
+
+
+
+        }
+
+
     }
 
-    //DISPLAY SKULL , TURNPIC , AND BOMB AT GAME BEGINNING AND AFTER RELOAD (BOMBANIME)
-    if(ioplaying && ioendgame != true) {
-        var time = mapgametime.get(ioroomid);
-        var theme = mapgametheme.get(ioroomid);
-        socket.emit('displayBeginning')
-        socket.emit('displayPostRule' , time , theme);
-        socket.emit('startSoundEvent');
 
-        socket.emit('displayStrikerEvent' , mapgamestack.get(ioroomid).length ,  mapgametotal.get(ioroomid));
+    if(iomode == "Citanime") {
+        if(ioplaying && ioendgame != true) {
+            //DISPLAY OPPONENT (CITANIME)
+            if(ioplaying && ioingame == true) {
+                var oplayer = 'SLAYERBOT';
+                var playertab = [];
+                    for (let [key, value] of mapcode) {
+                        if(mapcode.get(key) == ioroomid) playertab.push(key);
+                    }
+                socket.emit('displayOpponents2' , playertab , iousername );
+            }
 
-
-        //ENABLE OR DISABLE TURN FOR THE CURRENT SOCKET ACCORDING TO MAPGAMETURN AFTER LOAD AND RELOAD
-        if(mapgameturn.get(ioroomid) == iousername) socket.emit('denableTurnInput' , 0)
-        else socket.emit('denableTurnInput' , 1);
-
-        //SHOW TURNPIC TO PLAYERS
-        var index_player = 0;
-        for (let [key, value] of mapcode) {
-            if(key == mapgameturn.get(ioroomid) && mapcode.get(key) == ioroomid) {
-                
-                break;
-            } 
-            if(mapcode.get(key) == ioroomid) index_player++; 
+            socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid));
+            socket.emit('displayBeginning2')
         }
-
-        socket.emit('displayTurnPicEvent' , index_player);
-        
-
-        //SHOW SKULL TO PLAYERS
-        var lostPlayer = [];
-        var index_lost = 0;
-        for (let [key, value] of mapcode) {
-            if(mapcode.get(key) == ioroomid) {
-                if(!mapcodecopy.has(key)) lostPlayer.push(index_lost);
-            } 
-            if(mapcode.get(key) == ioroomid) index_lost++;
-        }
-
-        if(lostPlayer.length > 0) {
-            lostPlayer.forEach(index => {
-                socket.emit('displaySkullEvent' , index);
-            });
-        }
-
-
-        //CHANGE BOMB PIC STEP AFTER RELOAD
-        var xx = mapgametimer.get(ioroomid);
-        var yy = mapgametime.get(ioroomid);
-        var step2 = Math.floor(yy/2);
-
-        if((yy-xx) > step2) {
-            socket.emit('changeBombStepEvent' , 1);
-        }
-
-        if((yy-xx) > 1 && (yy-xx) <= step2) {
-            socket.emit('changeBombStepEvent' , 2);
-        }
-
-        if((yy-xx) <= 1) {
-            socket.emit('changeBombStepEvent' , 3);
-        }     
-
-
-
     }
 
 
@@ -937,6 +996,11 @@ io.on('connection' , (socket) => {
             socket.broadcast.to(ioroomid).emit('notifKickPlayerEvent');
         }
     });
+
+
+    socket.on('updateCurrentGameAfterLeavingEvent' , () => {
+        socket.broadcast.to(ioroomid).emit('reloadGameForOtherPlayer');
+    })
     
 
 

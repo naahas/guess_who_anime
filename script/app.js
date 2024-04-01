@@ -13,13 +13,14 @@ var app = new Vue({
             usernamedisplay: '',
             roomid: '',
             opponents:'',
-            bombtime:'',
+            timer:'',
             currenttheme:'',
             opponentres:'',
             canswer:'',
             gwinner: 'SLAYER',
             nbplayer: 0,
-            currentmode: 'Bombanime'
+            currentmode: 'Bombanime',
+            difficulty: 'Normal',
             
             
         }
@@ -166,7 +167,7 @@ var app = new Vue({
 
         },
 
-        sendGameSetting: function() {
+        sendGameSetting1: function() {
             var bombtime = $('#rangeid').val();
             var themechoice = $('.cselect').find(":selected").val();
 
@@ -178,7 +179,7 @@ var app = new Vue({
 
             var config = {
                 method: 'post',
-                url: '/confirmSetting',
+                url: '/confirmSettingBombanime',
                 data: body
             };
 
@@ -192,6 +193,37 @@ var app = new Vue({
 
 
             socket.emit('handleTimerEvent');
+
+        },
+
+        sendGameSetting2: function() {
+            var timer = $('#rangeid').val();
+            var difficulty = $('.cselect').find(":selected").val();
+            var nbturn = $('.cselect2').find(":selected").val();
+
+
+            var body = {
+                val1: timer,
+                val2: difficulty,
+                val3: nbturn
+            };
+
+            var config = {
+                method: 'post',
+                url: '/confirmSettingCitanime',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.reload();
+            })
+            .catch(function (err) {
+                
+            });
+
+
+            // socket.emit('handleTimerEvent');
 
         },
 
@@ -271,6 +303,13 @@ var app = new Vue({
         },
 
 
+        sendCitaAnswer: function() {
+            var citanswer = $('.citaput').val();
+            $('.citaput').val('');
+            
+        },
+
+
         checkAnswer: function(elem) {
             this.canswer = elem.value;
             elem.value = '';
@@ -298,6 +337,8 @@ var app = new Vue({
             .catch(function (err) {
                 
             });
+
+            socket.emit('updateCurrentGameAfterLeavingEvent');
         },
 
 
@@ -429,8 +470,8 @@ var app = new Vue({
         });
 
 
-        socket.on('changeGamePlayerStatusEvent' , () => {
-            ingameRequest();
+        socket.on('changeGamePlayerStatusEvent' , (imode) => {
+            ingameRequest(imode);
         });
 
 
@@ -439,16 +480,22 @@ var app = new Vue({
         });
 
 
-        socket.on('displaySetting', (nmode) => {
+        socket.on('displaySetting', () => {
             $('.rdiv').show();
-            if(nmode == 1) $('.navdiv').show();
+            $('.navdiv').show();
+            // if(nmode == 1) $('.navdiv').show();
+            // if(nmode == 2) $('.navdiv2').show();
         });
 
 
-        socket.on('displayOpponentsM1' , (opponents , ruser) => {   
+        socket.on('displayOpponents' , (opponents , ruser) => {   
             this.opponents = opponents;
-
             editOpponent(opponents , ruser);
+        });
+
+        socket.on('displayOpponents2' , (opponents , ruser) => {   
+            this.opponents = opponents;
+            editOpponent2(opponents , ruser);
         });
 
 
@@ -457,10 +504,16 @@ var app = new Vue({
         });
 
 
-
-        socket.on('displayPostRule' , (time , theme) => {
-            this.bombtime = time;
+        socket.on('displayPostRule' , (time , theme ) => {
+            this.timer = time;
             this.currenttheme = theme;
+            $('.rdiv2').show();
+            $('.backigbtn').show();
+        });
+
+        socket.on('displayPostRule2' , (time, difficulty) => {
+            this.difficulty = difficulty;
+            this.timer = time;
             $('.rdiv2').show();
             $('.backigbtn').show();
         });
@@ -592,6 +645,12 @@ var app = new Vue({
             $('.bombdiv').show();
         });
 
+        socket.on('displayBeginning2' , () => {
+            $('.citadiv').show();
+            $('.citainputdiv').show();
+            $('.citaopponentdiv').show();
+        });
+
 
         socket.on('displayRePlay' , () => {
             $('.replaybtn').show();
@@ -656,6 +715,9 @@ var app = new Vue({
         });
 
 
+        socket.on('reloadGameForOtherPlayer' , () => {
+            location.reload();
+        })
       
 
         
@@ -868,9 +930,9 @@ function editAnswerError2(indexp) {
 
 
 
-function ingameRequest() {
+function ingameRequest(imode) {
     var body = {
-        val: 'val'
+        val: imode
     };
 
     var config = {
@@ -1141,12 +1203,9 @@ function editOpponent(players , username) {
 
     for(let i = 1 ; i <= numberOfElements ; i++) {
 
-        var playerdiv = document.createElement('div');
-        
-        
+        var playerdiv = document.createElement('div');  
         playerdiv.setAttribute('id' , 'playerdiv' + i);
         playerdiv.classList.add('playerdiv');
-
         
         container.appendChild(playerdiv);
 
@@ -1290,45 +1349,39 @@ if(sliderEl) {
 
 
 
-////////////// OPANIME PART //////////////
 
+function editOpponent2(players , username) {
+    
+    var playerdiv = document.getElementById('citaopponentdivid');
+    var pbr = document.createElement("br");
+   
+    for(var i = 0; i < players.length ; i++) {
+        if(players[i] != username) {
+            var spanuser = document.createElement('span');
+            spanuser.classList.add('citatxtfoe');
+        
+            var spanpoint =  document.createElement('span');
+            spanpoint.innerHTML = '1999'
+            spanpoint.classList.add('citapoint');
 
+            var gojoplayerpic = document.createElement('img');
+            gojoplayerpic.setAttribute('alt' , 'GP');
+            gojoplayerpic.setAttribute('src' , 'gojo' + (i+1) + '.png');
+            gojoplayerpic.classList.add('citatxtfoepic'); 
 
+            var usertxt = document.createTextNode(players[i]);
+            var pbr = document.createElement("br");
 
+            spanuser.appendChild(gojoplayerpic);
+            spanuser.appendChild(usertxt);
+            playerdiv.appendChild(spanuser);
+            playerdiv.appendChild(spanpoint);
+            playerdiv.appendChild(pbr);
+        }
+    }
 
-
-const opening = ["Dragon Ball Z- Opening 1",
-"One Piece - Opening 14",
-"My Hero Academia - Opening 2",
-"Vinland Saga - Opening 3",
-"One Punch Man - Opening 1",
-"Black Clover - Opening 3",
-"Naruto Shippuden - Opening 13",
-"HunterXHunter - Opening 1",
-"My Hero Academia - Opening 2"];
-
-if(btnAnswer) {
-
-for (let i = 0; i < opening.length; i++){
-    var btnAnswer = document.getElementById('choice' + (i));
-    var span = btnAnswer.childNodes[0]
-    span.innerHTML = opening[i];
-}
-
-const generateAnswers = () => {
-    Math.random(); //[]
-} 
-
-
-var video = document.getElemeentById("opvideo");
-
-  // Démarrer la vidéo une fois que la page est chargée
-
-    video.play();
- 
-
+        
 
 }
-
 
 

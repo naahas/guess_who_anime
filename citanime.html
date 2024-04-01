@@ -1,0 +1,198 @@
+
+
+
+
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no , initial-scale=1.0">
+    <meta name="author" content="nahass">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="theme-color" content="#CFEBF3" />
+    <meta name="description" content="Tic Tac Boom Version Anime">
+    <meta nem="application-name" content="">
+    <meta charset="UTF-8">
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
+
+    <link rel="icon" href="bicon1.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="home.css">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <title>Bombanime</title>
+</head>
+
+
+
+<body>
+    
+    
+    <div id = "app">
+
+
+        <div id="maindiv" class="maingame">
+
+
+            <div class="rdiv">
+                <img src="down2.png" alt="SHOW">
+                <span>REGLES</span>
+            </div>
+
+            <div class="rdiv2">
+                <img src="down2.png" alt="SHOW">
+                <span>REGLES</span>
+            </div>
+
+            <div class="navdiv scrollbar-success">
+                <img class="closeimg" src="close.png" alt="X">
+                <p class="headsettxt">︲ PARAMETRES ︲</p>
+
+
+                <div class="subsetdiv rangediv">
+                    <p> ⏱️ Timer (sec)</p>
+                    <hr>
+                    <input id="rangeid" class="secrange" type="range" value="15" min="5" max="30">
+                    <span id="secvalid" class="secval"> 15 </span>
+                  </div>
+
+
+                  <div class="subsetdiv themediv">
+                    <p>🗒️ Difficulté </p>
+                    <hr>
+                    
+
+                    <div class="themeop dropdown2">
+                        <select name="one" class="dropdown2-select cselect">
+                            <option value="Normal">Normal</option>
+                            <option value="Facile">Facile</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Difficile">Difficile</option>
+                          </select>
+                    </div>
+
+                  </div>
+
+                  <div class="subsetdiv jokerdiv">
+                    <p class="navpara">🖲️ Nombre citations </p>
+                    <hr class="navdivhr">
+                    <div class="themeop dropdown2">
+                        <select name="one" class="dropdown2-select cselect2">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                          </select>
+                    </div>
+                      
+                  </div>
+
+
+                  <div class="subsetdiv rulediv">
+                    <p> RULES </p>
+                    <hr>
+                    <p> Indique la difficulté et le temps dont chaque joueur dispose pour trouver la citation </p>
+                  </div>
+
+                   
+                  <button @click="sendGameSetting2()" class="subsettingbtn">CONFIRMER</button>
+
+
+            </div>
+
+
+            <div class="postnavdiv">
+
+                <img class="closeimg2" src="close.png" alt="X">
+                <p class="headsettxt">︲ PARAMETRES ︲</p>
+
+                <div class="subsetdiv rangediv">
+                    <p >⏱️ Timer (sec)</p>
+                    <hr>
+                    <p> {{timer}} secondes </p>
+                  </div>
+
+
+                  <div class="subsetdiv themediv">
+                    <p>🗒️​ Difficulté </p>
+                    <hr>
+                    
+                    <p>{{difficulty}}</p>
+
+                  </div>
+                  
+
+
+            </div>
+
+
+            <p class="waitgametxt">L'HÔTE EDITE LES RÈGLES ...</p>
+
+
+
+            <div class="userdiv">
+                <span class="currentxt"> {{usernamedisplay}} </span>
+            </div>
+
+
+            <div id="citaopponentdivid" class="citaopponentdiv">
+                
+            </div>
+
+            
+            <div class="citadiv">
+                <span class="citatxt">  Le pouvoir est l'unique source de justice  </span>
+                <hr>
+                <img title="Utiliser Joker" class="jokerpic joker1" src="joker.png" alt="joker">
+                <img title="Utiliser Joker" class="jokerpic joker2 jokerble" src="joker.png" alt="joker">
+                <img title="Utiliser Joker" class="jokerpic joker3 jokerble" src="joker.png" alt="joker">
+            </div>
+
+
+
+
+            <div class="citainputdiv">
+                <input @keyup.enter="sendCitaAnswer()" type="text" class="citaput" autofocus>
+            </div>
+            
+
+            
+
+
+
+
+
+            
+
+            <img class="soundpic" src="sound.png" alt="SOUND">
+
+            <button @click="exitGame()" class="backigbtn">RETOUR</button>    
+
+
+            
+    
+        </div> <!-- end main div-->
+    
+
+
+
+    </div> <!-- end app div -->
+
+    
+
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="./app.js"></script>
+
+
+</body>
+
+</html>
