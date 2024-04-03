@@ -6373,6 +6373,12 @@
          "reponses": ["KIBUTSUJI MUZAN" , "MUZAN"],
          "joker" : ["M _ _ _ _" , "DEMON SLAYER"]
        }
+       ,
+       {
+         "citation": "Je ne reviens jamais sur ma parole, c’est ça pour moi être un ninja !",
+         "reponses": ["NARUTO UZUMAKI" , "NARUTO"],
+         "joker" : ["N _ _ _ _ _" , "NARUTO"]
+       }
      ],
      "Normal": [
         {
