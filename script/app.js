@@ -858,6 +858,7 @@ var app = new Vue({
 
 
         socket.on('increasePointForOtherEvent' , (indexp , postpoint) => {
+            console.log('XD')
             $('.spanpoint' + indexp).text(postpoint);
         });
 
@@ -953,8 +954,6 @@ var app = new Vue({
             var parsept = parseInt(valpt , 10); ;
             var potpp = parsept - 200;
             var postpoint = potpp >= 0 ? potpp : 0;
-            console.log(parsept)
-            console.log(postpoint)
             this.incNbr(parsept , postpoint , 1)
 
             
@@ -966,6 +965,12 @@ var app = new Vue({
             setTimeout(() => {
                 $('.citatxt').removeClass('endcitaclass');
             }, 1000);
+        });
+
+
+        socket.on('disableJokerEvent' , () => {
+            $('.joker1').addClass('jokerble');
+            $('.joker2').addClass('jokerble');
         });
         
 

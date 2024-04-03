@@ -11,6 +11,7 @@ const { reset } = require('nodemon');
 const bodyParser = require('body-parser');
 var _ = require('underscore');
 const { prependOnceListener } = require('process');
+const { post } = require('jquery');
 
 
 
@@ -997,9 +998,10 @@ io.on('connection' , (socket) => {
                     if(mapcode.get(key) == ioroomid) index_player++; 
                 }
 
-                socket.broadcast.to(ioroomid).emit('increasePointForOtherEvent' , index_player , postpoint )       
+                socket.broadcast.to(ioroomid).emit('increasePointForOtherEvent' , index_player , postpoint);     
                 
 
+                socket.emit('disableJokerEvent');
                 socket.emit('disableCitaInputEvent');
                 
                 //WRONG ANSWER (CITANIME)
@@ -1194,6 +1196,24 @@ io.on('connection' , (socket) => {
         if(stat == 2) hint = jk[1];
 
         socket.emit('displayJokerEvent' , stat , hint);
+
+        //DISPLAY DECREASE POINT TO OTHER PLAYER
+        var prepoint = mapgameplayerpoint.get(iousername);
+        var postpoint = (prepoint - 200) >= 0 ? (prepoint - 200) : 0 ;
+
+        console.log('prepoint -> ' , prepoint)
+        console.log('postpoint -> ' , postpoint)
+
+        var index_player = 0;
+
+        for (let [key, value] of mapgameplayerpoint) {
+            if(key == iousername && mapcode.get(key) == ioroomid) break;
+            if(mapcode.get(key) == ioroomid) index_player++; 
+        }
+
+        socket.broadcast.to(ioroomid).emit('increasePointForOtherEvent' , index_player , postpoint)  
+
+
     });
     
 
