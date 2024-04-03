@@ -1243,6 +1243,25 @@ body{
   background-color:rgba(71, 28, 92, 0.2);
 }
 
+.turndiv {
+  margin-top:1em;
+  padding: 1em;
+  letter-spacing: 0.1em;
+  background-color:rgba(71, 28, 92, 0.2);
+}
+
+.turndiv p {
+  font-family: 'Courier New', Courier, monospace;
+  color:aliceblue;
+}
+
+.turndiv hr{
+  width: 70%;
+  margin-left:15%;
+}
+
+
+
 .rulediv {
   margin-top:1em;
   padding: 1em;
@@ -2177,7 +2196,7 @@ select::-ms-expand {
 
 .citadiv {
   display: none;
-  width: fit-content;
+  width: 66%;
   height: fit-content;
   position: absolute;
   top:-10em;
@@ -2186,19 +2205,25 @@ select::-ms-expand {
   right: 0;
   margin: auto;
   padding: 5px;
+  text-align: center;
   justify-content: center;
   align-items: center;
   opacity: 0;
   animation: citaPop 1.2s forwards;
 }
 
+.citadiv hr {
+  width: 40%;
+  margin-left: 30%;
+  margin-top: 3%;
+}
+
 .citatxt {
-  color:#12384f;
-  font-size: 1.7rem;
-  text-shadow: rgb(186, 206, 229) 1px 0 10px;
+  color:#e5eef7;
+  font-size: 135%;
+  text-shadow: rgb(233, 249, 140) 1px 0 10px;
   text-transform: uppercase;
   letter-spacing: 0.2px;
-  font-weight: 600;
   font-family:'Courier New', Courier, monospace;
 }
 
@@ -2221,7 +2246,7 @@ select::-ms-expand {
 .jokerpic {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
-  width: 11%;
+  width: 5rem;
   margin: 1em;
   opacity: 0.4;
 }
@@ -2240,13 +2265,70 @@ select::-ms-expand {
 }
 
 
+.hintdiv {
+  position: absolute;
+  width: fit-content;
+  height: fit-content;
+  z-index: 0;
+  margin: auto;
+  top:10%;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.hintdiv {
+  text-shadow: rgb(206, 226, 19) 5px 0 10px;  
+  font-family:'Times New Roman', Times, serif;
+  font-weight: 600;
+  color:aliceblue;
+  text-transform: uppercase;
+  font-size: 1rem;
+  margin: 0.em;
+  animation: hintAnim 1s forwards;
+}
+
+
+.hintspan1 , .hintspan2 {
+  background-color: red;
+}
+
+
+@keyframes hintAnim {
+  0% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+.endcitaclass {
+  animation: citaDisappear 0.7s forwards;
+}
+
+
+@keyframes citaDisappear {
+  0% {
+
+  }
+
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+
 
 .citainputdiv {
   display: none;
   position: absolute;
   width: fit-content;
   height: fit-content;
-  bottom: 20%;
+  bottom: 23%;
   right: 0;
   left:0;
   margin: auto;
@@ -2488,7 +2570,7 @@ select::-ms-expand {
   color:aliceblue;
   text-shadow: rgb(125, 145, 68) 5px 0 10px;  
   text-transform: uppercase;
-  font-size: 65%;
+  font-size: 75%;
   padding: 1em;
 }
 
@@ -2503,11 +2585,19 @@ select::-ms-expand {
 }
 
 
+.selfcitatxtfoepic {
+  animation: gojoA 2s infinite;
+  padding: 1px;
+  margin-bottom: 1em;
+}
+
+
 .citatxtfoepic {
   animation: gojoA 2s infinite;
   margin-right: 1em;
   padding: 1px;
 }
+
 
 
 @keyframes gojoA {
@@ -2521,5 +2611,142 @@ select::-ms-expand {
 
   100% {
     transform: rotate(0deg);
+  }
+}
+
+.selfcitapointdiv {
+  width: fit-content;
+  display: none;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  bottom: 0.5em;
+  right: 0;
+}
+
+.citatmppoint {
+  text-shadow: rgb(167, 225, 6) 5px 0 10px;  
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color:aliceblue;
+  padding: 15px;
+  font-size: 2rem;
+}
+
+
+
+.bbb {
+  position: absolute;
+  z-index: 99;
+  left:0;
+  right: 0;
+  bottom: 0;
+  top:0;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+}
+
+
+
+
+.spanpoint0 {
+
+}
+
+.spanpoint1 {
+  
+}
+
+.spanpoint2 {
+  
+}
+
+.spanpoint3 {
+  
+}
+
+.spanpoint4 {
+  
+}
+
+.spanpoint5 {
+  
+}
+
+.spanpoint6 {
+  
+}
+
+.spanpoint7 {
+  
+}
+
+.spanpoint8 {
+  
+}
+
+.spanpoint9 {
+  
+}
+
+
+.spanpoint10 {
+  
+}
+
+
+
+#citimer {
+  display: none;
+  position: absolute;
+  top:10%;
+  margin: auto;
+  left: 0;
+  right: 0;
+  font-size: 1.7rem;
+  text-shadow: rgb(206, 226, 19) 5px 0 10px;  
+  font-family:'Times New Roman', Times, serif;
+  font-weight: 600;
+  color:aliceblue;
+  opacity: 0.9;
+  margin-bottom: 1em;
+}
+
+
+.citimerpic {
+  width: 40px;
+  height: 40px;
+  animation: citimerpicA 1.8s infinite;
+}
+
+@keyframes citimerpicA {
+  0% {
+    transform: rotate(-12deg);
+  }
+
+  50% {
+    transform: rotate(12deg);
+  }
+
+  100% {
+    transform: rotate(-12deg);
+  }
+}
+
+
+.citanimationtimer {
+  animation: popCimer 0.1s ease-in-out;
+}
+
+
+@keyframes popCimer {
+  0% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }

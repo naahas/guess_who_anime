@@ -56,7 +56,7 @@
                 <div class="subsetdiv rangediv">
                     <p> ⏱️ Timer (sec)</p>
                     <hr>
-                    <input id="rangeid" class="secrange" type="range" value="15" min="5" max="30">
+                    <input id="rangeid" class="secrange" type="range" value="15" min="5" max="20">
                     <span id="secvalid" class="secval"> 15 </span>
                   </div>
 
@@ -124,6 +124,15 @@
                     <p>{{difficulty}}</p>
 
                   </div>
+
+
+                  <div class="subsetdiv turndiv">
+                    <p>🖲️ Nombre citations  </p>
+                    <hr>
+                    
+                    <p>{{nbturn}}</p>
+
+                  </div>
                   
 
 
@@ -139,34 +148,45 @@
             </div>
 
 
+            <div class="winnerdiv">
+                <div class="subwinnerdiv">
+                    <img src="crown.png" alt="CROWN">
+                    <h2> {{gwinner}} A GAGNÉ ({{winnerpoint}}) </h2>
+                    <hr>
+                </div>
+                <button @click="replay()" class="replaybtn"> REJOUER </button>
+            </div>
+
+
             <div id="citaopponentdivid" class="citaopponentdiv">
                 
             </div>
 
-            
+            <p id="citimer"> <img class="citimerpic" src="citatimerpic.png">  <span class="citimerspan"> </span>  </p>
+
             <div class="citadiv">
-                <span class="citatxt">  Le pouvoir est l'unique source de justice  </span>
+               
+                <span class="citatxt">  {{citation}} </span>
                 <hr>
-                <img title="Utiliser Joker" class="jokerpic joker1" src="joker.png" alt="joker">
-                <img title="Utiliser Joker" class="jokerpic joker2 jokerble" src="joker.png" alt="joker">
-                <img title="Utiliser Joker" class="jokerpic joker3 jokerble" src="joker.png" alt="joker">
+                <img @click="useJoker(1)" title="Utiliser Joker" class="jokerpic joker1" src="joker.png" alt="joker">
+                <img @click="useJoker(2)" title="Utiliser Joker" class="jokerpic joker2" src="joker.png" alt="joker">
             </div>
 
+            <div class="hintdiv">
+                <span id="hintspan1">  </span> &nbsp;
+                <span id="hintspan2">  </span>
+            </div>
 
+            <div id="selfcitapointdivid" class="selfcitapointdiv">
+               
+            </div> 
 
 
             <div class="citainputdiv">
-                <input @keyup.enter="sendCitaAnswer()" type="text" class="citaput" autofocus>
+                <input disabled @keyup.enter="sendCitaAnswer()" type="text" class="citaput disablemode2" autofocus>
             </div>
             
 
-            
-
-
-
-
-
-            
 
             <img class="soundpic" src="sound.png" alt="SOUND">
 
@@ -176,7 +196,16 @@
             
     
         </div> <!-- end main div-->
-    
+
+
+
+        <audio id="audio2">
+            <source src="right2.mp3" type="audio/mp3">
+        </audio>
+
+        <audio id="audio3">
+            <source src="wrong.mp3" type="audio/mp3">
+        </audio>
 
 
 

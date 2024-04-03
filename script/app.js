@@ -21,6 +21,10 @@ var app = new Vue({
             nbplayer: 0,
             currentmode: 'Bombanime',
             difficulty: 'Normal',
+            playerpoint: 1242,
+            nbturn: 5,
+            citation: '',
+            winnerpoint: 0
             
             
         }
@@ -223,7 +227,7 @@ var app = new Vue({
             });
 
 
-            // socket.emit('handleTimerEvent');
+            socket.emit('handleTimerEvent2');
 
         },
 
@@ -306,6 +310,26 @@ var app = new Vue({
         sendCitaAnswer: function() {
             var citanswer = $('.citaput').val();
             $('.citaput').val('');
+
+            var body = {
+                val : citanswer
+            };
+
+            var config = {
+                method: 'post',
+                url: '/checkCitaAnswer',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                
+            })
+            .catch(function (err) {
+                
+            });
+
+            socket.emit('sendAnswerEvent2' , citanswer)
             
         },
 
@@ -417,7 +441,69 @@ var app = new Vue({
                     
                 });
 
+        },
+
+
+        incNbr: function(currentpoint ,  newpoint , stat) {
+            this.incEltNbr("spanpointid" , currentpoint , newpoint , stat);
+        },
+
+        incEltNbr: function(id , currentpoint , newpoint , stat) {
+            var elt = document.getElementById(id);
+            var endNbr = newpoint;
+            if(stat == 0) this.incNbrRec( currentpoint , endNbr, elt);
+            if(stat == 1) this.DecNbrRec( currentpoint , endNbr, elt);
+        },
+        
+        incNbrRec: function(i, endNbr, elt) {
+            var speed = 10;
+            var self = this; // save la ref à l'objet vue 
+        
+            if (i <= endNbr) {
+                elt.innerHTML = i;
+                setTimeout(() => { // flèche pour conserver la référence à l'objet vue
+                    self.incNbrRec(i + 1, endNbr, elt); 
+                }, speed);
+            }
+        },
+
+        DecNbrRec: function(currentnb, endNbr, elt) {
+            var speed = 10;
+            var self = this; // save la ref à l'objet vue 
+        
+            if (currentnb >= endNbr) {
+                elt.innerHTML = currentnb;
+                setTimeout(() => { // flèche pour conserver la référence à l'objet vue
+                    self.DecNbrRec(currentnb - 1, endNbr, elt); 
+                }, speed);
+            }
+        },
+
+
+        useJoker: function(stat) {
+                var body = {
+                    val : stat
+                };
+    
+                var config = {
+                    method: 'post',
+                    url: '/useJoker',
+                    data: body
+                };
+    
+                axios(config)
+                .then(function (res) {
+                })
+                .catch(function (err) {
+                    
+                });
+
+                socket.emit('useJokerEvent' , stat);
+            
         }
+
+        
+
 
     },
 
@@ -493,9 +579,10 @@ var app = new Vue({
             editOpponent(opponents , ruser);
         });
 
-        socket.on('displayOpponents2' , (opponents , ruser) => {   
+        socket.on('displayOpponents2' , (opponents , oppoint ,  ruser) => {   
             this.opponents = opponents;
-            editOpponent2(opponents , ruser);
+            editOpponent2(opponents , oppoint,  ruser);
+            $('.selfcitapointdiv').show();
         });
 
 
@@ -511,9 +598,10 @@ var app = new Vue({
             $('.backigbtn').show();
         });
 
-        socket.on('displayPostRule2' , (time, difficulty) => {
+        socket.on('displayPostRule2' , (time, difficulty , nbturn) => {
             this.difficulty = difficulty;
             this.timer = time;
+            this.nbturn = nbturn;
             $('.rdiv2').show();
             $('.backigbtn').show();
         });
@@ -617,6 +705,28 @@ var app = new Vue({
         });
 
 
+        socket.on('playRightAudio2', () => {
+            var ta = document.getElementById('audio2');
+            ta.volume = 0.5;
+            const promise = ta.play();  
+                
+            let playedOnLoad;
+
+            if (promise !== undefined) {
+                promise.then(_ => {
+                    playedOnLoad = true;
+                }).catch(error => {
+                    playedOnLoad = true;
+                });
+            }
+            
+            $('.citaput').addClass('pulseclass');
+            setTimeout(() => {
+                $('.citaput').removeClass('pulseclass');
+            }, 500);
+
+        });
+
 
         socket.on('changeBombStepEvent' , (step) => {
             editBombPic(step);
@@ -628,6 +738,14 @@ var app = new Vue({
             displayWinner(winner);
         });
 
+        socket.on('endGameEvent2' , (winner , winnerpoint ,  host) => {
+            console.log("current user -> " , this.usernamedisplay)
+            console.log("host -> " , host);
+            console.log('winner ->' , winner)
+            if(this.usernamedisplay == host) displayPostToHost();
+            displayWinner2(winner , winnerpoint);
+        });
+
 
         socket.on('playSlashEvent' , () => {
             playSlash();
@@ -636,7 +754,11 @@ var app = new Vue({
 
 
         socket.on('endGameEventAfterReload' , (winner) => {
-            displayWinner2(winner);
+            displayWinnerHost(winner);
+        });
+
+        socket.on('endGameEventAfterReload2' , (winner , winnerpoint) => {
+            displayWinnerHost2(winner , winnerpoint);
         });
 
 
@@ -717,9 +839,134 @@ var app = new Vue({
 
         socket.on('reloadGameForOtherPlayer' , () => {
             location.reload();
-        })
-      
+        });
 
+
+
+        socket.on('displayCitationData' , (citation) => {
+            this.citation = citation;
+        });
+      
+        socket.on('answerErrorEvent2', () => {
+            editAnswerError3();
+        });
+
+
+        socket.on('increasePointEvent' , (prepoint , postpoint) => {
+            this.incNbr(prepoint , postpoint , 0);
+        });
+
+
+        socket.on('increasePointForOtherEvent' , (indexp , postpoint) => {
+            $('.spanpoint' + indexp).text(postpoint);
+        });
+
+
+        socket.on('updateTimer' , (newtimer) => {
+            $('#citimer').addClass("citanimationtimer");
+            $('.citimerspan').text(newtimer);
+            $('#citimer').show();
+            
+        });
+
+
+        socket.on('enableCitaInputEvent' , (stat) => {
+            $('.citaput').removeClass('disablemode2')
+            $('.citaput').removeAttr('disabled');
+            $('.citaput').focus();
+
+            if(stat == 1) {
+                var body = {
+                    val : 'val'
+                };
+    
+                var config = {
+                    method: 'post',
+                    url: '/resetCitaStatus',
+                    data: body
+                };
+    
+                axios(config)
+                .then(function (res) {
+                    
+                })
+                .catch(function (err) {
+                    
+                });
+            }
+        });
+
+
+        socket.on('disableCitaInputEvent' , () => {
+            $('.citaput').addClass('disablemode2')
+            $(".citaput").attr("disabled", "disabled");
+        });
+
+
+        socket.on('changeCitationEvent' , (new_citation) => {
+            this.citation = new_citation;
+        });
+
+
+        socket.on('resetJokerEvent' , () => {
+            var body = {
+                val : 'val'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/resetJoker',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                
+            })
+            .catch(function (err) {
+                
+            });
+
+            $('.hintdiv').hide();
+            $('.joker1').removeClass('jokerble');
+            $('.joker2').removeClass('jokerble');
+        });
+
+
+
+        socket.on('displayJokerEvent' , (stat , hint) => {
+            if(stat == 1) {
+                $('.joker1').addClass('jokerble');
+                $('#hintspan1').html('<strong> &nbsp; ' + hint + '&nbsp; </strong>');
+                $('.hintdiv').show();
+                $('.hintspan1').show();
+            }
+
+            if(stat == 2) {
+                $('.joker2').addClass('jokerble');
+                $('#hintspan2').html('<strong> &nbsp; ' + hint + '&nbsp; </strong>');
+                $('.hintdiv').show();
+                $('.hintspan2').show();
+            }
+
+            var valpt = $('#spanpointid').text();
+            var parsept = parseInt(valpt , 10); ;
+            var potpp = parsept - 200;
+            var postpoint = potpp >= 0 ? potpp : 0;
+            console.log(parsept)
+            console.log(postpoint)
+            this.incNbr(parsept , postpoint , 1)
+
+            
+        });
+
+
+        socket.on('animationCitaTimerEvent' , () => {
+            $('.citatxt').addClass('endcitaclass');
+            setTimeout(() => {
+                $('.citatxt').removeClass('endcitaclass');
+            }, 1000);
+        });
         
 
     },
@@ -928,6 +1175,37 @@ function editAnswerError2(indexp) {
 }
 
 
+function editAnswerError3() {
+    $('.citaput').addClass('tmpshake');
+    $(".citaput").animate({'border-bottom-color': '#e26381'}, 400);
+    setTimeout(function(){
+        $('.citaput').removeClass('tmpshake');
+     },300);    
+
+     setTimeout(function(){
+        $(".citaput").css('border-bottom-color' , '#e0cbcb');
+     },500);  
+
+     $(".citaput").trigger('blur'); 
+
+     var ta = document.getElementById('audio3');
+     ta.volume = 0.5;
+     const promise = ta.play();  
+                
+     let playedOnLoad;
+
+     if (promise !== undefined) {
+         promise.then(_ => {
+             playedOnLoad = true;
+         }).catch(error => {
+             playedOnLoad = true;
+         });
+     }
+     
+     $('.citaput').focus();
+
+}
+
 
 
 function ingameRequest(imode) {
@@ -1031,9 +1309,8 @@ function editBombPic(step) {
 }
 
 
-function displayWinner2(winner) {
+function displayWinnerHost(winner) {
     app.gwinner = winner;
-
 
     $('.container').hide();
     $('.bombdiv').hide();
@@ -1041,6 +1318,15 @@ function displayWinner2(winner) {
 
     var ta = document.getElementById('audio1');
     ta.pause();
+}
+
+function displayWinnerHost2(winner , winnerpoint) {
+    app.gwinner = winner;
+    app.winnerpoint = winnerpoint;
+
+    $('.winnerdiv').show();
+
+  
 }
 
 
@@ -1072,6 +1358,42 @@ function displayWinner(winner) {
 
     var ta = document.getElementById('audio1');
     ta.pause();
+
+
+}
+
+function displayWinner2(winner , winnerpoint) {
+
+    var body = {
+        val: winner,
+        val2: winnerpoint
+    };
+
+    var config = {
+        method: 'post',
+        url: '/endGame',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        
+    })
+    .catch(function (err) {
+        
+    });
+
+    app.gwinner = winner;
+    app.winnerpoint = winnerpoint;
+
+    $('#citaopponentdivid').hide();
+    $('#citimer').hide();
+    $('.hintdiv').hide();
+    $('#selfcitapointdivid').hide();
+    $('.citainputdiv').hide();
+    $('.citadiv').hide();
+
+    $('.winnerdiv').show();
 
 
 }
@@ -1279,14 +1601,8 @@ function editOpponent(players , username) {
             });
             
             
-            
         }
 
-
-        
-
-
-        
         playerdiv.appendChild(turnpic);
         playerdiv.appendChild(skullpic);
         playerdiv.appendChild(playertxt)
@@ -1350,9 +1666,10 @@ if(sliderEl) {
 
 
 
-function editOpponent2(players , username) {
+function editOpponent2(players , ppoint ,  username) {
     
     var playerdiv = document.getElementById('citaopponentdivid');
+    var selfplayerdiv = document.getElementById('selfcitapointdivid');
     var pbr = document.createElement("br");
    
     for(var i = 0; i < players.length ; i++) {
@@ -1361,7 +1678,8 @@ function editOpponent2(players , username) {
             spanuser.classList.add('citatxtfoe');
         
             var spanpoint =  document.createElement('span');
-            spanpoint.innerHTML = '1999'
+            spanpoint.innerHTML = ppoint[i];
+            spanpoint.classList.add('spanpoint' + i)
             spanpoint.classList.add('citapoint');
 
             var gojoplayerpic = document.createElement('img');
@@ -1377,11 +1695,27 @@ function editOpponent2(players , username) {
             playerdiv.appendChild(spanuser);
             playerdiv.appendChild(spanpoint);
             playerdiv.appendChild(pbr);
+        
+        } else {
+            app.playerpoint = ppoint[i];
+
+            var gojoplayerpic = document.createElement('img');
+            gojoplayerpic.setAttribute('alt' , 'GP');
+            gojoplayerpic.setAttribute('src' , 'gojo' + (i+1) + '.png');
+            gojoplayerpic.classList.add('selfcitatxtfoepic'); 
+
+            var spanpoint =  document.createElement('span');
+            spanpoint.id = "spanpointid";
+            spanpoint.classList.add('citatmppoint');
+            spanpoint.innerHTML = ppoint[i];
+            selfplayerdiv.appendChild(gojoplayerpic)
+            selfplayerdiv.appendChild(spanpoint)
         }
     }
 
         
 
 }
+
 
 

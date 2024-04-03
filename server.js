@@ -10,6 +10,10 @@ const session = require('express-session');
 const { reset } = require('nodemon');
 const bodyParser = require('body-parser');
 var _ = require('underscore');
+const { prependOnceListener } = require('process');
+
+
+
 
 
 //main const
@@ -24,7 +28,7 @@ const io = new Server(server , {
 })
 
 
-//TODO : re-enable bombtime restriction (when bombtime > 15) for bombanime
+//TODO : display point after decrease to other player when someone uses a joker (citanime)
 
 
 
@@ -78,6 +82,7 @@ var mapgametheme = new Map();
 var mapgameturn = new Map();
 var mapgametimer = new Map();
 var mapgamewinner = new Map();
+var mapgamewinnerpoint = new Map();
 var mapgamedata = new Map();
 var mapgamestack = new Map();
 var mapgametotal = new Map();
@@ -85,6 +90,9 @@ var mapcodecopy = new Map();
 var mapgamedifficulty = new Map();
 var mapgamecitaturn = new Map();
 var mapgameplayerpoint = new Map();
+var mapgamecitation = new Map();
+var mapgameitationanswer = new Map();
+var mapgamecitajoker = new Map();
 var current_user = [];
 
 //path handle
@@ -123,7 +131,7 @@ app.post('/subUsername' , function(req,res) {
     }
 
     res.end(cres);
-
+       
 });
  
 
@@ -164,7 +172,7 @@ app.post('/codeCheck' , function(req,res) {
         }   
     }
     
-
+    req.session.citadisable = false;
     res.end(resnb);
 });
 
@@ -177,7 +185,7 @@ app.post('/replay' , function(req,res) {
     req.session.replayed = true;
 
     mapgamewinner.delete(req.session.rid); 
-
+    mapgamewinnerpoint.delete(req.session.rid); 
 
 
     res.end();
@@ -204,6 +212,27 @@ app.post('/replayPlayer' , function(req,res) {
     req.session.isplaying = null;
     req.session.endgame = null;
 
+
+    res.end();
+});
+
+
+app.post('/checkCitaAnswer' , function(req,res) {
+
+    var answer = req.body.val;
+    var answerUp = answer.toUpperCase();
+    var rid = req.session.rid;
+
+    if(mapgameitationanswer.get(rid).includes(answerUp)) req.session.citadisable = true;
+    else req.session.citadisable = false;
+
+    res.end();
+});
+
+
+app.post('/resetCitaStatus' , function(req,res) {
+
+    req.session.citadisable = false;
 
     res.end();
 });
@@ -253,7 +282,7 @@ app.get('/game' , function(req,res) {
 
     if(req.session.ingame == true) {
         var modfilename = req.session.mode.toLowerCase();
-        console.log(modfilename)
+        console.log("launched mode -> " , modfilename)
         res.sendFile(__dirname + '/' + modfilename + '.html');
     } else res.redirect('/');
 
@@ -276,6 +305,37 @@ app.post('/ipstatus' , function(req,res) {
 });
 
 
+app.post('/useJoker' , function(req,res) {
+
+    var ppoint = mapgameplayerpoint.get(req.session.username);
+
+    if(req.body.val == 1 && req.session.usedJK1 != true) {
+        var new_point = (ppoint - 200) >= 0 ? (ppoint - 200) : 0 ;
+        mapgameplayerpoint.set(req.session.username , new_point)
+        req.session.usedJK1 = true;
+    }
+
+    if(req.body.val == 2 && req.session.usedJK2 != true) {
+        var new_point = (ppoint - 200) >= 0 ? (ppoint - 200) : 0 ;
+        mapgameplayerpoint.set(req.session.username , new_point)
+        
+        req.session.usedJK2 = true;
+    }
+
+    
+    res.end();
+});
+
+
+app.post('/resetJoker' , function(req,res) {
+
+    req.session.usedJK1 = false;
+    req.session.usedJK2 = false;
+
+    
+    res.end();
+});
+
 
 // GAME START AFTER CONFIRM SETTING (BOMBANIME)
 app.post('/confirmSettingBombanime' , function(req,res) {
@@ -283,8 +343,6 @@ app.post('/confirmSettingBombanime' , function(req,res) {
     var theme = req.body.val2;
     if(btime < 3) btime = 3;
     if(btime > 15) btime = 15;
-
-    console.log(mapcode)
 
     if(theme == 'Naruto') mapgamedata.set(req.session.rid , profile.Character.Naruto);
     if(theme == 'One Piece') mapgamedata.set(req.session.rid , profile.Character.OnePiece);
@@ -316,8 +374,6 @@ app.post('/confirmSettingBombanime' , function(req,res) {
         
     }
 
-    console.log('current players copy => ' , mapcodecopy)
-
     var total_chara = mapgamedata.get(req.session.rid).length;
     mapgametotal.set(req.session.rid , total_chara);
 
@@ -337,24 +393,33 @@ app.post('/confirmSettingBombanime' , function(req,res) {
 app.post('/confirmSettingCitanime' , function(req,res) {
     var btime = req.body.val1;
     if(btime < 5) btime = 5;
-    if(btime > 30) btime = 30;
+    if(btime > 20) btime = 20;
+
     var difficulty = req.body.val2;
+    if(difficulty != "Facile" && difficulty != "Normal" && difficulty != "Difficile") difficulty = "Normal";
+
     var nbturn = req.body.val3;
+    if(nbturn > 20) nbturn = 20;
+    if(nbturn < 5) nbturn = 5;
 
-    console.log(nbturn)
-
-    mapgametime.set(req.session.rid , btime);
+    mapgametime.set(req.session.rid , btime++);
     mapgameturn.set(req.session.rid , req.session.username);
     mapgametimer.set(req.session.rid , 1);
     mapgamedifficulty.set(req.session.rid , difficulty);
     mapgamecitaturn.set(req.session.rid , nbturn);
 
+    req.session.citadisable = false;
+
+    if(difficulty == "Facile") mapgamedata.set(req.session.rid , profile.Citation.Facile);
+    if(difficulty == "Normal")  mapgamedata.set(req.session.rid , profile.Citation.Normal);
+    if(difficulty == "Difficile") mapgamedata.set(req.session.rid , profile.Citation.Difficile);
+
+    generateCitation(req.session.rid);
     
     for (let [key, value] of mapcode) {
         if(value == req.session.rid) mapcodecopy.set(key, value);
-        if(value == req.session.rid) mapgameplayerpoint.set(key, 0);
+        if(value == req.session.rid) mapgameplayerpoint.set(key, 500);
     }
-
 
     req.session.isplaying = true;
     req.session.replayed = false;
@@ -366,6 +431,8 @@ app.post('/confirmSettingCitanime' , function(req,res) {
 
     res.end();
 });
+
+
 
 
 app.post('/playSolo' , function(req,res) {
@@ -401,9 +468,6 @@ app.post('/returnBackJoin' , async function(req,res) {
     mapcode.delete(req.session.username);
     mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
 
-
-
-    
 
     res.end();
 });
@@ -443,7 +507,8 @@ app.post('/endGame' , function(req,res) {
     req.session.endgame = true;
 
     var winner = req.body.val;
-    // console.log("winner : " , winner)
+    if(req.body.val2) mapgamewinnerpoint.set(req.session.rid , req.body.val2);
+    
     mapgamewinner.set(req.session.rid , winner);
 
     res.end();
@@ -468,6 +533,10 @@ app.post('/exitGame' , function(req,res) {
     req.session.isplaying = false;
     req.session.joined = null;
     req.session.solop = null;
+    req.session.citadisable = null;
+    req.session.usedJK1 = null;
+    req.session.usedJK2 = null;
+
     
     if(req.session.created) {
         
@@ -475,9 +544,13 @@ app.post('/exitGame' , function(req,res) {
             if(mapcode.get(key) == req.session.rid) mapcode.delete(key);
         }
 
+
+        mapgameplayerpoint.delete(req.session.username);
         mapcode.delete(req.session.username);
         mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
         mapgametime.delete(req.session.rid)
+        mapgamecitaturn.delete(req.session.rid);
+        mapgamedifficulty.delete(req.session.rid);
         mapgametheme.delete(req.session.rid);
         mapgameturn.delete(req.session.rid);
         mapgametimer.delete(req.session.rid);
@@ -524,6 +597,7 @@ io.on('connection' , (socket) => {
     const iosolo = socket.request.session.solop;
     const ioback = socket.request.session.back;
     const iomode = socket.request.session.mode;
+    const iocitadisable = socket.request.session.citadisable;
 
 
     socket.emit('showSettingEvent' , iousername);
@@ -587,7 +661,6 @@ io.on('connection' , (socket) => {
     if(iocreate && ioingame == true) {
         if(!ioplaying && iomode == 'Bombanime') socket.emit('displaySetting');
         if(!ioplaying && iomode == 'Citanime') socket.emit('displaySetting');
-
     }
 
 
@@ -681,22 +754,38 @@ io.on('connection' , (socket) => {
             if(ioplaying && ioingame == true) {
                 var oplayer = 'SLAYERBOT';
                 var playertab = [];
+                var playerpoint = [];
                     for (let [key, value] of mapcode) {
                         if(mapcode.get(key) == ioroomid) playertab.push(key);
                     }
-                socket.emit('displayOpponents2' , playertab , iousername );
+                    for (let [key, value] of mapgameplayerpoint) {
+                        if(mapcode.get(key) == ioroomid) playerpoint.push(value);
+                    }
+                // console.log(playerpoint)
+                socket.emit('displayOpponents2' , playertab , playerpoint ,  iousername );
             }
 
-            socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid));
+            if(iocitadisable == true) socket.emit("disableCitaInputEvent");
+            else socket.emit('enableCitaInputEvent' , 0);
+
+            socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid) , mapgamecitaturn.get(ioroomid) );
             socket.emit('displayBeginning2')
+            socket.emit('displayCitationData' , mapgamecitation.get(ioroomid));
         }
     }
 
 
 
     if(ioendgame) {
-        socket.emit('displayPostRule' , mapgametime.get(ioroomid) , mapgametheme.get(ioroomid));
-        socket.emit('endGameEventAfterReload' , mapgamewinner.get(ioroomid));
+        if(iomode == "Bombanime") {
+            socket.emit('displayPostRule' , mapgametime.get(ioroomid) , mapgametheme.get(ioroomid));
+            socket.emit('endGameEventAfterReload' , mapgamewinner.get(ioroomid));
+        }
+
+        if(iomode == "Citanime") {
+            socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid) , mapgamecitaturn.get(ioroomid) );
+            socket.emit('endGameEventAfterReload2' , mapgamewinner.get(ioroomid) , mapgamewinnerpoint.get(ioroomid));
+        }
     }
 
 
@@ -880,15 +969,110 @@ io.on('connection' , (socket) => {
     });
 
 
+    // CHECK ANSWER HERE (CITANIME)
+    socket.on('sendAnswerEvent2' , (answer) => {
+        var canswer = answer.toUpperCase();
+        var answers = mapgameitationanswer.get(ioroomid);
+
+        if(iocitadisable != true) {
+        
+            //ANSWER RIGHT
+            if(answers.includes(canswer)) {
+                socket.emit('playRightAudio2');
+                
+                //INCREASE PLAYER POINT
+                var prepoint = 500;
+                prepoint = mapgameplayerpoint.get(iousername);
+
+                mapgameplayerpoint.set(iousername , mapgameplayerpoint.get(iousername) + 500);
+                var postpoint = mapgameplayerpoint.get(iousername);
+
+                socket.emit("increasePointEvent" , prepoint,  postpoint);       
+
+                    
+                //DISPLAY NEW PLAYER POINT TO OTHER PLAYERS
+                var index_player = 0;
+                for (let [key, value] of mapgameplayerpoint) {
+                    if(key == iousername && mapcode.get(key) == ioroomid) break;
+                    if(mapcode.get(key) == ioroomid) index_player++; 
+                }
+
+                socket.broadcast.to(ioroomid).emit('increasePointForOtherEvent' , index_player , postpoint )       
+                
+
+                socket.emit('disableCitaInputEvent');
+                
+                //WRONG ANSWER (CITANIME)
+            } else {
+                socket.emit('answerErrorEvent2');
+
+            }
+        }
+
+        
+    });
+
+
+    // HANDLE TIMER (CITANIME)
+    socket.on('handleTimerEvent2' , () => {
+        var btimer = setInterval(() => {
+            var current_time = mapgametimer.get(ioroomid);
+            var game_time = mapgametime.get(ioroomid);
+
+
+            if(game_time - current_time == 1) {
+                io.to(ioroomid).emit('animationCitaTimerEvent');
+            }
+
+
+            //TIME'S UP
+            if(current_time>=game_time) {
+                mapgamecitaturn.set(ioroomid , mapgamecitaturn.get(ioroomid) - 1);
+
+                if(mapgamecitaturn.get(ioroomid) > 0) {
+                    mapgametimer.set(ioroomid , 0);
+                    generateCitation(ioroomid);
+                    io.to(ioroomid).emit('changeCitationEvent' , mapgamecitation.get(ioroomid));
+                    io.to(ioroomid).emit('enableCitaInputEvent' , 1);
+                    io.to(ioroomid).emit('resetJokerEvent');
+
+                    //NO MORE TURN
+                } else {
+                    var winner = iousername;
+                    var winnerpoint = mapgameplayerpoint.get(iousername);
+
+                    for (let [key, value] of mapgameplayerpoint) {
+                        if(mapcode.get(key) == ioroomid) {
+                            if(value > winnerpoint) { winnerpoint = value; winner = key };
+                        }
+                    }
+
+                    io.to(ioroomid).emit('endGameEvent2' , winner , winnerpoint , iousername + " (vous)");
+                    clearInterval(btimer);
+                }
+                //RESET TIMER
+                
+                
+
+                
+               
+            }
+            
+            
+            var new_timer_value = mapgametime.get(ioroomid) - mapgametimer.get(ioroomid);
+            if(mapgamecitaturn.get(ioroomid) > 0) io.to(ioroomid).emit("updateTimer" , new_timer_value);
+            mapgametimer.set(ioroomid , mapgametimer.get(ioroomid)+1);
+    
+        }, 1000);
+    });
+
+
     // HANDLE TIMER (BOMBANIME)
     socket.on('handleTimerEvent' , () => {
         var btimer = setInterval(() => {
             var current_time = mapgametimer.get(ioroomid);
             var game_time = mapgametime.get(ioroomid);
             var step2 = Math.floor(game_time/2);
-
-            // console.log('current timer -> ' , current_time)
-            // console.log('game time -> ' , game_time)
 
             //CHANGE BOMB PIC STEP
             if((game_time-current_time) == step2 && game_time!=2 && game_time!=3) {
@@ -902,7 +1086,6 @@ io.on('connection' , (socket) => {
 
             //BOMB EXPLODE (ENDGAME OR NOT)
             if(current_time>=game_time) {
-                // console.log('BOOM')
 
                 //RESET TIMER
                 mapgametimer.set(ioroomid , 0);
@@ -1000,7 +1183,18 @@ io.on('connection' , (socket) => {
 
     socket.on('updateCurrentGameAfterLeavingEvent' , () => {
         socket.broadcast.to(ioroomid).emit('reloadGameForOtherPlayer');
-    })
+    });
+
+
+
+    socket.on('useJokerEvent' , (stat) => {
+        var jk = mapgamecitajoker.get(ioroomid);
+        var hint;
+        if(stat == 1) hint = jk[0];
+        if(stat == 2) hint = jk[1];
+
+        socket.emit('displayJokerEvent' , stat , hint);
+    });
     
 
 
@@ -2433,6 +2627,22 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
 
 
+}
+
+
+
+function generateCitation(rid) {
+    var datab = mapgamedata.get(rid);
+    var totalc = Math.floor(Math.random() * datab.length);
+    var toRemove = datab[totalc];
+    var c_citation = datab[totalc].citation;
+    var c_answer = datab[totalc].reponses;
+    var c_joker = datab[totalc].joker;
+    mapgamecitation.set(rid , c_citation);
+    mapgameitationanswer.set(rid ,c_answer);
+    mapgamecitajoker.set(rid , c_joker);
+
+    mapgamedata.set(rid , mapgamedata.get(rid).filter(item => item!=toRemove));
 }
 
 
