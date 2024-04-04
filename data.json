@@ -6369,6 +6369,12 @@
        }
        ,
        {
+         "citation": "Vous avez dit que tout avait un nom ? Je nommerai ce pouvoir le pouvoir d’échapper à cet océan de pierre.",
+         "reponses": ["JOLYNE CUJOH" , "JOLYNE"],
+         "joker" : ["J _ _ _ _ _" , "Jojo"]
+       }
+       ,
+       {
          "citation": "Est-ce que mon teint vous paraît horrible ? Est-ce que mon visage te paraît pâle ?",
          "reponses": ["KIBUTSUJI MUZAN" , "MUZAN"],
          "joker" : ["M _ _ _ _" , "DEMON SLAYER"]
@@ -6379,6 +6385,97 @@
          "reponses": ["NARUTO UZUMAKI" , "NARUTO"],
          "joker" : ["N _ _ _ _ _" , "NARUTO"]
        }
+       ,
+        {
+           "citation": "Un coup dans le dos c'est le déshonneur pour un sabreur",
+           "reponses": ["MONKEY D LUFFY" , "LUFFY"],
+           "joker" : ["L _ _ _ Y" , "One Piece" ]
+        }
+        ,
+        {
+           "citation": "JE VEUX VIVRE !!!",
+           "reponses": ["NICO ROBIN" , "ROBIN"],
+           "joker" : ["R _ _ _ _" , "One Piece" ]
+        }
+        ,
+        {
+           "citation": "C'est l'heure du duel !",
+           "reponses": ["YUGI MUTO" , "YUGI" , "ATEM"],
+           "joker" : ["Y _ _ _" , "Yu-Gi-Oh"]
+        }
+        ,
+        {
+           "citation": "Ahh les nuages ont bien de la chance , à flotter si librement",
+           "reponses": ["SHIKAMARU NARA" , "SHIKAMARU"],
+           "joker" : ["S _ _ _ _ _ _ _ _" , "Naruto"]
+        }
+        ,
+        {
+           "citation": "L'art est une explosion",
+           "reponses": ["DEODARA"],
+           "joker" : ["D _ _ _ _ _ _" , "Naruto Shippuden"]
+        }
+        ,
+        {
+           "citation": "Je vais créer un nouveau monde , où elle existe..",
+           "reponses": ["OBITO" , "OBITO UCHIHA"],
+           "joker" : ["O _ _ _ _" , "Naruto Shippuden"]
+        }
+        ,
+        {
+           "citation": "Laisse moi te voir danser , jusqu'à ta mort.",
+           "reponses": ["MADARA" , "MADARA UCHIHA"],
+           "joker" : ["M _ _ _ _ _" , "Naruto Shippuden"]
+        }
+
+        ,
+        {
+           "citation": "Tout va bien. Pourquoi ? Parce que je suis là !",
+           "reponses": ["ALL MIGHT" , "TOSHINORI"],
+           "joker" : ["A _ _  M _ _ _ _" , "My Hero Academia"]
+        }
+        ,
+        {
+           "citation": "L’amour engendre le sacrifice, qui à son tour engendre la haine. Ainsi , vous pourrez connaître la douleur.",
+           "reponses": ["PAIN" , "NAGATO"],
+           "joker" : ["P _ _ _" , "Naruto Shippuden" ]
+        }
+        ,
+        {
+           "citation": "Ceux qui ne comprennent pas la vraie douleur ne pourront jamais comprendre la vraie paix.",
+           "reponses": ["PAIN" , "NAGATO"],
+           "joker" : ["P _ _ _" , "Naruto Shippuden" ]
+        }
+        ,
+        {
+           "citation": "Ca va aller. Après tout , tu es faible",
+           "reponses": ["SATORU GOJO" , "GOJO"],
+           "joker" : ["G _ _ _" , "Jujutsu Kaisen" ]
+        }
+        ,
+        {
+           "citation": "Ceux qui enfreignent les règles sont des moins que rien , mais ceux qui abandonnent leurs amis encore pire que des moins que rien.",
+           "reponses": ["KAKASHI HATAKE" , "KAKASHI"],
+           "joker" : ["K _ _ _ _ _ _" , "Naruto" ]
+        }
+        ,
+         {
+           "citation": "Nous aspirons à la même chose , de régler ça une bonne fois pour toute ici et maintenant. Quel camp périra , quel camp vraincra ?",
+           "reponses": ["ERWIN SMITH" , "ERWIN"],
+           "joker" : [ "E _ _ _ _" , "ERWIN"]
+         }
+         ,
+        {
+           "citation": "Il ne s'est rien passé",
+           "reponses": ["RORONOA ZORO" , "ZORO"],
+           "joker" : ["Z _ _ _" , "One Piece"]
+        }
+         ,
+         {
+           "citation": "J'ai répondu à votre appel et me voici , êtes-vous mon maître ?",
+           "reponses": ["SABER" , "ARTORIA PENDRAGON" , "ARTORIA"],
+           "joker" : [ "S _ _ _" , "Fate"]
+         }
      ],
      "Normal": [
         {
@@ -6386,10 +6483,21 @@
            "reponses": ["BARBE NOIRE", "TEACH", "MARSHALL D TEACH" , "BLACKBEARD"],
            "joker" : ["T _ _ _ _" , "One Piece" ]
         },
+         {
+           "citation": "Pourquoi haïrai-je quelqu'un de moins fort que moi ?",
+           "reponses": ["ESCANOR"],
+           "joker" : [ "E _ _ _ _ _ _" , "Nanatsu No Taizai"]
+         },
         {
            "citation": "Vivre n’est pas un crime",
            "reponses": ["FRANKY", "CUTTY FLAM"],
            "joker" : [ "F _ _ _ _ _", "One Piece" ]
+        },
+        
+        {
+           "citation": "Qu'est-ce qu'un cœur ? Si je t'arrache la poitrine , pourrais-je le voir ? Si j'ouvre ton crâne, pourrais-je le voir ?",
+           "reponses": ["ULQUIORRA", "ULQUIORRA SCHIFFER"],
+           "joker" : [ "U _ _ _ _ _ _ _", "Bleach" ]
         },
         {
            "citation": "À quoi te sert ton ambition si tu ne peux pas protéger ton capitaine ?",
@@ -6420,6 +6528,90 @@
            "reponses": ["THORS"],
            "joker" : ["T _ _ _ _" , "Vinland Saga" ]
         }
+        ,
+        {
+           "citation": "As tu déjà vu un animal sauvage qui pouvait promettre de ne plus jamais mordre personne ? Moi, non.",
+           "reponses": ["RORONOA ZORO" , "ZORO"],
+           "joker" : ["Z _ _ _" , "One Piece" ]
+        }
+        ,
+        {
+           "citation": "Peu importe combien de fois tu me frappes, tu es celui qui est blessé !",
+           "reponses": ["RORONOA ZORO" , "ZORO"],
+           "joker" : ["Z _ _ _" , "One Piece" ]
+        }
+        ,
+        {
+           "citation": "Ne pas voir la pourriture de ce monde, est un plaisir uniquement connu des aveugles !",
+           "reponses": ["FUJITORA" , "ISSHO"],
+           "joker" : ["F _ _ _ _ _ _ _" , "One Piece" ]
+        }
+        ,
+        {
+           "citation": "En cet instant même, nous nous trouvons en terrain neutre ! La justice l'emportera ? C'est certain, parce que celui qui l'emportera deviendra la justice !",
+           "reponses": ["DONQUIXOTE DOFLAMINGO" , "DOFLAMINGO"],
+           "joker" : ["D _ _ _ _ _ _ _ _ _" , "One Piece" ]
+        }
+        ,
+        {
+           "citation": "Si vous voulez apprendre à connaître quelqu'un, découvrez ce qui le met en colère.",
+           "reponses": ["GON FREECS" , "GON"],
+           "joker" : ["G _ _" , "Hunter Hunter" ]
+        }
+        ,
+         {
+           "citation": "L'amour et la haine sont les deux faces d'une même médaille",
+           "reponses": ["HISOKA MOROW", "HISOKA"],
+           "joker" : ["H _ _ _ _ _" , "Hunter Hunter"]
+         }
+         ,
+         {
+           "citation": "Vous devriez profiter des petits détours au maximum , car c'est là que vous trouverez les choses plus importantes pour vous.",
+           "reponses": ["GING FREECS", "GING"],
+           "joker" : ["G _ _ _ _" , "Hunter Hunter"]
+         }
+         ,
+        {
+           "citation": "Comment peux tu avancer si tu continues à regretter ton passé ?",
+           "reponses": ["EDWARD ELRIC" , "EDWARD"],
+           "joker" : ["E _ _ _ _ _" , "Fullmetal Alchemist" ]
+        }
+        ,
+         {
+           "citation": "Jamais personne n'a vraiment tenté de le surpasser , vous êtes le seul. La seule et unique personne. A quel point êtes vous borné ?",
+           "reponses": ["HAWKS" , "KEIGO" , "KEIGO TAKAMI"],
+           "joker" : [ "H _ _ _ _" , "My Hero Academia"]
+         }
+
+         ,
+         {
+           "citation": "Arrivederci!",
+           "reponses": ["BRUNO" , "BRUNO BUCCIARATI"],
+           "joker" : [ "B _ _ _ _" , "Jojo's Bizarre Adventure"]
+         }
+
+         ,
+         {
+           "citation": "Elle m'a sauvé la vie , traite la avec autant de douceur qu'une fleur ou un papillon !",
+           "reponses": ["OKKOTSU YUTA" , "YUTA"],
+           "joker" : [ "Y _ _ _" , "Jujutsu Kaisen"]
+         }
+
+         ,
+         {
+           "citation": "Ca vous va si la terre est détruite ? , êtes vous incapable de la défendre sans moi ?",
+           "reponses": ["GOKU" , "KAKAROT" , "SON GOKU"],
+           "joker" : [ "G _ _ _" , "Dragon Ball"]
+         }
+         ,
+         {
+           "citation": "Ainsi je deviens le nouvel empereur et voici mon chevalier , le Knight Of Zero",
+           "reponses": ["LELOUCH LAMPEROUGE" , "LELOUCH" , "LELOUCH VI BRITANNIA"],
+           "joker" : [ "L _ _ _ _ _ _" , "Code Geass"]
+         }
+         
+         
+        
      ],
      "Difficile": [
         {
@@ -6428,10 +6620,39 @@
            "joker" : ["T _ _ _ _" , "One Piece" ]
          },
          {
+           "citation": "Je l'aime , c'est pour ça que je veux la voir toujours sourire. Je ne la laisserai pas mourir.",
+           "reponses": ["NOMRAN"],
+           "joker" : [ "N _ _ _ _ _" , "The Promised Neverland"]
+         },
+         {
            "citation": "Quand croyez-vous qu’un homme meurt ? ... lorsque son souvenir tombe dans l’oubli !",
            "reponses": ["DR HILULUK", "HILULUK"],
            "joker" : [ "H _ _ _ _ _ _" , "One Piece"]
          }
+         ,
+         {
+           "citation": "Dis-moi , si j'ai bien compris. Tu vas me vaincre avec un chou à la crème et un elfe ?",
+           "reponses": ["SETO KAIBA", "KAIBA"],
+           "joker" : [ "K _ _ _ _" , "Yu-Gi-Oh"]
+         }
+         ,
+         {
+           "citation": "Prêt ou pas , compagnon ,  c'est ici que tu prends le relais.",
+           "reponses": ["ATEM", "YUGI" , "YUGI MUTO"],
+           "joker" : [ "Y _ _ _" , "Yu-Gi-Oh"]
+         }
+         ,
+         {
+           "citation": "Rejeter le bon sens pour rendre possible l'impossible !",
+           "reponses": ["SIMON"],
+           "joker" : [ "S _ _ _ _" , "Gurren Lagann"]
+         }
+         ,
+        {
+           "citation": "La vie n'est pas un jeu de hasard. Si tu veux gagner , tu dois travailler dur.",
+           "reponses": ["SORA"],
+           "joker" : ["S _ _ _" , "No Game No Life"]
+        }
          ,
          {
            "citation": "On decroche de la réalité lorsque le bonheur vous tombe tout cuit dans la bouche.",
@@ -6452,10 +6673,24 @@
          }
          ,
          {
-           "citation": "La meilleure voie est toujours celle qui demande le plus e courage !",
+           "citation": "Je jure sur le nom de la déesse Fionna que nous vaincrons. Suivez moi à moins que le simple fait d'imiter le Rookie vous suffit ?",
+           "reponses": ["FINN"],
+           "joker" : ["F _ _ _" , "Danmachi"]
+         }
+         
+         ,
+         {
+           "citation": "La meilleure voie est toujours celle qui demande le plus de courage !",
            "reponses": ["MORI", "MORI BUNTARO" , "BUNTARO MORI"],
            "joker" : ["M _ _ _" , "Ascension"]
          }
+         ,
+         {
+           "citation": "Les Hommes sont beaucoup plus dangereux que les Dieux de la forêt.",
+           "reponses": ["SAN"],
+           "joker" : ["S _ _" , "Princesse Mononoke"]
+         }
+         
      ]
    }  
    

@@ -929,6 +929,8 @@ var app = new Vue({
             });
 
             $('.hintdiv').hide();
+            $('#hintspan1').hide();
+            $('#hintspan2').hide();
             $('.joker1').removeClass('jokerble');
             $('.joker2').removeClass('jokerble');
         });
@@ -940,19 +942,19 @@ var app = new Vue({
                 $('.joker1').addClass('jokerble');
                 $('#hintspan1').html('<strong> &nbsp; ' + hint + '&nbsp; </strong>');
                 $('.hintdiv').show();
-                $('.hintspan1').show();
+                $('#hintspan1').show();
             }
 
             if(stat == 2) {
                 $('.joker2').addClass('jokerble');
                 $('#hintspan2').html('<strong> &nbsp; ' + hint + '&nbsp; </strong>');
                 $('.hintdiv').show();
-                $('.hintspan2').show();
+                $('#hintspan2').show();
             }
 
             var valpt = $('#spanpointid').text();
             var parsept = parseInt(valpt , 10); ;
-            var potpp = parsept - 200;
+            var potpp = parsept - 50;
             var postpoint = potpp >= 0 ? potpp : 0;
             this.incNbr(parsept , postpoint , 1)
 

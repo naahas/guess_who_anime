@@ -311,13 +311,13 @@ app.post('/useJoker' , function(req,res) {
     var ppoint = mapgameplayerpoint.get(req.session.username);
 
     if(req.body.val == 1 && req.session.usedJK1 != true) {
-        var new_point = (ppoint - 200) >= 0 ? (ppoint - 200) : 0 ;
+        var new_point = (ppoint - 50) >= 0 ? (ppoint - 50) : 0 ;
         mapgameplayerpoint.set(req.session.username , new_point)
         req.session.usedJK1 = true;
     }
 
     if(req.body.val == 2 && req.session.usedJK2 != true) {
-        var new_point = (ppoint - 200) >= 0 ? (ppoint - 200) : 0 ;
+        var new_point = (ppoint - 50) >= 0 ? (ppoint - 50) : 0 ;
         mapgameplayerpoint.set(req.session.username , new_point)
         
         req.session.usedJK2 = true;
@@ -985,7 +985,7 @@ io.on('connection' , (socket) => {
                 var prepoint = 500;
                 prepoint = mapgameplayerpoint.get(iousername);
 
-                mapgameplayerpoint.set(iousername , mapgameplayerpoint.get(iousername) + 500);
+                mapgameplayerpoint.set(iousername , mapgameplayerpoint.get(iousername) + 200);
                 var postpoint = mapgameplayerpoint.get(iousername);
 
                 socket.emit("increasePointEvent" , prepoint,  postpoint);       
@@ -1199,7 +1199,7 @@ io.on('connection' , (socket) => {
 
         //DISPLAY DECREASE POINT TO OTHER PLAYER
         var prepoint = mapgameplayerpoint.get(iousername);
-        var postpoint = (prepoint - 200) >= 0 ? (prepoint - 200) : 0 ;
+        var postpoint = (prepoint - 50) >= 0 ? (prepoint - 50) : 0 ;
 
         console.log('prepoint -> ' , prepoint)
         console.log('postpoint -> ' , postpoint)
