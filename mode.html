@@ -35,6 +35,16 @@
     
     <div id = "app">
 
+        <div id="ruleboxdivid" class="ruleboxdiv">
+            <img src="backcita1.jpg" class="modebackbox">
+
+            <p class="ruledesc">
+                {{ruletxt}}
+            </p>
+            <img class="rulepic" style="width: 3em; height: 3em;" src="ball.png">
+            <hr>
+            <p class="ruletitle">{{ruletitle}}</p>
+        </div>
 
         <div id="maindiv" class="maingame">
 
@@ -42,11 +52,11 @@
             <img class="backmode" src="wback1.jpg" amt="backpic">
             <img @click="returnHome()" class="logopic2" src ="bicon2.png" alt="Bicon">
 
+       
 
             <nav class="modenav">
                 <p>
-                    <i class="fa-solid fa-circle-info" style="color: aliceblue;"></i>  &nbsp; Par défaut , le mode selectionné est <b>Bombanime</b>
-                    &nbsp;| Mode <b>Citanime</b>  en cours d'implémentation |
+                    <i class="fa-solid fa-circle-info" style="color: aliceblue;"></i>  &nbsp; Par défaut , le mode selectionné est <b>Bombanime</b> &nbsp;&nbsp; Mode Quizanime en cours d'implémentation
                 </p>
              
                 <hr class="navhr">
@@ -61,12 +71,12 @@
 
             <div id="gridboxdiv" class="gridmodediv">
                 <div class="casecontainer" name = "Bombanime">
-                    <i title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
-                    <div class="casemode"name = "Bombanime" id="bombanimecase" @click="selectMode('Bombanime')"> <span>Bombanime &nbsp; <i class="fa fa-bomb" aria-hidden="true"></i></div>
+                    <i @click="displayRule(1)" title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
+                    <div class="casemode" name = "Bombanime" id="bombanimecase" @click="selectMode('Bombanime')"> <span>Bombanime &nbsp; <i class="fa fa-bomb" aria-hidden="true"></i></div>
                 </div>
                 <div class="casecontainer" name = "Citanime">
-                    <i title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
-                    <div class="casemode"name = "Citanime" id="citanimecase" @click="selectMode('Citanime')"> <span>Citanime &nbsp; <i class="fa-solid fa-music" style="color: #5a4c85;"></i> </div>
+                    <i @click="displayRule(2)" title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
+                    <div class="casemode" name = "Citanime" id="citanimecase" @click="selectMode('Citanime')"> <span>Citanime &nbsp; <i style="color: #5a4c85;" class="fa-solid fa-bolt"></i></i> </div>
                 </div>
                 
             </div>
@@ -75,9 +85,9 @@
 
             <button disabled @click="confirmMode()" class="modebtn disablemode2">VALIDER</button>
 
-            <span class="copyright"> Bombanime © Nahass 2024 </span>
+            <span class="copyright2"> Bombanime © Nahass 2024 </span>
 
-            <!-- <button @click="returnHome()"  class="returnhomebtn"> RETOUR </button> -->
+            <button @click="returnHome()"  class="returnhomebtn"> RETOUR </button>
     
         </div> <!-- end main div-->
     

@@ -24,6 +24,8 @@ var app = new Vue({
             playerpoint: 1242,
             nbturn: 5,
             citation: '',
+            ruletxt: '',
+            ruletitle: '',
             winnerpoint: 0
             
             
@@ -500,6 +502,11 @@ var app = new Vue({
 
                 socket.emit('useJokerEvent' , stat);
             
+        },
+
+
+        displayRule: function(stat) {
+            editRule(stat);
         }
 
         
@@ -843,8 +850,8 @@ var app = new Vue({
 
 
 
-        socket.on('displayCitationData' , (citation) => {
-            this.citation = citation;
+        socket.on('displayCitationData' , (nbturn , citation) => {
+            this.citation = nbturn + ". " + citation;
         });
       
         socket.on('answerErrorEvent2', () => {
@@ -864,7 +871,7 @@ var app = new Vue({
 
 
         socket.on('updateTimer' , (newtimer) => {
-            $('#citimer').addClass("citanimationtimer");
+            
             $('.citimerspan').text(newtimer);
             $('#citimer').show();
             
@@ -904,8 +911,8 @@ var app = new Vue({
         });
 
 
-        socket.on('changeCitationEvent' , (new_citation) => {
-            this.citation = new_citation;
+        socket.on('changeCitationEvent' , (nbturn , new_citation) => {
+            this.citation = nbturn + ". " + new_citation;
         });
 
 
@@ -1545,8 +1552,8 @@ function editOpponent(players , username) {
     
     for (var i = 0; i < numberOfElements; i++) {
         var playerdiv = document.getElementById('playerdiv' + (i + 1));
-        var x = Math.cos(i * angle) * radius;
-        var y = Math.sin(i * angle) * radius;
+        var x = - Math.cos(i * angle) * radius;
+        var y = - Math.sin(i * angle) * radius;
         playerdiv.style.top = container.clientHeight / 2 - playerdiv.offsetHeight / 2 + y + 'px';
         playerdiv.style.left = container.clientWidth / 2 - playerdiv.offsetWidth / 2 + x + 'px';
 
@@ -1721,8 +1728,59 @@ function editOpponent2(players , ppoint ,  username) {
     }
 
         
-
 }
 
 
 
+
+
+//HIDE RULEDIV WHEN CLICK OUTSIDE RULEDIV
+document.addEventListener('click' , function hideRuleArea(event) {
+
+    if(document.getElementById('ruleboxdivid')) {
+        const rulebox = document.getElementById('ruleboxdivid');
+        const infoareas = document.getElementsByClassName('infomodepic')
+
+        if(!rulebox.contains(event.target)) {
+            let insidearea = false;
+            for(let i = 0 ; i < infoareas.length; i ++) {
+                if(infoareas[i].contains(event.target)) {
+                    insidearea = true;
+                    break;
+                }
+            }
+
+           if(!insidearea) {
+            
+            $('#ruleboxdivid').hide();
+            $('#maindiv').removeClass('brightclass');
+           }
+           
+          
+        } 
+        
+    }
+
+});
+
+
+
+
+function editRule(stat) {
+    if(stat == 1) {
+        app.ruletitle = "Bombanime";
+        app.ruletxt = "Très similaire à Bombparty , les joueurs s'affrontent en citant des personnages à tour de rôle. Chaque personne dispose d'un temps donné pour envoyer leur réponse. Le dernier joueur en vie remporte la partie.";
+        
+    }
+
+    if(stat == 2) {
+        app.ruletitle = "Citanime";
+        app.ruletxt = "Chaque joueur doivent trouver les citations affichées à l'écran. 2 indices sont mis à disposition des joueurs mais ceux-ci perdent des points à chaque utilisation. Le joueur avec le plus de points remporte  la partie.";
+        
+    }
+
+
+
+    $('.ruleboxdiv').show();
+    $('#maindiv').addClass('brightclass');
+}

@@ -6488,6 +6488,16 @@
            "reponses": ["ESCANOR"],
            "joker" : [ "E _ _ _ _ _ _" , "Nanatsu No Taizai"]
          },
+         {
+           "citation": "Une fois morte , je ne serai plus capable de me souvenir de toi..",
+           "reponses": ["MIKASA ACKERMAN" , "MIKASA"],
+           "joker" : [ "M _ _ _ _ _" , "Attack on Titans"]
+         },
+         {
+            "citation": "Je ne veux pas être un héros, les héros partagent leur boisson ...",
+            "reponses": ["RORONOA ZORO" , "ZORO"],
+            "joker" : [ "Z _ _ _" , "One Piece"]
+          },
         {
            "citation": "Vivre n’est pas un crime",
            "reponses": ["FRANKY", "CUTTY FLAM"],
@@ -6537,8 +6547,8 @@
         ,
         {
            "citation": "Peu importe combien de fois tu me frappes, tu es celui qui est blessé !",
-           "reponses": ["RORONOA ZORO" , "ZORO"],
-           "joker" : ["Z _ _ _" , "One Piece" ]
+           "reponses": ["MONKEY D LUFFY" , "LUFFY"],
+           "joker" : ["L _ _ _ _" , "One Piece" ]
         }
         ,
         {
@@ -6587,7 +6597,7 @@
          {
            "citation": "Arrivederci!",
            "reponses": ["BRUNO" , "BRUNO BUCCIARATI"],
-           "joker" : [ "B _ _ _ _" , "Jojo's Bizarre Adventure"]
+           "joker" : [ "B _ _ _ _" , "Jojo"]
          }
 
          ,
@@ -6609,6 +6619,12 @@
            "reponses": ["LELOUCH LAMPEROUGE" , "LELOUCH" , "LELOUCH VI BRITANNIA"],
            "joker" : [ "L _ _ _ _ _ _" , "Code Geass"]
          }
+         ,
+        {
+           "citation": "Un bon chasseur est aimé des animaux.",
+           "reponses": ["GING FREECS", "GING" , "KITE"],
+           "joker" : [ "K _ _ _", "Hunter Hunter" ]
+        }
          
          
         
@@ -6623,12 +6639,39 @@
            "citation": "Je l'aime , c'est pour ça que je veux la voir toujours sourire. Je ne la laisserai pas mourir.",
            "reponses": ["NOMRAN"],
            "joker" : [ "N _ _ _ _ _" , "The Promised Neverland"]
+         }
+         ,
+         {
+           "citation": "Ah , ton regard s'est endurci. Tant mieux , je peux m'en aller et te laisser t'occuper du reste...",
+           "reponses": ["ICHIMARU GIN", "GIN" , "ICHIMARU"],
+           "joker" : [ "G _ _" , "Bleach"]
          },
+         {
+            "citation": "Rassemble-toi , fleuve de lumière guidé par les fées ! Brille ! Pour détruire ceux qui nous agressent ! Par la lumière des fées !",
+            "reponses": ["CANA ALBERONA", "KANNA" , "CANA"],
+            "joker" : [ "C _ _ _" , "Fairy Tail"]
+          },
          {
            "citation": "Quand croyez-vous qu’un homme meurt ? ... lorsque son souvenir tombe dans l’oubli !",
            "reponses": ["DR HILULUK", "HILULUK"],
            "joker" : [ "H _ _ _ _ _ _" , "One Piece"]
-         }
+         },
+         {
+            "citation": "Dans ce cas , au milieu de la parade je ferai ce signe. Cela signifiera que même si je ne peux pas te voir , je te regarderai toujours.",
+            "reponses": ["LAXUS DREYAR", "LAXUS" , "LUXUS"],
+            "joker" : [ "L _ _ _ _" , "Fairy Tail"]
+          }
+          ,
+         {
+            "citation": "Trompe ta personne , trompe le monde et change le passé.",
+            "reponses": ["OKABE RINTAROU", "OKABE" , "OKARIN" , "HOUOUIN KYOUMA" , "KYOUMA" , "KYOMA"],
+            "joker" : [ "O _ _ _ _" , "Steins;Gate"]
+          },
+          {
+            "citation": "A partir de maintenant , je ne prendrai même pas 1 seconde pour te réduire à néant.",
+            "reponses": ["KUJO JOTARO", "JOTARO"],
+            "joker" : [ "J _ _ _ _ _" , "Jojo"]
+          }
          ,
          {
            "citation": "Dis-moi , si j'ai bien compris. Tu vas me vaincre avec un chou à la crème et un elfe ?",

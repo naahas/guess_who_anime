@@ -33,6 +33,32 @@ body{
 }
 
 
+.brightclass {
+  filter: brightness(30%);
+  pointer-events: none;
+}
+
+
+.citabackpic {
+  position: absolute;
+  z-index: -10;
+  width: 100%;
+  left: 0;
+  height: 100%;
+  opacity: 0.6;
+  filter: brightness(40%);
+}
+
+.modebackbox {
+  position: absolute;
+  z-index: -10;
+  width: 100%;
+  left: 0;
+  height: 100%;
+  opacity: 0.6;
+  filter: brightness(90%);
+}
+
 #mainback {
     z-index: -10;
     filter: brightness(80%);
@@ -306,7 +332,7 @@ body{
     margin: 0.5em;
     width: 80%;
     border: 0.2em double rgb(3, 15, 24);
-    padding: 0.5em;
+    padding: 0.7em;
     transition: all .2s ease-in;
 	  -webkit-transition: all .2s ease-in;
 }
@@ -668,6 +694,16 @@ body{
     color:rgba(240, 248, 255, 0.694);
     text-shadow: rgb(20, 97, 184) 1px 0 10px; 
     margin: 0.5em;
+  }
+
+  .copyright2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color:rgba(240, 248, 255, 0.694);
+    text-shadow: rgb(20, 97, 184) 1px 0 10px; 
+    margin: 0.7em;
   }
 
 
@@ -2219,12 +2255,13 @@ select::-ms-expand {
 }
 
 .citatxt {
-  color:#e5eef7;
+  color:#ffffff;
   font-size: 135%;
-  text-shadow: rgb(233, 249, 140) 1px 0 10px;
+  text-shadow: rgb(90, 96, 66) 1px 0 10px;
   text-transform: uppercase;
   letter-spacing: 0.2px;
   font-family:'Courier New', Courier, monospace;
+  animation: citaPop 2s forwards;
 }
 
 
@@ -2306,7 +2343,7 @@ select::-ms-expand {
 
 
 .endcitaclass {
-  animation: citaDisappear 0.7s forwards;
+  animation: citaDisappear 1s forwards;
 }
 
 
@@ -2708,8 +2745,21 @@ select::-ms-expand {
   font-family:'Times New Roman', Times, serif;
   font-weight: 600;
   color:aliceblue;
-  opacity: 0.9;
   margin-bottom: 1em;
+  animation: popCimer 0.5s forwards;
+}
+
+
+@keyframes popCimer {
+  0% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 
@@ -2734,19 +2784,88 @@ select::-ms-expand {
 }
 
 
-.citanimationtimer {
-  animation: popCimer 0.1s ease-in-out;
+
+.ruleboxdiv {
+  display: none;
+  text-align: center;
+  position: absolute;
+  width: 20%;
+  height: 65%;
+  background-color: rgb(180, 204, 224);
+  border-radius: 5px;
+  margin: auto;
+  left:0;
+  right: 0;
+  top:0;
+  overflow-y: auto;
+  bottom: 0;
+  z-index: 99;
+  animation: rulePop 0.5s forwards;
+  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(194, 205, 217, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  opacity: 0;
 }
 
 
-@keyframes popCimer {
+@keyframes rulePop {
   0% {
-    transform: scale(1.2);
-    opacity: 0;
+    transform: translateY(-2em) 
+  }
+
+  40% {
   }
 
   100% {
-    transform: scale(1);
     opacity: 1;
+    transform: translateY(0em)
   }
+}
+
+
+.rulepic {
+  margin-bottom: 5%;
+  /* animation: rulerot 10s infinite linear; */
+}
+
+@keyframes rulerot {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.ruletitle {
+  text-shadow: rgb(209, 192, 33) 5px 0 10px;  
+  font-family:'Times New Roman', Times, serif;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  position: absolute;
+  margin: auto;
+  right: 0;
+  left: 0;
+  bottom: 5%;
+  font-size: 0.8rem;
+}
+
+.ruledesc {
+  margin-top:15%;
+  padding: 30px;
+  font-family:'Times New Roman', Times, serif;
+  text-shadow: rgb(227, 210, 55) 5px 0 10px; 
+  font-size: 1.1rem;
+}
+
+
+.ruleboxdiv hr {
+  color:rgb(14, 12, 12);
+  height: 2px;
+  width: 50%;
+  margin-left: 25%;
 }

@@ -90,6 +90,7 @@ var mapgametotal = new Map();
 var mapcodecopy = new Map();
 var mapgamedifficulty = new Map();
 var mapgamecitaturn = new Map();
+var mapgamecitaturnorigin = new Map();
 var mapgameplayerpoint = new Map();
 var mapgamecitation = new Map();
 var mapgameitationanswer = new Map();
@@ -408,6 +409,7 @@ app.post('/confirmSettingCitanime' , function(req,res) {
     mapgametimer.set(req.session.rid , 1);
     mapgamedifficulty.set(req.session.rid , difficulty);
     mapgamecitaturn.set(req.session.rid , nbturn);
+    mapgamecitaturnorigin.set(req.session.rid , nbturn);
 
     req.session.citadisable = false;
 
@@ -769,9 +771,12 @@ io.on('connection' , (socket) => {
             if(iocitadisable == true) socket.emit("disableCitaInputEvent");
             else socket.emit('enableCitaInputEvent' , 0);
 
-            socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid) , mapgamecitaturn.get(ioroomid) );
+            socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid) , mapgamecitaturnorigin.get(ioroomid) );
             socket.emit('displayBeginning2')
-            socket.emit('displayCitationData' , mapgamecitation.get(ioroomid));
+
+            var origin_turnb = parseInt(mapgamecitaturnorigin.get(ioroomid));
+            var turnDisplay = (origin_turnb+1) - mapgamecitaturn.get(ioroomid);
+            socket.emit('displayCitationData' , turnDisplay , mapgamecitation.get(ioroomid));
         }
     }
 
@@ -1017,6 +1022,7 @@ io.on('connection' , (socket) => {
 
     // HANDLE TIMER (CITANIME)
     socket.on('handleTimerEvent2' , () => {
+        
         var btimer = setInterval(() => {
             var current_time = mapgametimer.get(ioroomid);
             var game_time = mapgametime.get(ioroomid);
@@ -1034,7 +1040,11 @@ io.on('connection' , (socket) => {
                 if(mapgamecitaturn.get(ioroomid) > 0) {
                     mapgametimer.set(ioroomid , 0);
                     generateCitation(ioroomid);
-                    io.to(ioroomid).emit('changeCitationEvent' , mapgamecitation.get(ioroomid));
+                    
+                    var origin_turnb = parseInt(mapgamecitaturnorigin.get(ioroomid));
+                    var turnDisplay = (origin_turnb+1) - mapgamecitaturn.get(ioroomid);
+
+                    io.to(ioroomid).emit('changeCitationEvent' , turnDisplay , mapgamecitation.get(ioroomid));
                     io.to(ioroomid).emit('enableCitaInputEvent' , 1);
                     io.to(ioroomid).emit('resetJokerEvent');
 
@@ -1200,9 +1210,6 @@ io.on('connection' , (socket) => {
         //DISPLAY DECREASE POINT TO OTHER PLAYER
         var prepoint = mapgameplayerpoint.get(iousername);
         var postpoint = (prepoint - 50) >= 0 ? (prepoint - 50) : 0 ;
-
-        console.log('prepoint -> ' , prepoint)
-        console.log('postpoint -> ' , postpoint)
 
         var index_player = 0;
 
