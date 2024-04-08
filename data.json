@@ -6412,7 +6412,7 @@
         ,
         {
            "citation": "L'art est une explosion",
-           "reponses": ["DEODARA"],
+           "reponses": ["DEIDARA"],
            "joker" : ["D _ _ _ _ _ _" , "Naruto Shippuden"]
         }
         ,
@@ -6735,11 +6735,56 @@
          }
          
      ]
-   }  
+   },
    
 
-
+   "Cards" : [
+         {
+            "Character": "Naruto",
+            "Anime" : "Naruto",
+            "path" : "naruto.gif"
+         },
+         {
+            "Character": "Luffy",
+            "Anime" : "One Piece"
+         },
+         {
+            "Character": "Ichigo",
+            "Anime" : "Bleach"
+         },
+         {
+            "Character": "Son Goku",
+            "Anime" : "Dragon Ball"
+         },
+         {
+            "Character": "Gon",
+            "Anime" : "Hunter Hunter"
+         },
+         {
+            "Character": "Natsu",
+            "Anime" : "Fairy Tail"
+         },
+         {
+            "Character": "Light",
+            "Anime" : "Death Note"
+         },
+         {
+            "Character": "Edward",
+            "Anime" : "Fullmetal Alchemist"
+         },
+         {
+            "Character": "Ichigo",
+            "Anime" : "Bleach"
+         },
+         {
+            "Character": "Eren",
+            "Anime" : "Attack on Titan"
+         },
+         {
+            "Character": "Saitama",
+            "Anime" : "One Punch Man"
+         }
+      ]
    
-
 
 }

@@ -24,6 +24,7 @@ var app = new Vue({
             playerpoint: 1242,
             nbturn: 5,
             citation: '',
+            hand: 3,
             ruletxt: '',
             ruletitle: '',
             winnerpoint: 0
@@ -233,6 +234,30 @@ var app = new Vue({
 
         },
 
+        sendGameSetting3: function() {
+            var nbcard = $('.cselect').find(":selected").val();
+
+            var body = {
+                val1: nbcard
+            };
+
+            var config = {
+                method: 'post',
+                url: '/confirmSettingCardanime',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.reload();
+            })
+            .catch(function (err) {
+                
+            });
+
+
+        },
+
 
         editUsername: function() {
             var body = {
@@ -419,6 +444,7 @@ var app = new Vue({
                 }
             }
 
+
         },
 
 
@@ -507,6 +533,30 @@ var app = new Vue({
 
         displayRule: function(stat) {
             editRule(stat);
+        },
+
+
+        drawCard: function() {
+            playDrawkSound();
+
+            var body = {
+                val : "val"
+            };
+
+            var config = {
+                method: 'post',
+                url: '/drawCard',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+            })
+            .catch(function (err) {
+                
+            });
+
+
         }
 
         
@@ -609,6 +659,13 @@ var app = new Vue({
             this.difficulty = difficulty;
             this.timer = time;
             this.nbturn = nbturn;
+            $('.rdiv2').show();
+            $('.backigbtn').show();
+        });
+
+
+        socket.on('displayPostRule3' , (hand) => {
+            this.hand = hand;
             $('.rdiv2').show();
             $('.backigbtn').show();
         });
@@ -780,6 +837,18 @@ var app = new Vue({
             $('.citaopponentdiv').show();
         });
 
+        socket.on('displayBeginning3' , () => {
+            editDeck();
+            var card_delay = 3000;
+            if(this.hand == 1) card_delay = 1900;
+            if(this.hand == 3) card_delay = 3300;
+            if(this.hand == 5) card_delay = 3900;
+
+            setTimeout(() => {
+                $('.card').show();
+            }, card_delay);
+        });
+
 
         socket.on('displayRePlay' , () => {
             $('.replaybtn').show();
@@ -797,7 +866,11 @@ var app = new Vue({
 
 
         socket.on('keepSettingEvent' , (btheme , btime) => {
-            editSelect(btheme , btime);   
+            editSetting(btheme , btime);   
+        });
+
+        socket.on('keepSettingEvent2' , (bturn , bdiff , btime) => {
+            editSetting2(bturn , bdiff , btime);   
         });
 
 
@@ -860,7 +933,9 @@ var app = new Vue({
 
 
         socket.on('increasePointEvent' , (prepoint , postpoint) => {
-            this.incNbr(prepoint , postpoint , 0);
+            // this.incNbr(prepoint , postpoint , 0);
+            var elt = document.getElementById("spanpointid");
+            elt.innerHTML = postpoint;
         });
 
 
@@ -963,7 +1038,9 @@ var app = new Vue({
             var parsept = parseInt(valpt , 10); ;
             var potpp = parsept - 50;
             var postpoint = potpp >= 0 ? potpp : 0;
-            this.incNbr(parsept , postpoint , 1)
+            // this.incNbr(parsept , postpoint , 1)
+            var elt = document.getElementById("spanpointid");
+            elt.innerHTML = postpoint;
 
             
         });
@@ -980,6 +1057,11 @@ var app = new Vue({
         socket.on('disableJokerEvent' , () => {
             $('.joker1').addClass('jokerble');
             $('.joker2').addClass('jokerble');
+        });
+
+
+        socket.on('displayDeck' , () => {
+            $('.centered-deckwrap').show();
         });
         
 
@@ -1481,7 +1563,7 @@ function editStriker(wchara , totalchara) {
 }
 
 
-function editSelect(btheme , btime) {
+function editSetting(btheme , btime) {
     var ss = document.getElementById('selectid');
     ss.value = btheme;
 
@@ -1490,8 +1572,20 @@ function editSelect(btheme , btime) {
 
     var iitxt = document.getElementById('secvalid');
     iitxt.innerHTML = btime;
+}
 
+function editSetting2(bturn , bdiff , btime) {
+    var sturn = document.getElementById('selectid2');
+    sturn.value = bturn;
 
+    var sdiff = document.getElementById('seletdiffid');
+    sdiff.value = bdiff;
+
+    var stime = document.getElementById('rangeid');
+    stime.value = btime;
+
+    var iitxt = document.getElementById('secvalid');
+    iitxt.innerHTML = btime;
 }
 
 
@@ -1731,7 +1825,28 @@ function editOpponent2(players , ppoint ,  username) {
 }
 
 
+function editRule(stat) {
+    if(stat == 1) {
+        app.ruletitle = "Bombanime";
+        app.ruletxt = "Très similaire à Bombparty , les joueurs s'affrontent en citant des personnages à tour de rôle. Chaque personne dispose d'un temps donné pour envoyer leur réponse. Le dernier joueur en vie remporte la partie.";
+        
+    }
 
+    if(stat == 2) {
+        app.ruletitle = "Citanime";
+        app.ruletxt = "Chaque joueur doivent trouver les citations affichées à l'écran. 2 indices sont mis à disposition des joueurs mais ceux-ci perdent des points à chaque utilisation. Le joueur avec le plus de points remporte  la partie.";
+    }
+
+    if(stat == 3) {
+        app.ruletitle = "Cardanime";
+        app.ruletxt = "Chaque joueur doivent trouver les citations affichées à l'écran. 2 indices sont mis à disposition des joueurs mais ceux-ci perdent des points à chaque utilisation. Le joueur avec le plus de points remporte  la partie.";
+    }
+
+
+
+    $('.ruleboxdiv').show();
+    $('#maindiv').addClass('brightclass');
+}
 
 
 //HIDE RULEDIV WHEN CLICK OUTSIDE RULEDIV
@@ -1766,21 +1881,101 @@ document.addEventListener('click' , function hideRuleArea(event) {
 
 
 
-function editRule(stat) {
-    if(stat == 1) {
-        app.ruletitle = "Bombanime";
-        app.ruletxt = "Très similaire à Bombparty , les joueurs s'affrontent en citant des personnages à tour de rôle. Chaque personne dispose d'un temps donné pour envoyer leur réponse. Le dernier joueur en vie remporte la partie.";
+//ENABLE CASEMODE WHEN CLICK OUTSIDE CASE
+document.addEventListener('click' , function hideRuleArea(event) {
+
+    if(document.getElementById('gridboxdiv')) {
+        const casearea = document.getElementsByClassName('casemode')
+    
+            let insidearea = false;
+            for(let i = 0 ; i < casearea.length; i ++) {
+                if(casearea[i].contains(event.target)) {
+                    insidearea = true;
+                    break;
+                }
+            }
+            
+            //IF OUTSIDE 
+           if(!insidearea) {
+                $('.modebtn').addClass('disablemode2');
+                $('.modebtn').prop("disabled", true);
+                $('.casecontainer').removeClass('selectedclass');
+           }
+           
+          
+        
         
     }
 
-    if(stat == 2) {
-        app.ruletitle = "Citanime";
-        app.ruletxt = "Chaque joueur doivent trouver les citations affichées à l'écran. 2 indices sont mis à disposition des joueurs mais ceux-ci perdent des points à chaque utilisation. Le joueur avec le plus de points remporte  la partie.";
+});
+
+
+
+
+function editDeck() {
+    $('#deckwrapid').addClass('showdeckclass');
+    $('#deckwrapid').show();
+
+    var deckel = document.getElementById('deckid');
+    var deckwrapel = document.getElementById('deckwrapid');
+    
+    //SHOW DECK BY ADDING SHOWCLASS AND THEN REMOVE THE SHOWCLASS RIGHT AWAY
+    deckwrapel.classList.add('showdeckclass');
+    setTimeout(() => {
+        deckwrapel.classList.remove('showdeckclass');
+    }, 550);
+    
+    deckwrapel.addEventListener('click' , function() {
+        $('#deckwrapid').prop("disabled", true);
+        $('#deckwrapid').addClass('disablemode2');
+
+        if(app.hand == 1) {
+            deckel.classList.add('drawclass1');
+            $('#deckwrapid').addClass('hidedeckclass1');
+            setTimeout(() => {
+                $('#deckwrapid').hide();
+            }, 510);
+        } 
+
+        if(app.hand == 3) {
+            deckel.classList.add('drawclass2');
+            $('#deckwrapid').addClass('hidedeckclass2');
+            setTimeout(() => {
+                $('#deckwrapid').hide();
+            }, 1400);
+        }
+
+        if(app.hand == 5) {
+            deckel.classList.add('drawclass3');
+            $('#deckwrapid').addClass('hidedeckclass3');
+            playDrawkSound();
+            setTimeout(() => {
+                $('#deckwrapid').hide();
+            }, 2500);
+        }
+
         
-    }
-
-
-
-    $('.ruleboxdiv').show();
-    $('#maindiv').addClass('brightclass');
+    });
 }
+
+
+
+function playDrawkSound() {
+    var ta = document.getElementById('audio7');
+    ta.volume = 0.5;
+    const promise = ta.play();  
+        
+    let playedOnLoad;
+
+    if (promise !== undefined) {
+        promise.then(_ => {
+            playedOnLoad = true;
+        }).catch(error => {
+            playedOnLoad = true;
+        });
+    }       
+}
+
+
+
+

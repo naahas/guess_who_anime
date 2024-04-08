@@ -10,7 +10,7 @@ body{
 
 #maindiv {
     position: absolute;
-    background-color: rgba(198, 201, 204, 0.489);
+    background-color: rgba(55, 69, 69, 0.489);
     width: 100vw;
     height: 100vh;
     text-align: center;
@@ -29,7 +29,6 @@ body{
   right: 0;
   bottom: 0;
   left: 0;
-  filter: brightness(50%);
 }
 
 
@@ -46,7 +45,14 @@ body{
   left: 0;
   height: 100%;
   opacity: 0.6;
-  filter: brightness(40%);
+}
+
+.cardback {
+  position: absolute;
+  z-index: -100;
+  background-color: rgba(72, 56, 56, 0.902);
+  width: 100%;
+  height: 100%;
 }
 
 .modebackbox {
@@ -1613,18 +1619,23 @@ select::-ms-expand {
   background-color: #fe9fe9;
   opacity: 0.6;
   border-radius: 3px;
-  border: 1px solid aliceblue;
+  border: 1px double aliceblue;
   box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
   box-sizing: border-box;
-  color: #0f1112;
+  color: #42525a;
   cursor: pointer;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  letter-spacing: 1px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  letter-spacing: 0.5px;
   font-weight: 400;
   line-height: 1.15385;
   padding: 0.5em;
 }
 
+
+.returnhomebtn:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
 
 
 .gridmodediv {
@@ -2416,8 +2427,8 @@ select::-ms-expand {
   display: inline-block;
   position: relative;
   overflow: hidden;
-  width:55%;
-  background: #f2f2f2;
+  width:30%;
+  background: #380e38;
   border: 1px solid;
   border-color: white #f7f7f7 whitesmoke;
   border-radius: 3px;
@@ -2801,7 +2812,7 @@ select::-ms-expand {
   bottom: 0;
   z-index: 99;
   animation: rulePop 0.5s forwards;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(194, 205, 217, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  box-shadow: rgba(188, 200, 214, 0.4) 0px 10px 10px 2px, rgba(194, 205, 217, 0.65) 0px 4px 6px -1px, rgba(220, 184, 184, 0.646) 10px 10px 0px inset;
   opacity: 0;
 }
 
@@ -2822,7 +2833,7 @@ select::-ms-expand {
 
 
 .rulepic {
-  margin-bottom: 5%;
+  margin-bottom: 8%;
   /* animation: rulerot 10s infinite linear; */
 }
 
@@ -2844,13 +2855,10 @@ select::-ms-expand {
   text-shadow: rgb(209, 192, 33) 5px 0 10px;  
   font-family:'Times New Roman', Times, serif;
   font-weight: 600;
+  color:#2d4654;
   letter-spacing: 3px;
   text-transform: uppercase;
-  position: absolute;
-  margin: auto;
-  right: 0;
-  left: 0;
-  bottom: 5%;
+  margin: 1em;
   font-size: 0.8rem;
 }
 
@@ -2869,3 +2877,213 @@ select::-ms-expand {
   width: 50%;
   margin-left: 25%;
 }
+
+
+
+
+/* CARDANIME */
+
+
+
+.scene {
+  position: absolute;
+  width: 30%;
+  margin: auto;
+  right: 0;
+  left: 0;
+  bottom: 10%;
+  display: flex;
+  justify-content: space-between;
+
+.card {
+  display: none;
+  border: 5px double rgba(92, 156, 216, 0.93);
+  position: relative;
+  width: 120px;
+  height: 160px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+
+}
+
+.card__face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: 1s ease-in-out;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &--back {
+      transform: scale(1.15) rotate(3deg);
+    }
+  }
+}
+
+
+/* --------------- DECK ----------------*/
+
+
+.deckwrap{
+  display: none;
+  position: absolute;
+  top:0;
+  left:0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  border: 2px double rgb(28, 35, 29);
+  
+}
+
+/* BEHIND TOP CARD */
+.card-deckwrap{
+  text-align: center;
+  width:170px;
+  height:220px;
+  position:relative;
+  background:#dcc2c2;
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk8__UKzfBQsCjkoOueRWDETUYy380YSWhVPuRIeFr3TI4ZI9jCWimG-gqF0J6e_E_5Yo&usqp=CAU');
+  background-size:cover;
+  box-shadow:0px 0px 5px rgb(211, 243, 247);
+  border-radius:5px;
+  border: 2px solid rgb(29, 33, 81);
+}
+/* -------------------- */
+
+.deck{
+  position:absolute;
+  width:100%;
+  height:100%;
+  /*preserve the back when fliping*/
+  transform-style:preserve-3d;
+  transition:0.5s all ease;
+  box-shadow:0px 0px 10px rgb(186, 158, 21);
+}
+
+
+.deck:hover {
+  cursor: pointer;
+  filter: brightness(50%);
+  transform:translateY(-20px);
+}
+
+
+.drawclass1 {
+  animation: drawA 0.45s 1 forwards ;
+}
+
+.drawclass2 {
+  animation: drawA 0.45s 3 forwards ;
+}
+
+.drawclass3 {
+  animation: drawA 0.45s 5 forwards ;
+}
+
+
+@keyframes drawA {
+  0% {
+    transform: translateY(-15px);
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateY(-80%) rotate(-6deg);
+    opacity: 0;
+  }
+}
+
+
+.hidedeckclass1 {
+  animation: hideDeckA 0.45s forwards;
+}
+
+.hidedeckclass2 {
+  animation: hideDeckA 1.45s forwards;
+}
+
+.hidedeckclass3  {
+  animation: hideDeckA 2.5s forwards;
+}
+
+
+@keyframes hideDeckA {
+  0% {
+    
+  }
+
+  85% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+
+.showdeckclass {
+  animation: showDeckA 0.5s forwards;
+}
+
+
+
+@keyframes showDeckA {
+  0% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+
+
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+/*front card*/
+.deck-front{
+  border-radius:5px;
+  position:absolute;
+  background:#dcc2c2;
+  width:100%;
+  height:100%;
+  /*hide backface*/
+  backface-visibility:hidden;
+  color:#333;
+  display: flex;
+  border: 2px solid rgb(29, 33, 81);
+}
+
+
+.deck-front img{
+  max-width: 100%;
+  height: auto;
+}
+
+.deck-front img:nth-of-type(1){
+  display:block;
+  position:absolute;
+  top:2%;
+  right:5%;
+  width: 20%;
+}
+
+
+
