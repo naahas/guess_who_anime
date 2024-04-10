@@ -93,6 +93,7 @@ var mapgamedifficulty = new Map();
 var mapgamecitaturn = new Map();
 var mapgamecitaturnorigin = new Map();
 var mapgameplayerpoint = new Map();
+var mapgamecardready = new Map();
 var mapgamecitation = new Map();
 var mapgamehand = new Map();
 var maphandplayer = new Map();
@@ -262,9 +263,6 @@ app.post('/game' , function(req,res) {
 
     console.log("current players : " , mapcode)
 
-    mapgametheme.set(req.session.rid , 'Naruto');
-    mapgametime.set(req.session.rid , 5);
-
     req.session.ingame = true;
 
     res.redirect('/game');
@@ -275,7 +273,8 @@ app.post('/game' , function(req,res) {
 app.get('/game' , function(req,res) {
 
     //IF PLAYER TRY TO RELOAD AFTER HOST LEAVE THE GAME
-    if(req.session.isplaying == true && req.session.joined == true && !mapgameturn.get(req.session.rid)) {
+    if(req.session.isplaying == true && req.session.joined == true && !mapgamedata.has(req.session.rid)) {
+        req.session.hasdraw = null;
         req.session.endgame = null;
         req.session.ingame = null;
         req.session.joined = false;
@@ -346,6 +345,10 @@ app.post('/resetJoker' , function(req,res) {
 // GAME START AFTER CONFIRM SETTING (BOMBANIME)
 app.post('/confirmSettingBombanime' , function(req,res) {
 
+    //DEFAULT
+    mapgametheme.set(req.session.rid , 'Naruto');
+    mapgametime.set(req.session.rid , 5);
+
     var btime = req.body.val1;
     var theme = req.body.val2;
     if(btime < 3) btime = 3;
@@ -396,50 +399,7 @@ app.post('/confirmSettingBombanime' , function(req,res) {
 });
 
 
-// GAME START AFTER CONFIRM SETTING (CITANIME)
-app.post('/confirmSettingCitanime' , function(req,res) {
-    var btime = req.body.val1;
-    if(btime < 5) btime = 5;
-    if(btime > 20) btime = 20;
 
-    var difficulty = req.body.val2;
-    if(difficulty != "Facile" && difficulty != "Normal" && difficulty != "Difficile" && difficulty != "Tout") difficulty = "Normal";
-
-    var nbturn = req.body.val3;
-    if(nbturn > 20) nbturn = 20;
-    if(nbturn < 5) nbturn = 5;
-
-    mapgametime.set(req.session.rid , btime++);
-    mapgameturn.set(req.session.rid , req.session.username);
-    mapgametimer.set(req.session.rid , 1);
-    mapgamedifficulty.set(req.session.rid , difficulty);
-    mapgamecitaturn.set(req.session.rid , nbturn);
-    mapgamecitaturnorigin.set(req.session.rid , nbturn);
-
-    req.session.citadisable = false;
-
-    if(difficulty == "Facile") mapgamedata.set(req.session.rid , profile.Citation.Facile);
-    if(difficulty == "Normal")  mapgamedata.set(req.session.rid , profile.Citation.Normal);
-    if(difficulty == "Difficile") mapgamedata.set(req.session.rid , profile.Citation.Difficile);
-    if(difficulty == "Tout") fusionDifficulty(req.session.rid);
-        
-    generateCitation(req.session.rid);
-    
-    for (let [key, value] of mapcode) {
-        // if(value == req.session.rid) mapcodecopy.set(key, value);
-        if(value == req.session.rid) mapgameplayerpoint.set(key, 500);
-    }
-
-    req.session.isplaying = true;
-    req.session.replayed = false;
-
-    io.once('connection' , (socket) => {
-        socket.to(req.session.rid).emit('makePlayerPlayingEvent');
-    });  
-
-
-    res.end();
-});
 
 
 app.post('/confirmSettingCardanime' , function(req,res) {
@@ -448,6 +408,7 @@ app.post('/confirmSettingCardanime' , function(req,res) {
 
     mapgamehand.set(req.session.rid , parseInt(handc));
     mapgamedata.set(req.session.rid , profile.Cards);
+    mapgamecardready.set(req.session.rid , false);
 
     req.session.isplaying = true;
     req.session.replayed = false;
@@ -464,10 +425,11 @@ app.post('/confirmSettingCardanime' , function(req,res) {
 app.post('/drawCard' , function(req,res) {
     
     generateHand(req.session.rid , req.session.username);
-
-
+    
     req.session.hasdraw = true;
-    res.end();
+
+    var hand = maphandplayer.get(req.session.username);
+    res.send(hand);
 });
 
 
@@ -643,7 +605,7 @@ io.on('connection' , (socket) => {
     socket.emit('showSettingEvent' , iousername);
     socket.emit('displayJoinDiv' , ioroomid);
 
-
+    
     if(iousername) socket.emit('displayUsernameEvent' , iousername);
 
   
@@ -790,49 +752,26 @@ io.on('connection' , (socket) => {
     }
 
 
-    if(iomode == "Citanime") {
-        if(ioplaying && ioendgame != true) {
-            //DISPLAY OPPONENT (CITANIME)
-            if(ioplaying && ioingame == true) {
-                var oplayer = 'SLAYERBOT';
-                var playertab = [];
-                var playerpoint = [];
-                    for (let [key, value] of mapcode) {
-                        if(mapcode.get(key) == ioroomid) playertab.push(key);
-                    }
-                    for (let [key, value] of mapgameplayerpoint) {
-                        if(mapcode.get(key) == ioroomid) playerpoint.push(value);
-                    }
-                // console.log(playerpoint)
-                socket.emit('displayOpponents2' , playertab , playerpoint ,  iousername );
-            }
-
-            if(iocitadisable == true) socket.emit("disableCitaInputEvent");
-            else socket.emit('enableCitaInputEvent' , 0);
-
-            socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid) , mapgamecitaturnorigin.get(ioroomid) );
-            socket.emit('displayBeginning2')
-
-            var origin_turnb = parseInt(mapgamecitaturnorigin.get(ioroomid));
-            var turnDisplay = (origin_turnb+1) - mapgamecitaturn.get(ioroomid);
-            socket.emit('displayCitationData' , turnDisplay , mapgamecitation.get(ioroomid));
-        }
-    }
+   
 
     if(iomode == "Cardanime") {
         if(ioplaying && ioendgame != true) {
             //DISPLAY OPPONENT (CARDANIME)
             if(ioplaying && ioingame == true) {
-
+                var playertab = [];
+                for (let [key, value] of mapcode) {
+                    if(mapcode.get(key) == ioroomid) playertab.push(key);
+                }
+              
+                socket.emit('displayOpponents3' , playertab ,  iousername );                        
             }
 
-
+            
+            //DISPLAY DECK OR CARDS (ACCORDING TO ALREADY DRAW OR NOT)
             socket.emit('displayPostRule3' , mapgamehand.get(ioroomid));
             if(iodraw != true) socket.emit('displayBeginning3')
+            else if(iodraw == true) socket.emit('displayPlayerCard' , maphandplayer.get(iousername));
 
-            var origin_turnb = parseInt(mapgamecitaturnorigin.get(ioroomid));
-            var turnDisplay = (origin_turnb+1) - mapgamecitaturn.get(ioroomid);
-            socket.emit('displayCitationData' , turnDisplay , mapgamecitation.get(ioroomid));
         }
     }
 
@@ -2747,7 +2686,6 @@ function generateCitation(rid) {
 
 
 function generateHand(rid , playername) {
-    console.log('lol')
     
     var chara_array = [];
     var random_nb;
@@ -2795,3 +2733,87 @@ server.listen(process.env.PORT || 7000 , function(err) {
     console.log("Server on " , server.address().port);
 
 })
+
+
+
+
+
+
+
+
+
+
+// if(iomode == "Citanime") {
+//     if(ioplaying && ioendgame != true) {
+//         //DISPLAY OPPONENT (CITANIME)
+//         if(ioplaying && ioingame == true) {
+//             var oplayer = 'SLAYERBOT';
+//             var playertab = [];
+//             var playerpoint = [];
+//                 for (let [key, value] of mapcode) {
+//                     if(mapcode.get(key) == ioroomid) playertab.push(key);
+//                 }
+//                 for (let [key, value] of mapgameplayerpoint) {
+//                     if(mapcode.get(key) == ioroomid) playerpoint.push(value);
+//                 }
+//             // console.log(playerpoint)
+//             socket.emit('displayOpponents2' , playertab , playerpoint ,  iousername );
+//         }
+
+//         if(iocitadisable == true) socket.emit("disableCitaInputEvent");
+//         else socket.emit('enableCitaInputEvent' , 0);
+
+//         socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid) , mapgamecitaturnorigin.get(ioroomid) );
+//         socket.emit('displayBeginning2')
+
+//         var origin_turnb = parseInt(mapgamecitaturnorigin.get(ioroomid));
+//         var turnDisplay = (origin_turnb+1) - mapgamecitaturn.get(ioroomid);
+//         socket.emit('displayCitationData' , turnDisplay , mapgamecitation.get(ioroomid));
+//     }
+// }
+
+
+// GAME START AFTER CONFIRM SETTING (CITANIME)
+// app.post('/confirmSettingCitanime' , function(req,res) {
+//     var btime = req.body.val1;
+//     if(btime < 5) btime = 5;
+//     if(btime > 20) btime = 20;
+
+//     var difficulty = req.body.val2;
+//     if(difficulty != "Facile" && difficulty != "Normal" && difficulty != "Difficile" && difficulty != "Tout") difficulty = "Normal";
+
+//     var nbturn = req.body.val3;
+//     if(nbturn > 20) nbturn = 20;
+//     if(nbturn < 5) nbturn = 5;
+
+//     mapgametime.set(req.session.rid , btime++);
+//     mapgameturn.set(req.session.rid , req.session.username);
+//     mapgametimer.set(req.session.rid , 1);
+//     mapgamedifficulty.set(req.session.rid , difficulty);
+//     mapgamecitaturn.set(req.session.rid , nbturn);
+//     mapgamecitaturnorigin.set(req.session.rid , nbturn);
+
+//     req.session.citadisable = false;
+
+//     if(difficulty == "Facile") mapgamedata.set(req.session.rid , profile.Citation.Facile);
+//     if(difficulty == "Normal")  mapgamedata.set(req.session.rid , profile.Citation.Normal);
+//     if(difficulty == "Difficile") mapgamedata.set(req.session.rid , profile.Citation.Difficile);
+//     if(difficulty == "Tout") fusionDifficulty(req.session.rid);
+        
+//     generateCitation(req.session.rid);
+    
+//     for (let [key, value] of mapcode) {
+//         // if(value == req.session.rid) mapcodecopy.set(key, value);
+//         if(value == req.session.rid) mapgameplayerpoint.set(key, 500);
+//     }
+
+//     req.session.isplaying = true;
+//     req.session.replayed = false;
+
+//     io.once('connection' , (socket) => {
+//         socket.to(req.session.rid).emit('makePlayerPlayingEvent');
+//     });  
+
+
+//     res.end();
+// });

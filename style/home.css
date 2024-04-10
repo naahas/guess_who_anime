@@ -47,6 +47,16 @@ body{
   opacity: 0.6;
 }
 
+.cardbackpic {
+  position: absolute;
+  z-index: -10;
+  width: 100%;
+  left: 0;
+  height: 100%;
+  filter: brightness(30%);
+}
+
+
 .cardback {
   position: absolute;
   z-index: -100;
@@ -2623,6 +2633,16 @@ select::-ms-expand {
 }
 
 
+.cardtxtfoe {
+  letter-spacing: 1.05px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color:rgb(197, 231, 203);
+  text-shadow: rgb(125, 145, 68) 5px 0 10px;  
+  text-transform: uppercase;
+  font-size: 80%;
+}
+
+
 
 .citapoint {
   text-shadow: rgb(167, 225, 6) 5px 0 10px;  
@@ -2886,46 +2906,157 @@ select::-ms-expand {
 
 
 .scene {
+  text-align: center;
   position: absolute;
-  width: 30%;
+  width: 55%;
   margin: auto;
   right: 0;
   left: 0;
-  bottom: 10%;
+  bottom: 13%;
   display: flex;
   justify-content: space-between;
-
-.card {
-  display: none;
-  border: 5px double rgba(92, 156, 216, 0.93);
-  position: relative;
-  width: 120px;
-  height: 160px;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s ease-in-out;
-  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
-
 }
 
-.card__face {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: 1s ease-in-out;
+.card {
+  margin: auto;
+  border: 5px double rgba(28, 32, 36, 0.93);
+  width: 140px;
+  height: 180px;
+  color: rgb(159, 24, 147);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  box-shadow: rgba(84, 93, 71, 0.4) 0px 0px 0px 2px, rgba(121, 118, 91, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+.cardpopclass {
+  animation: cardPop 1s forwards;
+} 
 
-    &--back {
-      transform: scale(1.15) rotate(3deg);
-    }
+@keyframes cardPop {
+  0% {
+    opacity: 0;
+    margin-bottom:-5em;
   }
+
+  100% {
+    opacity: 1;
+    margin-bottom:0;
+  }
+}
+
+.cardtxt {
+  width: 100%;
+  background-color: rgb(8, 30, 29);
+  color:azure;
+  padding: 5px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  letter-spacing: 1px;
+  border-top:1px solid aliceblue;
+  text-shadow: rgb(255, 255, 255) 10px 0 20px; 
+}
+
+
+
+
+
+.card:hover > img {
+  filter: brightness(20%);
+  
+}
+
+.card:hover {
+  transform: scale(1.2) translateY(-1em) !important;
+}
+
+.cardhoverclass {
+  filter: brightness(40%);
+  transform: scale(1.2) translateY(-1em);
+}
+
+
+.cardpicclass {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+}
+
+
+.statdiv {
+  visibility: hidden;
+  position: absolute;
+  display:flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin: auto;
+  height: 80%;
+  top:10%;
+  width: 100%;
+  padding: auto;
+}
+
+
+.statdivout {
+  position: absolute;
+  margin: auto;
+  left: 3%;
+  bottom: 0;
+  top:0;
+  padding: 7px;
+  height: fit-content;
+  background-color: rgb(110, 129, 129 , 0.02);
+  border-radius: 10px;
+  animation: statPopA 0.4s forwards;
+}
+
+
+
+@keyframes statPopA {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+
+  100% {
+    left: 3%;
+    opacity: 1;
+  }
+}
+
+.skilltxtout {
+  color:rgba(249, 249, 224, 0.884);
+  font-family: 'Times New Roman', Times, serif;
+  letter-spacing: 1px;
+  text-shadow: rgb(60, 53, 53) 1px 0 10px;  
+  padding: 5px;
+  padding-right: 20px;
+  margin-top:1.2em;
+  background-color: rgba(25, 21, 21, 0.311);
+  width: 150%;
+  box-shadow:0px 0px 3px rgb(211, 243, 247);
+}
+
+
+.skilltextoutspan {
+  float: right;
+  font-size: 1.1rem;
+}
+
+.skilltxtout span {
+  float: right;
+  font-size: 1.1rem;
+}
+
+.card:hover > .statdiv {
+  visibility: visible;
+}
+
+
+.skilltxt {
+  color:rgb(252, 228, 255);
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  letter-spacing: 1px;
+  font-size: 0.63rem;
+  text-shadow: .0.7em .1em 0 hsl(200, 51%, 58%);
 }
 
 
@@ -3087,3 +3218,135 @@ select::-ms-expand {
 
 
 
+.eyeskillpic {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 1%;
+  width: 40px;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+}
+
+.eyeskillpic:hover {
+  filter: brightness(50%);
+  
+}
+
+
+
+.cardopponentdiv {
+  display: none;
+  position: absolute;
+  margin: auto;
+  top:20%;
+  right: 2%;
+  height: 40%;
+  text-align: right;
+  animation: foePopA 0.5s forwards;
+  
+}
+
+
+
+@keyframes foePopA {
+  0% {
+    opacity: 0;
+    right: 1%;
+  }
+  100% {
+    opacity: 1;
+    right: 2%;
+  }
+}
+
+
+.cardselfdiv {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 1.5%;
+  text-align: right;
+  height: 40%;
+}
+
+.cardselfdivtxt {
+  color:rgb(201, 215, 228);
+  font-family: 'Times New Roman', Times, serif;
+  text-shadow: rgb(58, 52, 52) 0px 0 2px;  
+  font-size: 0.75rem;
+
+}
+
+.cardselfpoint {
+  text-shadow: rgb(167, 225, 6) 5px 0 10px;  
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color:aliceblue;
+  padding: 15px;
+  font-size: 1.5rem;
+}
+
+
+.selfcardpic {
+  /* animation: gojoA 2s infinite; */
+  
+  margin-bottom: 5px;
+}
+
+
+.headstatdiv {
+  position: absolute;
+  margin: auto;
+  left: 0;
+  bottom: 40%;
+  top:0;
+  right: 0;
+  width: 30%;
+  height: fit-content;
+  overflow: hidden;
+  background-color: rgb(232, 206, 206 , 0.02);
+  padding: 5px;
+  border-top: 2px solid aliceblue;
+  border-bottom: 2px solid aliceblue;
+}
+
+
+.statspan {
+  display: inline-block;
+  height: fit-content;
+  text-shadow: rgb(155, 168, 113) 5px 0 10px;  
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color:aliceblue;
+  letter-spacing: 4px;
+  padding: 15px;
+  font-size: 1.5rem;
+  animation: scrollStat 0.1s infinite;
+}
+
+/* @keyframes scrollStat {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
+} */
+
+
+
+.carduserpic {
+  position: absolute;
+  width: fit-content;
+  height: fit-content;
+  height: 7%;
+  top:10%;
+  right: 2%;
+  cursor: pointer;
+  filter: brightness(30%);
+}
+
+
+.carduserpic:hover {
+  filter: brightness(50%);
+}

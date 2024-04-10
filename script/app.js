@@ -551,6 +551,7 @@ var app = new Vue({
 
             axios(config)
             .then(function (res) {
+               firstCardsDisplay(res.data);
             })
             .catch(function (err) {
                 
@@ -619,6 +620,7 @@ var app = new Vue({
 
 
         socket.on('makePlayerPlayingEvent' , () => {
+        
             isplayingRequest();
         });
 
@@ -642,6 +644,10 @@ var app = new Vue({
             $('.selfcitapointdiv').show();
         });
 
+        socket.on('displayOpponents3' , (opponents , ruser) => {   
+            this.opponents = opponents;
+            editOpponent3(opponents,  ruser);
+        });
 
         socket.on('displayWaitMsgGameEvent' , () => {
             $('.waitgametxt').show();
@@ -850,6 +856,11 @@ var app = new Vue({
         });
 
 
+        socket.on('displayPlayerCard' , (player_cards) => {
+            displayCards(player_cards);
+        });
+
+
         socket.on('displayRePlay' , () => {
             $('.replaybtn').show();
         });
@@ -907,7 +918,6 @@ var app = new Vue({
 
         socket.on('updateMode' , (mode) => {
             this.currentmode = mode;
-            editMode(mode);
         });
 
 
@@ -1723,19 +1733,6 @@ function editOpponent(players , username) {
 }
 
 
-function editMode(mode) {
-    var gridbox = document.getElementById('gridboxdiv');
-
-    if(gridbox) {
-
-      
-
-    }
-
-}
-
-
-
 
 
 var taudio = document.getElementById('audio1');
@@ -1823,6 +1820,61 @@ function editOpponent2(players , ppoint ,  username) {
 
         
 }
+
+
+function editOpponent3(players ,  username) {
+    var mainarea = document.getElementById('maindiv');
+
+    var playerdiv = document.createElement('div');
+    playerdiv.classList.add('cardopponentdiv');
+
+    var showp = document.createElement('img');
+    showp.setAttribute('src' , 'carduser.png');
+    showp.classList.add('carduserpic');
+    
+    for(var i = 0; i < players.length ; i++) {
+        if(players[i] != username) {
+            var spanuser = document.createElement('span');
+            spanuser.classList.add('cardtxtfoe');
+        
+            // var spanpoint =  document.createElement('span');
+            // spanpoint.innerHTML = 0;
+            // spanpoint.classList.add('spanpoint' + i)
+            // spanpoint.classList.add('citapoint');
+
+            var usertxt = document.createTextNode(players[i]);
+            var pbr = document.createElement("br");
+
+            spanuser.appendChild(usertxt);
+            playerdiv.appendChild(spanuser);
+            // playerdiv.appendChild(spanpoint);
+            playerdiv.appendChild(pbr);
+        
+            //SELF POINT
+        } else {
+            app.playerpoint = 0;
+
+
+        }
+    }
+
+
+
+    showp.addEventListener('mouseenter' , function(event) {
+        playerdiv.style.display = 'unset';
+    });
+
+    showp.addEventListener('mouseleave' , function(event) {
+        playerdiv.style.display = 'none';
+    });
+
+    mainarea.append(showp , playerdiv);
+
+    
+
+        
+}
+
 
 
 function editRule(stat) {
@@ -1978,4 +2030,144 @@ function playDrawkSound() {
 
 
 
+function firstCardsDisplay(cards) {
+    if(cards.length == 1) {
+        setTimeout(() => {
+            displayCards(cards);
+        }, 1500);
+    }
 
+    if(cards.length == 3) {
+        setTimeout(() => {
+            displayCards(cards);
+        }, 2500);
+    }
+
+    if(cards.length == 5) {
+        setTimeout(() => {
+            displayCards(cards);
+        }, 3500);
+    }
+
+    
+}
+
+
+
+
+
+
+function displayCards(cards) {
+
+    var cardname;
+    var cardanime;
+    var cardpath;
+    var cardstat;
+
+    var statarray = ['ATK ' , 'DEF ' , 'INT ' , 'END ' , 'VIT ' , 'AGI ' , 'TECH ' , 'LUCK '];
+    var statarray2 = ['ATTAQUE' , 'DEFENSE' , 'INTELLIGENCE ' , 'ENDURANCE ' , 'VITESSE ' , 'AGILITÉ ' , 'TECHNIQUE ' , 'CHANCE '];
+    var mainarea = document.getElementById('maindiv');
+
+    var scene = document.getElementById('sceneid');
+    var statdiv = document.createElement('div');
+    var statdivout = document.createElement('div');
+    statdivout.id = "statdivoutid";
+   
+    for(let i = 0 ; i < cards.length ; i++) {
+        cardname = cards[i].Character;
+        cardanime = cards[i].Anime;
+        cardpath = cards[i].path;
+
+        var cardiv = document.createElement('div');
+        cardiv.classList.add('card');
+        cardiv.classList.add('cardpopclass');
+        cardiv.id = "cardid" + i;
+
+        //WHEN CARD HOVER
+        cardiv.addEventListener('mouseenter' , function(event) {
+            if(!statdivout.classList.contains('statdivout')) statdivout.classList.add('statdivout');
+            
+
+            for(let j = 0 ; j< 8 ; j ++) {
+                var pstat = document.createElement('p');
+                var span = document.createElement('span');
+                pstat.classList.add('skilltxtout');
+                pstat.textContent = statarray[j];
+
+                span.classList.add('skilltextoutspan');
+                span.textContent = cards[i].stat[j];
+
+                pstat.appendChild(span);
+                statdivout.appendChild(pstat);
+            }
+            mainarea.appendChild(statdivout);
+        });
+
+
+        //MOUSE LEAVE CARD
+        cardiv.addEventListener('mouseleave' , function(event) {
+            var sdiv = document.getElementById('statdivoutid');
+            while (sdiv.firstChild) {
+                sdiv.removeChild(sdiv.firstChild);
+            }
+
+        });
+
+
+    
+        var charapic = document.createElement('img');
+        charapic.setAttribute('src' , cardpath);
+        charapic.classList.add('cardpicclass');
+
+        var charname = document.createElement('span');
+        charname.innerHTML = cardname;
+        charname.classList.add('cardtxt');
+       
+        cardiv.appendChild(charapic);
+        cardiv.appendChild(charname);
+        scene.appendChild(cardiv);
+
+
+        // var statdone = document.createElement('div');
+        // statdone.classList.add('cardselfdiv');
+        // for(let i = 0 ; i < statarray2.length ; i ++) {
+        //     var pp = document.createElement('p');
+        //     pp.classList.add('cardselfdivtxt');
+        //     pp.innerHTML = statarray2[i];
+
+        //     statdone.appendChild(pp);
+        // }
+
+        // mainarea.appendChild(statdone)
+
+        
+    }
+}
+
+
+$(document).on('click', '.card', function() {
+    $(this).hide(100);
+});
+
+
+
+document.addEventListener('contextmenu', function(event) {
+    // event.preventDefault();
+
+});
+
+// var mots = ["INTELLIGENCE", "EFFICACITÉ", "CRÉATIVITÉ", "PERSÉVÉRANCE", "INNOVATION", "ADAPTABILITÉ", "COLLABORATION", "RÉSILIENCE", "AUTONOMIE", "FLEXIBILITÉ"];
+// var indexMot = 0;
+// var speed = 0.1;
+
+// function choisirMotAleatoire() {
+//     return mots[Math.floor(Math.random() * mots.length)];
+// }
+// // Mettre à jour le texte du span à chaque répétition de l'animation
+// document.querySelector('.statspan').addEventListener('animationiteration', function () {
+//     var motSuivant = choisirMotAleatoire();
+//     this.textContent = motSuivant;
+//     var sid = document.getElementById('statid');
+//     speed += 0.1; // Augmenter la vitesse
+//     sid.style.animationDuration = speed.toFixed(1) + 's'; // Limiter à une décimale et appliquer à nouveau la durée
+// });
