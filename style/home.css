@@ -3118,9 +3118,15 @@ select::-ms-expand {
   animation: drawA 0.45s 3 forwards ;
 }
 
+.drawclass4 {
+  animation: drawA 0.45s 4 forwards ;
+}
+
+
 .drawclass3 {
   animation: drawA 0.45s 5 forwards ;
 }
+
 
 
 @keyframes drawA {
@@ -3149,6 +3155,10 @@ select::-ms-expand {
 
 .hidedeckclass3  {
   animation: hideDeckA 2.5s forwards;
+}
+
+.hidedeckclass4  {
+  animation: hideDeckA 2s forwards;
 }
 
 

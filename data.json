@@ -6738,6 +6738,7 @@
    },
    
 
+
    "Cards" : [
          {
             "Character": "Naruto",
@@ -7357,7 +7358,7 @@
          ,
          {
             "Character": "Boruto",
-            "Anime" : "Naruto",
+            "Anime" : "Boruto",
             "path" : "boruto.gif",
             "stat" : [
                503,

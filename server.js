@@ -404,7 +404,8 @@ app.post('/confirmSettingBombanime' , function(req,res) {
 
 app.post('/confirmSettingCardanime' , function(req,res) {
     var handc = req.body.val1;
-    if(handc != 1 && handc != 3 && handc != 5) handc = 3;
+    console.log(handc)
+    if(handc != 1 && handc != 3 && handc!=4 && handc != 5) handc = 3;
 
     mapgamehand.set(req.session.rid , parseInt(handc));
     mapgamedata.set(req.session.rid , profile.Cards);

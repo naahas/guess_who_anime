@@ -1981,20 +1981,20 @@ function editDeck() {
         $('#deckwrapid').prop("disabled", true);
         $('#deckwrapid').addClass('disablemode2');
 
-        if(app.hand == 1) {
-            deckel.classList.add('drawclass1');
-            $('#deckwrapid').addClass('hidedeckclass1');
-            setTimeout(() => {
-                $('#deckwrapid').hide();
-            }, 510);
-        } 
-
         if(app.hand == 3) {
             deckel.classList.add('drawclass2');
             $('#deckwrapid').addClass('hidedeckclass2');
             setTimeout(() => {
                 $('#deckwrapid').hide();
             }, 1400);
+        }
+
+        if(app.hand == 4) {
+            deckel.classList.add('drawclass4');
+            $('#deckwrapid').addClass('hidedeckclass4');
+            setTimeout(() => {
+                $('#deckwrapid').hide();
+            }, 2800);
         }
 
         if(app.hand == 5) {
@@ -2041,6 +2041,12 @@ function firstCardsDisplay(cards) {
         setTimeout(() => {
             displayCards(cards);
         }, 2500);
+    }
+
+    if(cards.length == 4) {
+        setTimeout(() => {
+            displayCards(cards);
+        }, 2800);
     }
 
     if(cards.length == 5) {
