@@ -551,7 +551,8 @@ var app = new Vue({
 
             axios(config)
             .then(function (res) {
-               firstCardsDisplay(res.data);
+               firstCardsDisplay(res.data[0]);
+               if(res.data[1] == true) socket.emit('everyPlayerDrawedEvent');
             })
             .catch(function (err) {
                 
@@ -1072,6 +1073,16 @@ var app = new Vue({
 
         socket.on('displayDeck' , () => {
             $('.centered-deckwrap').show();
+        });
+
+
+        socket.on('hideCardWaitEvent' , () => {
+            $('.waitcarddiv').hide();
+        });
+        
+
+        socket.on('displayCardWaitEvent' , () => {
+            $('.waitcarddiv').css('display' , 'flex');
         });
         
 
@@ -1986,7 +1997,7 @@ function editDeck() {
             $('#deckwrapid').addClass('hidedeckclass2');
             setTimeout(() => {
                 $('#deckwrapid').hide();
-            }, 1400);
+            }, 1550);
         }
 
         if(app.hand == 4) {

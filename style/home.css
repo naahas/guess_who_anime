@@ -3360,3 +3360,53 @@ select::-ms-expand {
 .carduserpic:hover {
   filter: brightness(50%);
 }
+
+.waitcarddiv {
+  display: none;
+  align-items: center;
+  position: absolute;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  top: 5%;
+  right: 0;
+  left: 0;
+}
+
+.waitcard {
+  color:aliceblue;
+  padding: 10px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  font-size: 800;
+  text-shadow: .0.7em .1em 0 hsl(309, 84%, 50%);
+  opacity: 0.8;
+  font-style: italic;
+  margin: 1em;
+}
+
+
+
+.toto {
+  width: 40px;
+  height: 50px;
+  background-color: red;
+  transform-style: preserve-3d; /* Nécessaire pour permettre les transformations 3D */
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk8__UKzfBQsCjkoOueRWDETUYy380YSWhVPuRIeFr3TI4ZI9jCWimG-gqF0J6e_E_5Yo&usqp=CAU');
+  background-size:cover;
+  box-shadow:0px 0px 5px rgb(211, 243, 247);
+  animation: flip 1.5s infinite; /* Animation de flip */
+}
+
+@keyframes flip {
+  0% {
+      transform: perspective(400px) rotateY(0deg); /* Vue de face */
+  }
+  50% {
+      transform: perspective(400px) rotateY(180deg); /* Vue de dos */
+  }
+  100% {
+      transform: perspective(400px) rotateY(360deg); /* De retour à la vue de face */
+  }
+}

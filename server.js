@@ -404,12 +404,18 @@ app.post('/confirmSettingBombanime' , function(req,res) {
 
 app.post('/confirmSettingCardanime' , function(req,res) {
     var handc = req.body.val1;
-    console.log(handc)
     if(handc != 1 && handc != 3 && handc!=4 && handc != 5) handc = 3;
 
     mapgamehand.set(req.session.rid , parseInt(handc));
     mapgamedata.set(req.session.rid , profile.Cards);
-    mapgamecardready.set(req.session.rid , false);
+
+    var nbp = 0;
+    for (let [key, value] of mapcode) {
+        if(mapcode.get(key) == req.session.rid) nbp++
+    }
+
+    //TODO : HANDLE WHEN PLAY SOLO > MAKE BOT DRAW 
+    mapgamecardready.set(req.session.rid , nbp);
 
     req.session.isplaying = true;
     req.session.replayed = false;
@@ -429,8 +435,17 @@ app.post('/drawCard' , function(req,res) {
     
     req.session.hasdraw = true;
 
+    var actual_playerdraw = mapgamecardready.get(req.session.rid);
+    mapgamecardready.set(req.session.rid , actual_playerdraw - 1);
+
     var hand = maphandplayer.get(req.session.username);
-    res.send(hand);
+
+    //LAST PLAYER TO DRAW
+    if(actual_playerdraw - 1 == 0) {
+        res.send([hand , true]);
+    } else res.send([hand , false]);
+
+    
 });
 
 
@@ -766,6 +781,12 @@ io.on('connection' , (socket) => {
               
                 socket.emit('displayOpponents3' , playertab ,  iousername );                        
             }
+
+
+            //DISPLAY WAIT MSG OR NOT
+            var leftp = mapgamecardready.get(ioroomid);
+            if(leftp > 0) socket.emit('displayCardWaitEvent');
+            else socket.emit('hideCardWaitEvent');
 
             
             //DISPLAY DECK OR CARDS (ACCORDING TO ALREADY DRAW OR NOT)
@@ -1220,6 +1241,10 @@ io.on('connection' , (socket) => {
         socket.broadcast.to(ioroomid).emit('increasePointForOtherEvent' , index_player , postpoint)  
 
 
+    });
+
+    socket.on('everyPlayerDrawedEvent' , () => {
+        io.to(ioroomid).emit('hideCardWaitEvent');
     });
     
 
