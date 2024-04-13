@@ -99,7 +99,7 @@ var mapgamehand = new Map();
 var maphandplayer = new Map();
 var mapgameitationanswer = new Map();
 var mapgamecitajoker = new Map();
-var map 
+var mapgamecurrentstat = new Map();
 var current_user = [];
 
 //path handle
@@ -133,7 +133,7 @@ app.post('/subUsername' , function(req,res) {
 
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Bombanime';
+        req.session.mode = 'Cardanime';
         current_user.push(nicknameup);
     }
 
@@ -429,11 +429,36 @@ app.post('/confirmSettingCardanime' , function(req,res) {
 });
 
 
+app.post('/forceDraw' , function(req,res) {
+
+    if(req.session.solop == true) mapgamecardready.set(req.session.rid , actual_playerdraw - 1);
+
+    if(maphandplayer.has(req.session.username) == false){
+        console.log(req.session.username)
+        generateHand(req.session.rid , req.session.username);
+        req.session.hasdraw = true;
+        req.session.life = 5;
+
+        var actual_playerdraw = mapgamecardready.get(req.session.rid);
+        mapgamecardready.set(req.session.rid , actual_playerdraw - 1);
+
+        var hand = maphandplayer.get(req.session.username);
+        
+
+        res.send([hand, req.session.life]);
+
+    } else res.sendStatus(202);
+
+    
+});
+
+
 app.post('/drawCard' , function(req,res) {
     
     generateHand(req.session.rid , req.session.username);
     
     req.session.hasdraw = true;
+    req.session.life = 5;
 
     var actual_playerdraw = mapgamecardready.get(req.session.rid);
     mapgamecardready.set(req.session.rid , actual_playerdraw - 1);
@@ -442,8 +467,8 @@ app.post('/drawCard' , function(req,res) {
 
     //LAST PLAYER TO DRAW
     if(actual_playerdraw - 1 == 0) {
-        res.send([hand , true]);
-    } else res.send([hand , false]);
+        res.send([hand , mapgamecardready.get(req.session.rid) , req.session.life]);
+    } else res.send([hand , mapgamecardready.get(req.session.rid) , req.session.life]);
 
     
 });
@@ -578,6 +603,7 @@ app.post('/exitGame' , function(req,res) {
     }
 
     mapcode.delete(req.session.username);
+    maphandplayer.delete(req.session.username);
     req.session.created = null;
     req.session.rid = null;
     res.redirect('/');
@@ -616,6 +642,7 @@ io.on('connection' , (socket) => {
     const iomode = socket.request.session.mode;
     const iocitadisable = socket.request.session.citadisable;
     const iodraw = socket.request.session.hasdraw;
+    const iolife = socket.request.session.life;
 
 
     socket.emit('showSettingEvent' , iousername);
@@ -782,7 +809,8 @@ io.on('connection' , (socket) => {
                 socket.emit('displayOpponents3' , playertab ,  iousername );                        
             }
 
-
+            if(mapgamecurrentstat.has(ioroomid)) io.to(ioroomid).emit('displayMainStatEvent' , mapgamecurrentstat.get(ioroomid));
+              
             //DISPLAY WAIT MSG OR NOT
             var leftp = mapgamecardready.get(ioroomid);
             if(leftp > 0) socket.emit('displayCardWaitEvent');
@@ -792,7 +820,13 @@ io.on('connection' , (socket) => {
             //DISPLAY DECK OR CARDS (ACCORDING TO ALREADY DRAW OR NOT)
             socket.emit('displayPostRule3' , mapgamehand.get(ioroomid));
             if(iodraw != true) socket.emit('displayBeginning3')
-            else if(iodraw == true) socket.emit('displayPlayerCard' , maphandplayer.get(iousername));
+            else {
+                if(iodraw == true) {
+                    if(leftp > 0) socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , false , iolife);
+                    else socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , true , iolife);
+                } 
+
+            }
 
         }
     }
@@ -1099,6 +1133,15 @@ io.on('connection' , (socket) => {
     });
 
 
+    //HANDLE FIRST TIMER (CARDANIME)
+    socket.on('firstCardTimerEvent' , () => {
+        var leftp = mapgamecardready.get(ioroomid);
+        // setTimeout(() => {
+        //     io.to(ioroomid).emit('forceDrawEvent');
+        // }, 5000);
+    });
+
+
     // HANDLE TIMER (BOMBANIME)
     socket.on('handleTimerEvent' , () => {
         var btimer = setInterval(() => {
@@ -1243,8 +1286,15 @@ io.on('connection' , (socket) => {
 
     });
 
+
+    //START CARDANIME GAME (AFTER LAST PLAYER DRAW)
     socket.on('everyPlayerDrawedEvent' , () => {
         io.to(ioroomid).emit('hideCardWaitEvent');
+        setTimeout(() => {
+            var mainstat = generateStat();
+            mapgamecurrentstat.set(ioroomid , mainstat);
+            io.to(ioroomid).emit('playRound' , mainstat)
+        }, 3000);
     });
     
 
@@ -2731,9 +2781,16 @@ function generateHand(rid , playername) {
 }
 
 
+var rd = Math.floor(Math.random() * 8);
 
 
+function generateStat() {
+    var stats = ['ATTAQUE' , 'DEFENSE' , 'INTELLIGENCE' , 'ENDURANCE' , 'VITESSE' , 'AGILITÉ' , 'TECHNIQUE' , 'CHANCE'];
+    var rd = Math.floor(Math.random() * stats.length);
+    var rds = stats[rd];
 
+    return rds
+}
 
 
 

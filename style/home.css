@@ -1086,6 +1086,26 @@ body{
   opacity: 0.5;
 }
 
+.disablemode3 {
+  pointer-events: none;
+  filter: brightness(40%);
+}
+
+.enablecardanimation {
+  animation: enableCA 1s forwards;
+}
+
+
+@keyframes enableCA {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.5);
+  }
+}
+
 
 @media (max-width:431px) {
   
@@ -1734,6 +1754,7 @@ select::-ms-expand {
 }
 
 .casecontainer {
+  display: none;
   padding: 5px;
   background-color: transparent;
   border-radius: 10px;
@@ -2920,12 +2941,12 @@ select::-ms-expand {
 .card {
   margin: auto;
   border: 5px double rgba(28, 32, 36, 0.93);
-  width: 140px;
-  height: 180px;
+  width: 130px;
+  height: 170px;
   color: rgb(159, 24, 147);
   cursor: pointer;
   transition: 0.2s ease-in-out;
-  box-shadow: rgba(84, 93, 71, 0.4) 0px 0px 0px 2px, rgba(121, 118, 91, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  box-shadow: rgb(6, 6, 6) 0px 0px 0px 2px, rgba(121, 118, 91, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
 }
 
 .cardpopclass {
@@ -2960,7 +2981,8 @@ select::-ms-expand {
 
 
 .card:hover > img {
-  filter: brightness(20%);
+  filter: brightness(40%);
+  
   
 }
 
@@ -3249,7 +3271,7 @@ select::-ms-expand {
   display: none;
   position: absolute;
   margin: auto;
-  top:20%;
+  top:17%;
   right: 2%;
   height: 40%;
   text-align: right;
@@ -3303,23 +3325,113 @@ select::-ms-expand {
   margin-bottom: 5px;
 }
 
+.mainstattxt {
+  display: none;
+  position: absolute;
+  margin: auto;
+  top:0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: fit-content;
+  height: fit-content;
+  color:aliceblue;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 600;
+}
 
 .headstatdiv {
+  display: none;
+  color:aliceblue;
   position: absolute;
   margin: auto;
   left: 0;
-  bottom: 40%;
-  top:0;
+  top:20%;
   right: 0;
   width: 30%;
   height: fit-content;
   overflow: hidden;
-  background-color: rgb(232, 206, 206 , 0.02);
+  background-color: rgba(208, 46, 46, 0.);
   padding: 5px;
-  border-top: 2px solid aliceblue;
-  border-bottom: 2px solid aliceblue;
+  transform: scale(1.2);
+  animation: mainstatpopA 1s forwards;
+  opacity: 0;
+  overflow: hidden;
 }
 
+@keyframes mainstatpopA {
+  0% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+#mainstattxt {
+  color:aliceblue;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  letter-spacing: 5px;
+  font-size: 1.3rem;
+  text-shadow: rgb(18, 53, 20) 1px 0 10px;
+  
+}
+
+
+
+
+.endstatclass {
+  animation: mainstatrdA 3s forwards;
+}
+
+ @keyframes mainstatrdA {
+  0% {
+    
+  }
+
+  30% {
+    transform: scale(1.5);
+  }
+  50% {
+   
+  }
+
+  80% {
+    transform:  translateY(0) 
+  
+  }
+
+  85% {
+    opacity: 1;
+    
+  }
+
+  90% {
+    
+    transform: translateY(10px);
+  }
+
+  95% {
+    
+  }
+
+  100% {
+    transform: scale(1.3) translateY(-5em);
+  }
+ }
+
+.rollhr {
+  width: 70%;
+  margin-left:15%;
+  margin-top:2em;
+	border-top: 1px solid #8c8b8b;
+	border-bottom: 1px solid #fff;
+  box-shadow:0px 0px 5px rgb(23, 182, 203);
+}
 
 .statspan {
   display: inline-block;
@@ -3346,14 +3458,29 @@ select::-ms-expand {
 
 
 .carduserpic {
+  display: none;
   position: absolute;
   width: fit-content;
   height: fit-content;
-  height: 7%;
+  height: 5%;
   top:10%;
   right: 2%;
   cursor: pointer;
   filter: brightness(30%);
+  animation: showUA 0.5s forwards;
+}
+
+
+@keyframes showUA {
+  0% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 
@@ -3388,7 +3515,7 @@ select::-ms-expand {
 
 
 
-.toto {
+.headstatdivid {
   width: 40px;
   height: 50px;
   background-color: red;
@@ -3410,3 +3537,95 @@ select::-ms-expand {
       transform: perspective(400px) rotateY(360deg); /* De retour à la vue de face */
   }
 }
+
+
+
+.shinecard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+  /* animation: halo-animation 2s infinite; */
+  opacity: 0;
+  z-index: 5;
+}
+
+
+@keyframes halo-animation {
+  0% {
+      opacity: 0;
+  }
+  50% {
+      opacity: 1;
+  }
+  100% {
+      opacity: 0;
+  }
+}
+
+
+
+.cardlifediv {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction:column;
+  margin: 1.2%;
+  animation: lifeAA 1s forwards;
+}
+
+
+@keyframes lifeAA {
+  0% {
+    opacity: 0;
+    transform: translateX(1em);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.lifepic {
+  width: 43px;
+  height: 43px;
+  animation: lifeA 2s infinite;
+  opacity: 0.5;
+}
+
+
+.lifepic:hover {
+  filter: brightness(50%);
+}
+
+
+@keyframes lifeA {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.15);
+  }
+  
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+
+.startcard {
+  position: absolute;
+  right: 0;
+  margin: auto;
+  bottom: 0;
+  top:0;
+  width: fit-content;
+  height: fit-content;
+}
+
+
+

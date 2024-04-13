@@ -6743,7 +6743,7 @@
          {
             "Character": "Naruto",
             "Anime" : "Naruto",
-            "path" : "naruto.gif",
+            "path" : "naruto2.gif",
             "stat" : [
                756,
                210,
@@ -6789,7 +6789,7 @@
          {
             "Character": "Ichigo",
             "Anime" : "Bleach",
-            "path" : "ichigo.gif",
+            "path" : "ichigo2.gif",
             "stat" : [
                621,
                554,
@@ -6914,7 +6914,7 @@
             "stat" : [
                21,
                16,
-               985,
+               991,
                3,
                11,
                19,
@@ -6961,7 +6961,7 @@
             "stat" : [
                10,
                3,
-               991,
+               985,
                38,
                8,
                11,
@@ -7037,7 +7037,7 @@
          {
             "Character": "Power",
             "Anime" : "Chainsaw Man",
-            "path" : "power.gif",
+            "path" : "power2.gif",
             "stat" : [
                611,
                372,
@@ -7071,7 +7071,7 @@
             "Anime" : "Attack on Titan",
             "path" : "mikasa.gif",
             "stat" : [
-               62,
+               133,
                34,
                390,
                66,
@@ -7085,7 +7085,7 @@
          {
             "Character": "Levi",
             "Anime" : "Attack on Titan",
-            "path" : "levi.gif",
+            "path" : "levi2.gif",
             "stat" : [
                126,
                45,
@@ -7149,7 +7149,7 @@
          {
             "Character": "Sasuke",
             "Anime" : "Naruto",
-            "path" : "sasuke2.gif",
+            "path" : "sasuke3.gif",
             "stat" : [
                398,
                599,
@@ -7165,7 +7165,7 @@
          {
             "Character": "Vegeta",
             "Anime" : "Dragon Ball",
-            "path" : "vegeta2.gif",
+            "path" : "vegeta3.gif",
             "stat" : [
                966,
                922,
@@ -7194,10 +7194,11 @@
             ]
          }
          ,
-         {
+
+         {   
             "Character": "Itachi",
             "Anime" : "Naruto",
-            "path" : "itachi2.gif",
+            "path" : "itachi.gif",
             "stat" : [
                176,
                210,
@@ -7213,7 +7214,7 @@
          {
             "Character": "Madara",
             "Anime" : "Naruto",
-            "path" : "madara4.gif",
+            "path" : "madara5.gif",
             "stat" : [
                480,
                501,
@@ -7488,7 +7489,7 @@
          {
             "Character": "Zoro",
             "Anime" : "One Piece",
-            "path" : "zoro4.gif",
+            "path" : "zoro3.gif",
             "stat" : [
                747,
                604,
@@ -7532,6 +7533,39 @@
                718,
                662,
                888
+            ]
+         }
+         ,
+         {
+            "Character": "Sung Jin-Woo",
+            "Anime" : "Solo Leveling",
+            "path" : "jinwoo.gif",
+            "stat" : [
+               475,  
+               401,  
+               333,  
+               855,  
+               566,  
+               911,  
+               987,  
+               114  
+            ]
+         }
+
+         ,
+         {
+            "Character": "Ayanokoji",
+            "Anime" : "Classroom of the elite",
+            "path" : "ayanokoji.gif",
+            "stat" : [
+               110,  
+               82,  
+               972,  
+               236,  
+               119,  
+               331,  
+               77,  
+               120  
             ]
          }
       ]

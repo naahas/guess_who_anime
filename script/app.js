@@ -27,7 +27,8 @@ var app = new Vue({
             hand: 3,
             ruletxt: '',
             ruletitle: '',
-            winnerpoint: 0
+            winnerpoint: 0,
+            current_stat: ''
             
             
         }
@@ -254,6 +255,9 @@ var app = new Vue({
             .catch(function (err) {
                 
             });
+
+
+            socket.emit('firstCardTimerEvent');
 
 
         },
@@ -551,8 +555,10 @@ var app = new Vue({
 
             axios(config)
             .then(function (res) {
-               firstCardsDisplay(res.data[0]);
-               if(res.data[1] == true) socket.emit('everyPlayerDrawedEvent');
+               var stat = res.data[1] > 0 ? false : true ;
+               firstCardsDisplay(res.data[0] , stat);
+               displayCardLife(res.data[2]);
+               if(stat == true) socket.emit('everyPlayerDrawedEvent');
             })
             .catch(function (err) {
                 
@@ -851,14 +857,13 @@ var app = new Vue({
             if(this.hand == 3) card_delay = 3300;
             if(this.hand == 5) card_delay = 3900;
 
-            setTimeout(() => {
-                $('.card').show();
-            }, card_delay);
+         
         });
 
 
-        socket.on('displayPlayerCard' , (player_cards) => {
-            displayCards(player_cards);
+        socket.on('displayPlayerCard' , (player_cards , stat , life) => {
+            displayCardLife(life);
+            displayCards(player_cards , stat);
         });
 
 
@@ -1078,14 +1083,58 @@ var app = new Vue({
 
         socket.on('hideCardWaitEvent' , () => {
             $('.waitcarddiv').hide();
+            $('.card').removeClass('disablemode3');
+            $('.headstatdiv').show();
         });
         
 
         socket.on('displayCardWaitEvent' , () => {
             $('.waitcarddiv').css('display' , 'flex');
         });
+
+
+
+        socket.on('forceDrawEvent' , () => {
+            var body = {
+                val : 'val'
+            };
+
+            var config = {
+                method: 'post',
+                url: '/forceDraw',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                if(res.status != 202) {
+                    autoeditDeck();
+                    firstCardsDisplay(res.data[0] , true);
+                    displayCardLife(res.data[2]);
+                }
+                socket.emit('everyPlayerDrawedEvent');
+            })
+            .catch(function (err) {
+                
+            });
+        });
+
+
+        socket.on('playRound' , (stat) => {
+            this.current_stat = stat;
+            editRandomStat(stat);
+            setTimeout(() => {
+                $('.headstatdiv').hide(500);
+            }, 5000);
+        })
+
+        socket.on('displayMainStatEvent' , (mstat) => {
+            this.current_stat = mstat;
+            $('.mainstattxt').show();
+        })
         
 
+    
     },
 
 
@@ -1095,6 +1144,8 @@ var app = new Vue({
 
 
 //JS AND JQUERY SECTION
+
+$('.casecontainer').show();
 
 
 $('#subbtn').on('touchend click', function(event) {
@@ -1840,7 +1891,7 @@ function editOpponent3(players ,  username) {
     playerdiv.classList.add('cardopponentdiv');
 
     var showp = document.createElement('img');
-    showp.setAttribute('src' , 'carduser.png');
+    showp.setAttribute('src' , 'eyeskill.png');
     showp.classList.add('carduserpic');
     
     for(var i = 0; i < players.length ; i++) {
@@ -1880,8 +1931,8 @@ function editOpponent3(players ,  username) {
     });
 
     mainarea.append(showp , playerdiv);
-
-    
+ 
+    showp.style.display = 'unset';
 
         
 }
@@ -1973,7 +2024,49 @@ document.addEventListener('click' , function hideRuleArea(event) {
 });
 
 
+function autoeditDeck() {
+    $('#deckwrapid').addClass('showdeckclass');
+    $('#deckwrapid').show();
 
+    var deckel = document.getElementById('deckid');
+    var deckwrapel = document.getElementById('deckwrapid');
+    
+    //SHOW DECK BY ADDING SHOWCLASS AND THEN REMOVE THE SHOWCLASS RIGHT AWAY
+    deckwrapel.classList.add('showdeckclass');
+    setTimeout(() => {
+        deckwrapel.classList.remove('showdeckclass');
+    }, 550);
+    
+    $('#deckwrapid').prop("disabled", true);
+        $('#deckwrapid').addClass('disablemode2');
+
+        if(app.hand == 3) {
+            deckel.classList.add('drawclass2');
+            $('#deckwrapid').addClass('hidedeckclass2');
+            setTimeout(() => {
+                $('#deckwrapid').hide();
+            }, 1550);
+        }
+
+        if(app.hand == 4) {
+            deckel.classList.add('drawclass4');
+            $('#deckwrapid').addClass('hidedeckclass4');
+            setTimeout(() => {
+                $('#deckwrapid').hide();
+            }, 2800);
+        }
+
+        if(app.hand == 5) {
+            deckel.classList.add('drawclass3');
+            $('#deckwrapid').addClass('hidedeckclass3');
+            playDrawkSound();
+            setTimeout(() => {
+                $('#deckwrapid').hide();
+            }, 2500);
+        }    
+
+        
+}
 
 function editDeck() {
     $('#deckwrapid').addClass('showdeckclass');
@@ -1981,6 +2074,7 @@ function editDeck() {
 
     var deckel = document.getElementById('deckid');
     var deckwrapel = document.getElementById('deckwrapid');
+    var tzaeza =  document.getElementById('tete');
     
     //SHOW DECK BY ADDING SHOWCLASS AND THEN REMOVE THE SHOWCLASS RIGHT AWAY
     deckwrapel.classList.add('showdeckclass');
@@ -2041,28 +2135,28 @@ function playDrawkSound() {
 
 
 
-function firstCardsDisplay(cards) {
+function firstCardsDisplay(cards , stat) {
     if(cards.length == 1) {
         setTimeout(() => {
-            displayCards(cards);
+            displayCards(cards , stat);
         }, 1500);
     }
 
     if(cards.length == 3) {
         setTimeout(() => {
-            displayCards(cards);
+            displayCards(cards , stat);
         }, 2500);
     }
 
     if(cards.length == 4) {
         setTimeout(() => {
-            displayCards(cards);
+            displayCards(cards , stat);
         }, 2800);
     }
 
     if(cards.length == 5) {
         setTimeout(() => {
-            displayCards(cards);
+            displayCards(cards , stat);
         }, 3500);
     }
 
@@ -2070,11 +2164,24 @@ function firstCardsDisplay(cards) {
 }
 
 
+function displayCardLife(life) {
+    var mainarea = document.getElementById('maindiv');
+    var lifearea = document.createElement('div');
+    lifearea.classList.add('cardlifediv');
+
+    for(let i = 0; i < life ; i ++) {
+        var life_pic = document.createElement('img');
+        life_pic.setAttribute('src' , 'life3.png');
+        life_pic.classList.add('lifepic');
+        lifearea.appendChild(life_pic)
+    }
+
+    mainarea.appendChild(lifearea);
+}
 
 
 
-
-function displayCards(cards) {
+function displayCards(cards , stat) {
 
     var cardname;
     var cardanime;
@@ -2094,10 +2201,13 @@ function displayCards(cards) {
         cardname = cards[i].Character;
         cardanime = cards[i].Anime;
         cardpath = cards[i].path;
+        cardstat = cards[i].stat;
 
         var cardiv = document.createElement('div');
         cardiv.classList.add('card');
         cardiv.classList.add('cardpopclass');
+        // if(stat != true) cardiv.classList.add('disablemode3')
+
         cardiv.id = "cardid" + i;
 
         //WHEN CARD HOVER
@@ -2145,18 +2255,6 @@ function displayCards(cards) {
         scene.appendChild(cardiv);
 
 
-        // var statdone = document.createElement('div');
-        // statdone.classList.add('cardselfdiv');
-        // for(let i = 0 ; i < statarray2.length ; i ++) {
-        //     var pp = document.createElement('p');
-        //     pp.classList.add('cardselfdivtxt');
-        //     pp.innerHTML = statarray2[i];
-
-        //     statdone.appendChild(pp);
-        // }
-
-        // mainarea.appendChild(statdone)
-
         
     }
 }
@@ -2173,18 +2271,54 @@ document.addEventListener('contextmenu', function(event) {
 
 });
 
-// var mots = ["INTELLIGENCE", "EFFICACITÉ", "CRÉATIVITÉ", "PERSÉVÉRANCE", "INNOVATION", "ADAPTABILITÉ", "COLLABORATION", "RÉSILIENCE", "AUTONOMIE", "FLEXIBILITÉ"];
-// var indexMot = 0;
-// var speed = 0.1;
 
-// function choisirMotAleatoire() {
-//     return mots[Math.floor(Math.random() * mots.length)];
-// }
-// // Mettre à jour le texte du span à chaque répétition de l'animation
-// document.querySelector('.statspan').addEventListener('animationiteration', function () {
-//     var motSuivant = choisirMotAleatoire();
-//     this.textContent = motSuivant;
-//     var sid = document.getElementById('statid');
-//     speed += 0.1; // Augmenter la vitesse
-//     sid.style.animationDuration = speed.toFixed(1) + 's'; // Limiter à une décimale et appliquer à nouveau la durée
-// });
+function editRandomStat(cstat) {
+    var values = ['ATTAQUE' , 'DEFENSE' , 'INTELLIGENCE' , 'ENDURANCE' , 'VITESSE' , 'AGILITÉ' , 'TECHNIQUE' , 'CHANCE'];
+    startStatRoulette(values , cstat);
+}
+
+
+function displayStat(value) {
+  document.getElementById('mainstattxt').innerText = value;
+}
+
+// Fonction pour simuler un effet de roulette
+function startStatRoulette(values , cstat) {
+  var interval = 50; // Intervalle entre chaque changement de valeur (en millisecondes)
+  var maxIterations = 50; // Nombre maximal d'itérations avant de ralentir
+  let currentIteration = 0;
+  
+  // Fonction récursive pour changer de valeur
+  function roulette() {
+    var randomIndex = Math.floor(Math.random() * values.length);
+    displayStat(values[randomIndex]);
+    
+    currentIteration++;
+    if (currentIteration < maxIterations) {
+      setTimeout(roulette, interval);
+    } else {
+       
+      // Ralentissement progressif
+      interval *= 1.2; // Ajustez ce facteur selon votre préférence
+      if (interval < 200) {
+        displayStat(cstat);
+        document.getElementById('mainstattxt').classList.add('endstatclass');
+
+      } else {
+        setTimeout(roulette, interval);
+      }
+      
+    }
+  }
+  
+  // Démarrer la roulette
+  roulette();
+}
+
+
+
+
+
+
+
+
