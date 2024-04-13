@@ -105,7 +105,7 @@
             </div>
 
 
-              <p class="stt"> Stat : {{current_stat}} </p>
+              <p class="stt"> Stat : {{current_stat_display}} </p>
 
 
                 <div class="headstatdiv" id="headstatdivid">
@@ -115,11 +115,34 @@
                 </div>
 
 
-                <!-- <div id="plateid" class="cardplate">
+                <div id="plateid" class="cardplate">
+
+                  <div class="playedcard" id="llelle">
+                    <div class="playedback">  </div>
+                    <div class="playedfront">
+                      <img class="cardpicclass2" src="makima.gif"> 
+                    </div>
+                  </div>
+
+                  <div class="playedcard" id="ezaeaze">
+                    <div class="playedback">  </div>
+                    <div class="playedfront">
+                      <img class="cardpicclass2" src="makima.gif"> 
+                    </div>
+                  </div>
+                  
+                    
+                  
+                </div>
+
+                
+             
+               
+
+                  
                   
 
-
-                </div> -->
+                </div>
 
                 
                 <div class="deckwrap" id="deckwrapid" @click="drawCard()">
@@ -179,7 +202,7 @@
 
 
                 
-                <div class="waitcarddiv">
+                <div class="waitcarddiv" id="waitcardid">
                   <span class="waitcard">EN ATTENTE DES AUTRES JOUEURS &nbsp; </span>
                     
                   <div class="toto"></div>

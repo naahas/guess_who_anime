@@ -28,7 +28,8 @@ var app = new Vue({
             ruletxt: '',
             ruletitle: '',
             winnerpoint: 0,
-            current_stat: 'ATTAQUE'
+            current_stat: 'ATTAQUE',
+            current_stat_display : '⚔️ATTAQUE⚔️'
             
             
         }
@@ -555,10 +556,11 @@ var app = new Vue({
 
             axios(config)
             .then(function (res) {
-               var stat = res.data[1] > 0 ? false : true ;
+               var stat = res.data[1];
+               var stat_ready = res.data[3];
                firstCardsDisplay(res.data[0] , stat);
                displayCardLife(res.data[2]);
-               if(stat == true) socket.emit('everyPlayerDrawedEvent');
+               if(stat_ready == 0) socket.emit('everyPlayerDrawedEvent');
             })
             .catch(function (err) {
                 
@@ -1079,12 +1081,16 @@ var app = new Vue({
         socket.on('displayDeck' , () => {
             $('.centered-deckwrap').show();
         });
-
+        
 
         socket.on('hideCardWaitEvent' , () => {
             $('.waitcarddiv').hide();
-            $('.card').removeClass('disablemode3');
+            $('.headstatdiv').addClass("headstatanimation");
             $('.headstatdiv').show();
+            setTimeout(() => {
+                $('.headstatdiv').removeClass("headstatanimation");
+            }, 1500);
+            
         });
         
 
@@ -1121,8 +1127,9 @@ var app = new Vue({
 
 
         socket.on('playRound' , (stat) => {
-            this.current_stat = stat;
-            editRandomStat(stat);
+            this.current_stat = stat[0];
+            this.current_stat_display = stat[0] + " (" + stat[2] + ")"; 
+            editRandomStat(stat[1]);
             setTimeout(() => {
                 $('.headstatdiv').hide();
             }, 5000);
@@ -1130,12 +1137,27 @@ var app = new Vue({
             setTimeout(() => {
                 $('.stt').show();
             }, 6000);
-        })
+        });
+
+
+        socket.on('enableCardsEvent' , () => {
+            $('.card').removeClass('disablemode3');
+        });
 
         socket.on('displayMainStatEvent' , (mstat) => {
             this.current_stat = mstat;
             $('.stt').show();
-        })
+        });
+
+        socket.on('updateCardStatEvent' , (hando) => {
+            socket.emit('onUpdateStatEvent' , hando);
+        });
+
+
+        socket.on('displayCardOnPlate' , (character , charastat) => {
+            editPlate(character , charastat);
+        });
+
         
 
     
@@ -2192,7 +2214,7 @@ function displayCards(cards , stat) {
     var cardpath;
     var cardstat;
 
-    var statarray = ['ATK ' , 'DEF ' , 'INT ' , 'END ' , 'VIT ' , 'AGI ' , 'TECH ' , 'LUCK '];
+    var statarray = ['⚔️ ATK ' , '🛡️ DEF ' , ' 💡 INT ' , '❤️ END ' , '⚡ VIT ' , '🤸🏼 AGI ' , '🎯 TECH ' , '🍀 LUCK '];
     var statarray2 = ['ATTAQUE' , 'DEFENSE' , 'INTELLIGENCE ' , 'ENDURANCE ' , 'VITESSE ' , 'AGILITÉ ' , 'TECHNIQUE ' , 'CHANCE '];
     var mainarea = document.getElementById('maindiv');
 
@@ -2202,22 +2224,25 @@ function displayCards(cards , stat) {
     statdivout.id = "statdivoutid";
    
     for(let i = 0 ; i < cards.length ; i++) {
-        cardname = cards[i].Character;
-        cardanime = cards[i].Anime;
-        cardpath = cards[i].path;
-        cardstat = cards[i].stat;
+        cardname = cards[i][0].Character;
+        cardanime = cards[i][0].Anime;
+        cardpath = cards[i][0].path;
+        cardstat = cards[i][0].stat;
 
         var cardiv = document.createElement('div');
         cardiv.classList.add('card');
         cardiv.classList.add('cardpopclass');
-        if(stat != true) cardiv.classList.add('disablemode3')
+        cardiv.classList.add('disablemode3');
+
+        //DISABLE IF EVERYONE DIDNT DRAW YET
+        // if(stat != true) cardiv.classList.add('disablemode3')
+        if(cards[i][1] == true) cardiv.classList.remove('disablemode3');
 
         cardiv.id = "cardid" + i;
 
         //WHEN CARD HOVER
         cardiv.addEventListener('mouseenter' , function(event) {
             if(!statdivout.classList.contains('statdivout')) statdivout.classList.add('statdivout');
-            
 
             for(let j = 0 ; j< 8 ; j ++) {
                 var pstat = document.createElement('p');
@@ -2226,7 +2251,7 @@ function displayCards(cards , stat) {
                 pstat.textContent = statarray[j];
 
                 span.classList.add('skilltextoutspan');
-                span.textContent = cards[i].stat[j];
+                span.textContent = cards[i][0].stat[j];
 
                 pstat.appendChild(span);
                 statdivout.appendChild(pstat);
@@ -2266,10 +2291,17 @@ function displayCards(cards , stat) {
 
 //WHEN CLICK ON CARD
 $(document).on('click', '.card', function() {
-    // document.getElementById('plateid').classList.add('jesus')
-    alert('GROS NUL')
+    
+
+    
+
 });
 
+
+document.getElementById('waitcardid').addEventListener('click' , function() {
+    document.getElementById('ezaeaze').classList.add('playedpopclass')
+    $('#ezaeaze').show();
+});
 
 
 document.addEventListener('contextmenu', function(event) {
@@ -2279,7 +2311,7 @@ document.addEventListener('contextmenu', function(event) {
 
 
 function editRandomStat(cstat) {
-    var values = ['ATTAQUE' , 'DEFENSE' , 'INTELLIGENCE' , 'ENDURANCE' , 'VITESSE' , 'AGILITÉ' , 'TECHNIQUE' , 'CHANCE'];
+    var values = ['⚔️ATTAQUE⚔️' , '🛡️DEFENSE🛡️' , '💡INTELLIGENCE💡' , '❤️ENDURANCE❤️' , '⚡VITESSE⚡' , '🤸🏼AGILITÉ🤸🏼' , '🎯TECHNIQUE🎯' , '🍀CHANCE🍀'];
     startStatRoulette(values , cstat);
 }
 
@@ -2308,6 +2340,7 @@ function startStatRoulette(values , cstat) {
       interval *= 1.2; // Ajustez ce facteur selon votre préférence
       if (interval < 200) {
         displayStat(cstat);
+        
         document.getElementById('mainstattxt').classList.add('endstatclass');
 
       } else {
@@ -2323,8 +2356,35 @@ function startStatRoulette(values , cstat) {
 
 
 
+// editRandomStat('⚔️ ATTAQUE ⚔️')
+
+
+document.addEventListener("keydown", function(event) {
+    // Vérifie si la touche enfoncée est la touche "Echap"
+    if (event.code === "Escape") {
+        var body = {
+            val: ''
+        };
+
+        var config = {
+            method: 'post',
+            url: '/returnByEscape',
+            data: body
+        };
+
+        axios(config)
+        .then(function (res) {
+            if(res.data != 'no') location.reload();
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+    }
+});
 
 
 
 
+function editPlate(character , charastat) {
 
+}

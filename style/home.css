@@ -3056,6 +3056,7 @@ select::-ms-expand {
 }
 
 .skilltxtout {
+  text-align: left;
   color:rgba(249, 249, 224, 0.884);
   font-family: 'Times New Roman', Times, serif;
   letter-spacing: 1px;
@@ -3064,7 +3065,7 @@ select::-ms-expand {
   padding-right: 20px;
   margin-top:1.2em;
   background-color: rgba(25, 21, 21, 0.311);
-  width: 150%;
+  width: 120%;
   box-shadow:0px 0px 3px rgb(211, 243, 247);
 }
 
@@ -3095,6 +3096,17 @@ select::-ms-expand {
 
 /* --------------- DECK ----------------*/
 
+.deckwrapplate {
+  position: absolute;
+  top:0;
+  left:0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  border: 2px double rgb(28, 35, 29);
+}
 
 .deckwrap{
   display: none;
@@ -3332,24 +3344,93 @@ select::-ms-expand {
 
 .selfcardpic {
   /* animation: gojoA 2s infinite; */
-  
   margin-bottom: 5px;
 }
 
 
 .cardplate {
   position: absolute;
-  width: 50%;
+  width: 70%;
   height: 30%;
-  background-color: aliceblue;
   margin: auto;
-  top:25%;
+  background-color: rgb(110, 129, 129 ,0.2);
+  top:20%;
   left: 0;
   right: 0;
+  padding: 5px;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+.playedcard {
+  display: none;
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk8__UKzfBQsCjkoOueRWDETUYy380YSWhVPuRIeFr3TI4ZI9jCWimG-gqF0J6e_E_5Yo&usqp=CAU');
+  width: calc(12% - 20px); 
+  height: calc(85% - 20px); 
+  border: 2px solid aliceblue;
+  border-radius: 5px;
+  background-color: red;
+  color: aliceblue;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  margin: 20px;
+}
+
+.playedpopclass {
+  animation: playedPopA 1s forwards;
+}
+
+@keyframes playedPopA{
+  0% {
+    opacity: 0;
+    transform: translateY(5em);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.flipclass {
+  animation: playedflipA 1s forwards;
+}
+
+
+.playedcard .playedback,
+.playedcard .playedfront {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden; /* Cache le verso */
+}
+
+.playedcard .playedfront {
+  transform: rotateY(180deg); /* Déjà tourné vers le dos */
+}
+
+
+
+/* Animation pour l'effet de flip */
+@keyframes playedflipA {
+  0% { transform: rotateY(0deg); }
+  
+  100% { transform: rotateY(180deg); }
+}
+
+
+.cardpicclass2 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+}
+
+
 .stt {
+  display: none;
   position: absolute;
   margin: auto;
   top:3%;
@@ -3389,13 +3470,12 @@ select::-ms-expand {
   right: 0;
   width: 30%;
   height: fit-content;
-  overflow: hidden;
   background-color: rgba(208, 46, 46, 0.);
   padding: 5px;
-  transform: scale(1.2);
+}
+
+.headstatanimation {
   animation: mainstatpopA 1s forwards;
-  opacity: 0;
-  overflow: hidden;
 }
 
 @keyframes mainstatpopA {
@@ -3412,54 +3492,47 @@ select::-ms-expand {
 
 
 #mainstattxt {
-  color:aliceblue;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color:rgb(235, 253, 255);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   letter-spacing: 5px;
   font-size: 1.3rem;
+  font-weight: 600;
   text-shadow: rgb(18, 53, 20) 1px 0 10px;
-  
 }
-
 
 
 
 .endstatclass {
-  animation: mainstatrdA 3s forwards;
+  animation: mainstatrdA 2s forwards;
 }
 
  @keyframes mainstatrdA {
   0% {
-    
   }
 
   30% {
-    transform: scale(1.5);
+    transform: scale(1.4);
   }
   50% {
    
   }
 
   80% {
-    transform:  translateY(0) 
+  
   
   }
 
-  85% {
+ 
+
+  80% {
     opacity: 1;
     
-  }
-
-  90% {
-    
-    transform: translateY(10px);
-  }
-
-  95% {
     
   }
 
   100% {
-    transform: scale(1.3) translateY(-5em);
+    opacity: 0;
+    transform: scale(1.4)
   }
  }
 
@@ -3554,29 +3627,6 @@ select::-ms-expand {
 
 
 
-.headstatdivid {
-  width: 40px;
-  height: 50px;
-  background-color: red;
-  transform-style: preserve-3d; /* Nécessaire pour permettre les transformations 3D */
-  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk8__UKzfBQsCjkoOueRWDETUYy380YSWhVPuRIeFr3TI4ZI9jCWimG-gqF0J6e_E_5Yo&usqp=CAU');
-  background-size:cover;
-  box-shadow:0px 0px 5px rgb(211, 243, 247);
-  animation: flip 1.5s infinite; /* Animation de flip */
-}
-
-@keyframes flip {
-  0% {
-      transform: perspective(400px) rotateY(0deg); /* Vue de face */
-  }
-  50% {
-      transform: perspective(400px) rotateY(180deg); /* Vue de dos */
-  }
-  100% {
-      transform: perspective(400px) rotateY(360deg); /* De retour à la vue de face */
-  }
-}
-
 
 
 .shinecard {
@@ -3666,10 +3716,65 @@ select::-ms-expand {
   height: fit-content;
 }
 
-
-
-.jesus {
-  transform: skew(-131deg);
--webkit-transform: skew(-131deg);
--moz-transform: skew(-131deg);
+.sss {
+  animation: cardborderA 1s infinite linear;
+  
 }
+
+@keyframes cardborderA {
+  0% {
+    -webkit-box-shadow:0px 0px 52px 6px rgba(255, 255, 255, 0.9);
+    -moz-box-shadow: 0px 0px 52px 6px rgba(238, 238, 238, 0.9);
+    box-shadow: 0px 0px 52px 6px rgba(255, 255, 255, 0.9);
+  }
+
+  50% {
+    -webkit-box-shadow:0px 0px 52px 6px rgba(58, 48, 63, 0.9);
+    -moz-box-shadow: 0px 0px 52px 6px rgba(65, 35, 63, 0.9);
+    box-shadow: 0px 0px 52px 6px rgba(238, 18, 154, 0.9);
+  }
+
+  100% {
+    -webkit-box-shadow:0px 0px 52px 6px rgba(255, 255, 255, 0.9);
+    -moz-box-shadow: 0px 0px 52px 6px rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 0px 52px 6px rgba(249, 249, 249, 0.9);
+  }
+}
+
+.shadow {
+  
+}
+
+.shadow::before,
+.shadow::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  background: linear-gradient(45deg,rgb(240, 17, 17),blue,green,yellow,#e11d74,black,#ffff00,#aa0000);
+  background-size: 400%;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  z-index: -1;
+  animation: animate 25s linear infinite;
+}
+
+.shadow::after {
+  filter: blur(25px);
+}
+
+@keyframes animate {
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 400% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
+}
+
+

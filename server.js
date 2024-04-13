@@ -98,8 +98,12 @@ var mapgamecitation = new Map();
 var mapgamehand = new Map();
 var maphandplayer = new Map();
 var mapgameitationanswer = new Map();
+var mapgameplate = new Map();
 var mapgamecitajoker = new Map();
 var mapgamecurrentstat = new Map();
+var mapgamecardauthorize = new Map();
+
+
 var current_user = [];
 
 //path handle
@@ -404,10 +408,12 @@ app.post('/confirmSettingBombanime' , function(req,res) {
 
 app.post('/confirmSettingCardanime' , function(req,res) {
     var handc = req.body.val1;
-    if(handc != 1 && handc != 3 && handc!=4 && handc != 5) handc = 3;
+    if(handc != 1 && handc != 3 && handc!=4 && handc != 5) handc = 4;
 
     mapgamehand.set(req.session.rid , parseInt(handc));
     mapgamedata.set(req.session.rid , profile.Cards);
+    mapgamecardauthorize.set(req.session.rid , false);
+    mapgameplate.set(req.session.rid , []);
 
     var nbp = 0;
     for (let [key, value] of mapcode) {
@@ -429,28 +435,6 @@ app.post('/confirmSettingCardanime' , function(req,res) {
 });
 
 
-app.post('/forceDraw' , function(req,res) {
-
-    if(req.session.solop == true) mapgamecardready.set(req.session.rid , actual_playerdraw - 1);
-
-    if(maphandplayer.has(req.session.username) == false){
-        console.log(req.session.username)
-        generateHand(req.session.rid , req.session.username);
-        req.session.hasdraw = true;
-        req.session.life = 5;
-
-        var actual_playerdraw = mapgamecardready.get(req.session.rid);
-        mapgamecardready.set(req.session.rid , actual_playerdraw - 1);
-
-        var hand = maphandplayer.get(req.session.username);
-        
-
-        res.send([hand, req.session.life]);
-
-    } else res.sendStatus(202);
-
-    
-});
 
 
 app.post('/drawCard' , function(req,res) {
@@ -466,12 +450,18 @@ app.post('/drawCard' , function(req,res) {
     var hand = maphandplayer.get(req.session.username);
 
     //LAST PLAYER TO DRAW
-    if(actual_playerdraw - 1 == 0) {
-        res.send([hand , mapgamecardready.get(req.session.rid) , req.session.life]);
-    } else res.send([hand , mapgamecardready.get(req.session.rid) , req.session.life]);
+    res.send([hand , mapgamecardauthorize.get(req.session.rid) , req.session.life , mapgamecardready.get(req.session.rid)]);
+   
 
     
 });
+
+
+//ADD CARD TO PLATE
+app.post('/chooseCard' , function(req,res) {
+    
+    res.end();
+}); 
 
 
 app.post('/playSolo' , function(req,res) {
@@ -531,6 +521,38 @@ app.post('/returnBackCreate' , function(req,res) {
     res.end();
 });
 
+
+app.post('/returnByEscape' , function(req,res) {
+
+    //IF GAME IS ALREADY LAUNCHED BUT NOT PLAYING YET (AND GAME IS IN SOLO MODE)
+    if(req.session.ingame == true && req.session.isplaying != true && req.session.solop == true) {
+        req.session.solop = null;
+        req.session.ingame = null;
+
+        if(req.session.created) {
+        
+            for (let [key, value] of mapcode) {
+                if(mapcode.get(key) == req.session.rid) mapcode.delete(key);
+            }
+    
+    
+            mapcode.delete(req.session.username);
+            mapgametime.delete(req.session.rid);
+            mapgametheme.delete(req.session.rid);
+            req.session.created = null;
+        }
+
+        req.session.rid = null;
+        res.redirect('/');
+    } else {
+        if(!req.session.rid && req.session.username && req.session.joined) {
+            req.session.joined = null;
+            res.redirect('/');
+        }  else res.send('no');
+    }
+
+
+})
 
 
 app.post('/cancelPreGame' , function(req,res) {
@@ -816,16 +838,16 @@ io.on('connection' , (socket) => {
             if(leftp > 0) socket.emit('displayCardWaitEvent');
             else socket.emit('hideCardWaitEvent');
 
+            //DISPLAY CARDS OR NOT
+            var cards_auth = mapgamecardauthorize.get(ioroomid);
+            if(cards_auth == true) socket.emit('enableCardsEvent');
+
             
             //DISPLAY DECK OR CARDS (ACCORDING TO ALREADY DRAW OR NOT)
             socket.emit('displayPostRule3' , mapgamehand.get(ioroomid));
             if(iodraw != true) socket.emit('displayBeginning3')
             else {
-                if(iodraw == true) {
-                    if(leftp > 0) socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , false , iolife);
-                    else socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , true , iolife);
-                } 
-
+                if(iodraw == true) socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , cards_auth , iolife);
             }
 
         }
@@ -1136,9 +1158,7 @@ io.on('connection' , (socket) => {
     //HANDLE FIRST TIMER (CARDANIME)
     socket.on('firstCardTimerEvent' , () => {
         var leftp = mapgamecardready.get(ioroomid);
-        // setTimeout(() => {
-        //     io.to(ioroomid).emit('forceDrawEvent');
-        // }, 5000);
+        
     });
 
 
@@ -1286,15 +1306,47 @@ io.on('connection' , (socket) => {
 
     });
 
-
-    //START CARDANIME GAME (AFTER LAST PLAYER DRAW)
+    //START CARDANIME GAME (AFTER LAST PLAYER DRAW) AND START FIRST ROUND
     socket.on('everyPlayerDrawedEvent' , () => {
         io.to(ioroomid).emit('hideCardWaitEvent');
+
+
+        //PLAY FIRST ROUND
         setTimeout(() => {
             var mainstat = generateStat();
             mapgamecurrentstat.set(ioroomid , mainstat);
             io.to(ioroomid).emit('playRound' , mainstat)
         }, 3000);
+
+
+        //ENABLE CARDS FOR EVERYONE
+        setTimeout(() => {
+            mapgamecardauthorize.set(ioroomid , true);
+            io.to(ioroomid).emit('enableCardsEvent');
+            
+            
+            var hando = maphandplayer.get(iousername);
+            for(let i = 0 ; i < hando.length ; i ++)  hando[i][1] = true;
+            io.to(ioroomid).emit('updateCardStatEvent' , hando)
+            
+           
+
+        }, 10000);
+
+      
+    });
+
+
+    socket.on('onUpdateStatEvent' , (new_hand) => {
+        maphandplayer.set(iousername , new_hand);
+    });
+
+
+    socket.on('updatePlateForEveyroneEvent' , (character , character_stat) => {
+        
+        io.to(ioroomid).emit('displayCardOnPlate' , character , character_stat);
+
+
     });
     
 
@@ -2772,7 +2824,7 @@ function generateHand(rid , playername) {
 
         random_nb = Math.floor(Math.random() * datac.length);
         random_chara = datac[random_nb];
-        chara_array.push(random_chara)
+        chara_array.push([random_chara , false]);
         mapgamedata.set(rid , datac.filter(el => el != random_chara));
     }
 
@@ -2785,11 +2837,13 @@ var rd = Math.floor(Math.random() * 8);
 
 
 function generateStat() {
-    var stats = ['ATTAQUE' , 'DEFENSE' , 'INTELLIGENCE' , 'ENDURANCE' , 'VITESSE' , 'AGILITÉ' , 'TECHNIQUE' , 'CHANCE'];
+    var stats = [ ['ATTAQUE' , '⚔️ATTAQUE⚔️' , 'ATK'] , ['DEFENSE' , '🛡️DEFENSE🛡️' , 'DEF'] , ['INTELLIGENCE' , '💡INTELLIGENCE💡' , 'INT'] , ['ENDURANCE' , '❤️ENDURANCE❤️' , 'END'] , ['VITESSE' , '⚡VITESSE⚡' , 'VIT'] , ['AGILITÉ' , '🤸🏼AGILITÉ🤸🏼' , 'AGI'] , ['TECHNIQUE' , '🎯TECHNIQUE🎯' , 'TECH'] , ['CHANCE' , '🍀CHANCE🍀' , 'LUCK']];
     var rd = Math.floor(Math.random() * stats.length);
-    var rds = stats[rd];
+    var rds = stats[rd][0];
+    var rds2 = stats[rd][1];
+    var rds3 = stats[rd][2]
 
-    return rds
+    return [rds , rds2 , rds3]
 }
 
 
