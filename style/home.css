@@ -2938,6 +2938,17 @@ select::-ms-expand {
   justify-content: space-between;
 }
 
+.cardo {
+  margin: auto;
+  border: 5px double rgba(28, 32, 36, 0.93);
+  width: 130px;
+  height: 170px;
+  color: rgb(159, 24, 147);
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  box-shadow: rgb(6, 6, 6) 0px 0px 0px 2px, rgba(121, 118, 91, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
+
 .card {
   margin: auto;
   border: 5px double rgba(28, 32, 36, 0.93);
@@ -3325,19 +3336,47 @@ select::-ms-expand {
   margin-bottom: 5px;
 }
 
-.mainstattxt {
-  display: none;
+
+.cardplate {
+  position: absolute;
+  width: 50%;
+  height: 30%;
+  background-color: aliceblue;
+  margin: auto;
+  top:25%;
+  left: 0;
+  right: 0;
+  display: flex;
+}
+
+.stt {
   position: absolute;
   margin: auto;
-  top:0;
+  top:3%;
+  font-size: 80%;
   left: 0;
-  bottom: 0;
   right: 0;
   width: fit-content;
   height: fit-content;
-  color:aliceblue;
+  color:rgb(237, 255, 217);
+  text-shadow: rgb(18, 53, 20) 1px 0 10px;
+  letter-spacing: 3px;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-weight: 600;
+  font-style: oblique;
+  opacity: 0.8;
+  animation: sttA 0.8s forwards;
+}
+
+@keyframes sttA {
+  0% {
+    transform: translateY(-2em);
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .headstatdiv {
@@ -3629,3 +3668,8 @@ select::-ms-expand {
 
 
 
+.jesus {
+  transform: skew(-131deg);
+-webkit-transform: skew(-131deg);
+-moz-transform: skew(-131deg);
+}

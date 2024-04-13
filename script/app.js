@@ -28,7 +28,7 @@ var app = new Vue({
             ruletxt: '',
             ruletitle: '',
             winnerpoint: 0,
-            current_stat: ''
+            current_stat: 'ATTAQUE'
             
             
         }
@@ -1124,13 +1124,17 @@ var app = new Vue({
             this.current_stat = stat;
             editRandomStat(stat);
             setTimeout(() => {
-                $('.headstatdiv').hide(500);
+                $('.headstatdiv').hide();
             }, 5000);
+
+            setTimeout(() => {
+                $('.stt').show();
+            }, 6000);
         })
 
         socket.on('displayMainStatEvent' , (mstat) => {
             this.current_stat = mstat;
-            $('.mainstattxt').show();
+            $('.stt').show();
         })
         
 
@@ -2206,7 +2210,7 @@ function displayCards(cards , stat) {
         var cardiv = document.createElement('div');
         cardiv.classList.add('card');
         cardiv.classList.add('cardpopclass');
-        // if(stat != true) cardiv.classList.add('disablemode3')
+        if(stat != true) cardiv.classList.add('disablemode3')
 
         cardiv.id = "cardid" + i;
 
@@ -2260,8 +2264,10 @@ function displayCards(cards , stat) {
 }
 
 
+//WHEN CLICK ON CARD
 $(document).on('click', '.card', function() {
-    $(this).hide(100);
+    // document.getElementById('plateid').classList.add('jesus')
+    alert('GROS NUL')
 });
 
 
