@@ -13,7 +13,7 @@ var app = new Vue({
             usernamedisplay: '',
             roomid: '',
             opponents:'',
-            timer:'',
+            timer:'100',
             currenttheme:'',
             opponentres:'',
             canswer:'',
@@ -1100,7 +1100,7 @@ var app = new Vue({
 
 
 
-        socket.on('playRound' , (stat) => {
+        socket.on('playRound' , (stat , create_stat) => {
             this.current_stat = stat[0];
             this.current_stat_display = stat[0] + " (" + stat[2] + ")"; 
             editRandomStat(stat[1]);
@@ -1110,7 +1110,10 @@ var app = new Vue({
 
             setTimeout(() => {
                 $('.stt').show();
+                socket.emit('startCardRoundTimer');
             }, 6000);
+
+            
         });
 
 
@@ -1131,6 +1134,32 @@ var app = new Vue({
 
         socket.on('displayPlateEvent' , (plate) => {
             editPlate(plate);
+        });
+
+
+        socket.on('playBackCardanimeAudioEvent' , () => {
+            playCardBackAudio();
+        });
+
+
+        socket.on('updateCardTimerEvent' , (time) => {
+            if(time < 0) time = 0;
+            this.timer = time;
+            $('.cardtimertxt').html(time);
+            $('.cardtimertxt').show();
+        });
+
+
+        socket.on('revealCardEvent', () => {
+            revealCard();
+        });
+
+
+        socket.on('displayCardTime' , (time) => {
+            if(time < 0) time = 0;
+            this.timer = time;
+            $('.cardtimertxt').html(time);
+            $('.cardtimertxt').show();
         });
         
 
@@ -2278,7 +2307,22 @@ function displayCards(cards , stat , used_cards , used_cards_tmp) {
 }
 
 
+//ADD FINGER AFTER HOVER CARD
+$(document).on('mouseenter' , '.card' , function() {
+    var spanused = document.createElement('span');
+    spanused.classList.add('usedspan');
 
+    var spanpic = document.createElement('img');
+    spanpic.setAttribute('src' , 'finger3.png');
+    spanpic.classList.add('fingerpic');
+
+    spanused.appendChild(spanpic);
+    this.appendChild(spanused);
+});
+
+$(document).on('mouseleave' , '.card' , function() {
+    $(this).find('span:eq(1)').remove();
+});
 
 
 
@@ -2417,7 +2461,7 @@ function addToPlate(card_info) {
     var card_front = document.createElement('div');
     card_front.classList.add('playedfront');
 
-    var card_pic = document.createElement('pic');
+    var card_pic = document.createElement('img');
     card_pic.classList.add('cardpicclass2');
     card_pic.setAttribute('src' , chara_pic);
 
@@ -2426,9 +2470,9 @@ function addToPlate(card_info) {
     card_author.textContent = player;
 
     card_front.appendChild(card_pic);
+    card_front.appendChild(card_author);
     card_container.appendChild(card_back);
     card_container.appendChild(card_front);
-    card_container.appendChild(card_author);
 
     plate.appendChild(card_container)
 
@@ -2451,6 +2495,7 @@ function editPlate(plate_info) {
         var card_container = document.createElement('div');
         card_container.classList.add('playedcard');
         card_container.classList.add('playedpopclass');
+        if(app.timer <= 0)  card_container.classList.add('flipclass');
 
         var card_back = document.createElement('div');
         card_back.classList.add('playedback');
@@ -2458,7 +2503,7 @@ function editPlate(plate_info) {
         var card_front = document.createElement('div');
         card_front.classList.add('playedfront');
 
-        var card_pic = document.createElement('pic');
+        var card_pic = document.createElement('img');
         card_pic.classList.add('cardpicclass2');
         card_pic.setAttribute('src' , chara_pic);
 
@@ -2467,9 +2512,9 @@ function editPlate(plate_info) {
         card_author.textContent = player;
 
         card_front.appendChild(card_pic);
+        card_front.appendChild(card_author);
         card_container.appendChild(card_back);
         card_container.appendChild(card_front);
-        card_container.appendChild(card_author);
 
         plate.appendChild(card_container)
 
@@ -2479,4 +2524,20 @@ function editPlate(plate_info) {
 
     }
     
+}
+
+
+
+function playCardBackAudio() {
+    var ta = document.getElementById('audio8');
+    ta.volume = 0.2;
+    ta.loop = true;
+    
+    // ta.play();
+        
+}
+
+
+function revealCard() {
+    $('.playedcard').addClass('flipclass');
 }

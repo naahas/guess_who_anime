@@ -843,6 +843,8 @@ io.on('connection' , (socket) => {
 
     if(iomode == "Cardanime") {
         if(ioplaying && ioendgame != true) {
+            socket.emit('playBackCardanimeAudioEvent')
+
             //DISPLAY OPPONENT (CARDANIME)
             if(ioplaying && ioingame == true) {
                 var playertab = [];
@@ -851,6 +853,11 @@ io.on('connection' , (socket) => {
                 }
               
                 socket.emit('displayOpponents3' , playertab ,  iousername );                        
+            }
+
+
+            if(mapgametime.has(ioroomid)) {
+                socket.emit('displayCardTime' , mapgametime.get(ioroomid));
             }
 
 
@@ -1366,8 +1373,41 @@ io.on('connection' , (socket) => {
 
 
 
+    //WHEN SOMEONE CHOOSE A CARD : ITS SHOWN IN THE PLATE FOR EVERYONE
     socket.on('tempPlateEvent' , (card_toadd_info) => {
         io.to(ioroomid).emit('updatePlateEvent' , card_toadd_info);
+    });
+
+
+    socket.on('startCardRoundTimer' , () => {
+        //IF THE ONE WHO IS EMITTING THE TIMER IS THE HOST
+        if(iocreate) {
+            var max_time = 20;
+            var initial_time = 1;
+            mapgametime.set(ioroomid , max_time);
+              
+            var ctimer = setInterval(() => {
+
+                io.to(ioroomid).emit('updateCardTimerEvent' , mapgametime.get(ioroomid));
+
+                //TIME'S UP
+                if(initial_time>max_time) {
+                   
+                    
+                    io.to(ioroomid).emit('revealCardEvent');
+                    
+                    
+
+                    
+                    clearInterval(ctimer);
+                }
+                
+                
+                max_time--;
+                mapgametime.set(ioroomid , max_time);
+        
+            }, 1000);
+        }
     });
     
 

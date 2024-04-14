@@ -1085,14 +1085,14 @@ body{
 
 .usedspan {
   position: absolute;
-  bottom: -30%;
+  bottom: -25%;
   margin: auto;
   right: 0;
   left: 0;
 }
 
 .fingerpic {
-  width: 25px;
+  width: 20px;
   animation: fingerA 0.7s infinite;
 }
 
@@ -3032,7 +3032,7 @@ select::-ms-expand {
 
 .cardhoverclass {
   filter: brightness(40%);
-  transform: scale(1.2) translateY(-1em);
+  transform: scale(1.1) translateY(-1em);
 }
 
 
@@ -3415,10 +3415,11 @@ select::-ms-expand {
   margin: auto;
   opacity: 0.9;
   text-shadow: rgb(155, 168, 113) 5px 0 10px; 
-  margin-top:155%;
- font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-style: oblique;
 }
+
 
 .playedpopclass {
   animation: playedPopA 1s forwards;
@@ -3470,6 +3471,31 @@ select::-ms-expand {
   object-fit: cover;
 
 }
+
+
+.cardtimertxt {
+  display: none;
+  color:aliceblue;
+  font-style: normal;
+  font-size: 1.2rem;
+  text-shadow: rgb(153, 241, 11) 1px 0 10px;
+  animation: cardtimeA 0.5s forwards;
+}
+
+
+@keyframes cardtimeA {
+  0% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
 
 
 .stt {
