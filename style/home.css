@@ -366,6 +366,9 @@ body{
     background-color: rgba(70, 103, 126, 0.901);
 }
 
+
+
+
 .kickpic {
   width: 7%;
   opacity: 0.7;
@@ -1080,6 +1083,32 @@ body{
   background-color: transparent;
 }
 
+.usedspan {
+  position: absolute;
+  bottom: -30%;
+  margin: auto;
+  right: 0;
+  left: 0;
+}
+
+.fingerpic {
+  width: 25px;
+  animation: fingerA 0.7s infinite;
+}
+
+@keyframes fingerA {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
 
 .disablemode2 {
   pointer-events: none;
@@ -2998,7 +3027,7 @@ select::-ms-expand {
 }
 
 .card:hover {
-  transform: scale(1.2) translateY(-1em) !important;
+  transform: scale(1.1) translateY(-0.7em) !important;
 }
 
 .cardhoverclass {
@@ -3353,7 +3382,7 @@ select::-ms-expand {
   width: 70%;
   height: 30%;
   margin: auto;
-  background-color: rgb(110, 129, 129 ,0.2);
+  background-color: rgb(110, 129, 129 ,0.1);
   top:20%;
   left: 0;
   right: 0;
@@ -3363,18 +3392,32 @@ select::-ms-expand {
   align-items: center;
 }
 
+
+
+
 .playedcard {
-  display: none;
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk8__UKzfBQsCjkoOueRWDETUYy380YSWhVPuRIeFr3TI4ZI9jCWimG-gqF0J6e_E_5Yo&usqp=CAU');
-  width: calc(12% - 20px); 
-  height: calc(85% - 20px); 
+  width: 9%;
+  height: 75%;
   border: 2px solid aliceblue;
   border-radius: 5px;
   background-color: red;
-  color: aliceblue;
   transform-style: preserve-3d;
   perspective: 1000px;
-  margin: 20px;
+  margin: 15px;
+}
+
+
+
+.cardauthor {
+  overflow: hidden;
+  color: rgb(156, 199, 237);
+  margin: auto;
+  opacity: 0.9;
+  text-shadow: rgb(155, 168, 113) 5px 0 10px; 
+  margin-top:155%;
+ font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-style: oblique;
 }
 
 .playedpopclass {

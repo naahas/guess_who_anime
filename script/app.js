@@ -863,9 +863,9 @@ var app = new Vue({
         });
 
 
-        socket.on('displayPlayerCard' , (player_cards , stat , life) => {
+        socket.on('displayPlayerCard' , (player_cards , stat , life , used_cards , used_cards_tmp) => {
             displayCardLife(life);
-            displayCards(player_cards , stat);
+            displayCards(player_cards , stat , used_cards , used_cards_tmp);
         });
 
 
@@ -1100,32 +1100,6 @@ var app = new Vue({
 
 
 
-        socket.on('forceDrawEvent' , () => {
-            var body = {
-                val : 'val'
-            };
-
-            var config = {
-                method: 'post',
-                url: '/forceDraw',
-                data: body
-            };
-
-            axios(config)
-            .then(function (res) {
-                if(res.status != 202) {
-                    autoeditDeck();
-                    firstCardsDisplay(res.data[0] , true);
-                    displayCardLife(res.data[2]);
-                }
-                socket.emit('everyPlayerDrawedEvent');
-            })
-            .catch(function (err) {
-                
-            });
-        });
-
-
         socket.on('playRound' , (stat) => {
             this.current_stat = stat[0];
             this.current_stat_display = stat[0] + " (" + stat[2] + ")"; 
@@ -1144,20 +1118,20 @@ var app = new Vue({
             $('.card').removeClass('disablemode3');
         });
 
-        socket.on('displayMainStatEvent' , (mstat) => {
-            this.current_stat = mstat;
+        socket.on('displayMainStatEvent' , (stat) => {
+            this.current_stat = stat[0];
+            this.current_stat_display = stat[0] + " (" + stat[2] + ")"; 
             $('.stt').show();
         });
 
-        socket.on('updateCardStatEvent' , (hando) => {
-            socket.emit('onUpdateStatEvent' , hando);
+
+        socket.on('updatePlateEvent' , (card_info) => {
+            addToPlate(card_info)
         });
 
-
-        socket.on('displayCardOnPlate' , (character , charastat) => {
-            editPlate(character , charastat);
+        socket.on('displayPlateEvent' , (plate) => {
+            editPlate(plate);
         });
-
         
 
     
@@ -2164,25 +2138,25 @@ function playDrawkSound() {
 function firstCardsDisplay(cards , stat) {
     if(cards.length == 1) {
         setTimeout(() => {
-            displayCards(cards , stat);
+            displayCards(cards , stat , [] , []);
         }, 1500);
     }
 
     if(cards.length == 3) {
         setTimeout(() => {
-            displayCards(cards , stat);
+            displayCards(cards , stat , [] , []);
         }, 2500);
     }
 
     if(cards.length == 4) {
         setTimeout(() => {
-            displayCards(cards , stat);
+            displayCards(cards , stat , [] , []);
         }, 2800);
     }
 
     if(cards.length == 5) {
         setTimeout(() => {
-            displayCards(cards , stat);
+            displayCards(cards , stat , [] , []);
         }, 3500);
     }
 
@@ -2207,7 +2181,7 @@ function displayCardLife(life) {
 
 
 
-function displayCards(cards , stat) {
+function displayCards(cards , stat , used_cards , used_cards_tmp) {
 
     var cardname;
     var cardanime;
@@ -2224,25 +2198,24 @@ function displayCards(cards , stat) {
     statdivout.id = "statdivoutid";
    
     for(let i = 0 ; i < cards.length ; i++) {
-        cardname = cards[i][0].Character;
-        cardanime = cards[i][0].Anime;
-        cardpath = cards[i][0].path;
-        cardstat = cards[i][0].stat;
+        cardname = cards[i].Character;
+        cardanime = cards[i].Anime;
+        cardpath = cards[i].path;
+        cardstat = cards[i].stat;
 
         var cardiv = document.createElement('div');
         cardiv.classList.add('card');
         cardiv.classList.add('cardpopclass');
-        cardiv.classList.add('disablemode3');
 
         //DISABLE IF EVERYONE DIDNT DRAW YET
-        // if(stat != true) cardiv.classList.add('disablemode3')
-        if(cards[i][1] == true) cardiv.classList.remove('disablemode3');
+        if(stat != true || used_cards.includes(cardname) || used_cards_tmp.includes(cardname)) cardiv.classList.add('disablemode3')
 
         cardiv.id = "cardid" + i;
 
         //WHEN CARD HOVER
         cardiv.addEventListener('mouseenter' , function(event) {
             if(!statdivout.classList.contains('statdivout')) statdivout.classList.add('statdivout');
+            
 
             for(let j = 0 ; j< 8 ; j ++) {
                 var pstat = document.createElement('p');
@@ -2251,7 +2224,7 @@ function displayCards(cards , stat) {
                 pstat.textContent = statarray[j];
 
                 span.classList.add('skilltextoutspan');
-                span.textContent = cards[i][0].stat[j];
+                span.textContent = cards[i].stat[j];
 
                 pstat.appendChild(span);
                 statdivout.appendChild(pstat);
@@ -2279,8 +2252,24 @@ function displayCards(cards , stat) {
         charname.innerHTML = cardname;
         charname.classList.add('cardtxt');
        
+
         cardiv.appendChild(charapic);
         cardiv.appendChild(charname);
+
+        //IF THE CARD HAS BEEN CHOOSED
+        if(used_cards.includes(cardname)) {
+            var spanused = document.createElement('span');
+            spanused.classList.add('usedspan');
+
+            var spanpic = document.createElement('img');
+            spanpic.setAttribute('src' , 'finger3.png');
+            spanpic.classList.add('fingerpic');
+
+            spanused.appendChild(spanpic);
+            cardiv.appendChild(spanused);
+        }
+
+
         scene.appendChild(cardiv);
 
 
@@ -2289,19 +2278,47 @@ function displayCards(cards , stat) {
 }
 
 
+
+
+
+
 //WHEN CLICK ON CARD
 $(document).on('click', '.card', function() {
-    
+    // this.classList.add('shadow')
+    var spanused = document.createElement('span');
+    spanused.classList.add('usedspan');
 
-    
+    var spanpic = document.createElement('img');
+    spanpic.setAttribute('src' , 'finger3.png');
+    spanpic.classList.add('fingerpic');
 
+    spanused.appendChild(spanpic);
+    this.appendChild(spanused);
+    this.classList.add('disablemode3');
+
+    var character = this.querySelector('span').textContent;
+    var body = {
+        val: character
+    };
+
+    var config = {
+        method: 'post',
+        url: '/chooseCard',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+       socket.emit('tempPlateEvent' , res.data);
+       $(".card").addClass('disablemode3');
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
 });
 
 
-document.getElementById('waitcardid').addEventListener('click' , function() {
-    document.getElementById('ezaeaze').classList.add('playedpopclass')
-    $('#ezaeaze').show();
-});
+
 
 
 document.addEventListener('contextmenu', function(event) {
@@ -2356,8 +2373,6 @@ function startStatRoulette(values , cstat) {
 
 
 
-// editRandomStat('⚔️ ATTAQUE ⚔️')
-
 
 document.addEventListener("keydown", function(event) {
     // Vérifie si la touche enfoncée est la touche "Echap"
@@ -2384,7 +2399,84 @@ document.addEventListener("keydown", function(event) {
 
 
 
+function addToPlate(card_info) {
+    var chara = card_info[0];
+    var chara_stat = card_info[1];
+    var chara_pic = card_info[2];
+    var player = card_info[3];
 
-function editPlate(character , charastat) {
+    var plate = document.getElementById('plateid');
 
+    var card_container = document.createElement('div');
+    card_container.classList.add('playedcard');
+    card_container.classList.add('playedpopclass');
+
+    var card_back = document.createElement('div');
+    card_back.classList.add('playedback');
+
+    var card_front = document.createElement('div');
+    card_front.classList.add('playedfront');
+
+    var card_pic = document.createElement('pic');
+    card_pic.classList.add('cardpicclass2');
+    card_pic.setAttribute('src' , chara_pic);
+
+    var card_author = document.createElement('p');
+    card_author.classList.add('cardauthor');
+    card_author.textContent = player;
+
+    card_front.appendChild(card_pic);
+    card_container.appendChild(card_back);
+    card_container.appendChild(card_front);
+    card_container.appendChild(card_author);
+
+    plate.appendChild(card_container)
+
+    setTimeout(() => {
+        card_container.classList.remove('playedpopclass');
+    }, 1100);
+}
+
+
+
+function editPlate(plate_info) {
+    var plate = document.getElementById('plateid');
+
+    for(let i = 0 ; i < plate_info.length ; i ++) {
+        var character = plate_info[i][0];
+        var chara_stat = plate_info[i][1];
+        var chara_pic = plate_info[i][2];
+        var player = plate_info[i][3];
+        
+        var card_container = document.createElement('div');
+        card_container.classList.add('playedcard');
+        card_container.classList.add('playedpopclass');
+
+        var card_back = document.createElement('div');
+        card_back.classList.add('playedback');
+
+        var card_front = document.createElement('div');
+        card_front.classList.add('playedfront');
+
+        var card_pic = document.createElement('pic');
+        card_pic.classList.add('cardpicclass2');
+        card_pic.setAttribute('src' , chara_pic);
+
+        var card_author = document.createElement('p');
+        card_author.classList.add('cardauthor');
+        card_author.textContent = player;
+
+        card_front.appendChild(card_pic);
+        card_container.appendChild(card_back);
+        card_container.appendChild(card_front);
+        card_container.appendChild(card_author);
+
+        plate.appendChild(card_container)
+
+        setTimeout(() => {
+            card_container.classList.remove('playedpopclass');
+        }, 1100);
+
+    }
+    
 }

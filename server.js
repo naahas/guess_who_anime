@@ -98,11 +98,11 @@ var mapgamecitation = new Map();
 var mapgamehand = new Map();
 var maphandplayer = new Map();
 var mapgameitationanswer = new Map();
-var mapgameplate = new Map();
 var mapgamecitajoker = new Map();
 var mapgamecurrentstat = new Map();
 var mapgamecardauthorize = new Map();
-
+var mapgameusedcard = new Map();
+var mapgametmpdisable = new Map();
 
 var current_user = [];
 
@@ -413,7 +413,8 @@ app.post('/confirmSettingCardanime' , function(req,res) {
     mapgamehand.set(req.session.rid , parseInt(handc));
     mapgamedata.set(req.session.rid , profile.Cards);
     mapgamecardauthorize.set(req.session.rid , false);
-    mapgameplate.set(req.session.rid , []);
+    mapgameusedcard.set(req.session.rid , []);
+    mapgametmpdisable.set(req.session.rid , []);
 
     var nbp = 0;
     for (let [key, value] of mapcode) {
@@ -426,6 +427,7 @@ app.post('/confirmSettingCardanime' , function(req,res) {
     req.session.isplaying = true;
     req.session.replayed = false;
 
+
     io.once('connection' , (socket) => {
         socket.to(req.session.rid).emit('makePlayerPlayingEvent');
     });  
@@ -435,6 +437,33 @@ app.post('/confirmSettingCardanime' , function(req,res) {
 });
 
 
+app.post('/chooseCard' , function(req,res) {
+
+    var character  = req.body.val;
+    var tab = mapgameusedcard.get(req.session.rid);
+    var tab2 = mapgametmpdisable.get(req.session.rid);
+    var character_stat;
+    var character_pic;
+    
+
+    var main_stat_index = editAssociate(mapgamecurrentstat.get(req.session.rid)[2]);
+    
+    var hand = maphandplayer.get(req.session.username);
+    hand.forEach(card => {
+        if(card.Character == character) {
+            character_stat = card.stat[main_stat_index];
+            character_pic = card.path;
+        } else if(!tab2.includes(card.Character)) tab2.push(card.Character);
+    });
+
+
+    if(!tab.includes(character)) tab.push([character , character_stat , character_pic ,  req.session.username]);
+    mapgameusedcard.set(req.session.rid , tab);
+    mapgametmpdisable.set(req.session.rid , tab2);
+
+    
+    res.send([character , character_stat , character_pic , req.session.username]);
+});
 
 
 app.post('/drawCard' , function(req,res) {
@@ -455,13 +484,6 @@ app.post('/drawCard' , function(req,res) {
 
     
 });
-
-
-//ADD CARD TO PLATE
-app.post('/chooseCard' , function(req,res) {
-    
-    res.end();
-}); 
 
 
 app.post('/playSolo' , function(req,res) {
@@ -831,7 +853,14 @@ io.on('connection' , (socket) => {
                 socket.emit('displayOpponents3' , playertab ,  iousername );                        
             }
 
-            if(mapgamecurrentstat.has(ioroomid)) io.to(ioroomid).emit('displayMainStatEvent' , mapgamecurrentstat.get(ioroomid));
+
+            //DISPLAY PLATE IF THERE IS CARDS
+            if(mapgameusedcard.get(ioroomid).length > 0) {
+                socket.emit('displayPlateEvent' , mapgameusedcard.get(ioroomid))
+            }
+
+            //DISPLAY STAT
+            if(mapgamecurrentstat.has(ioroomid)) socket.emit('displayMainStatEvent' , mapgamecurrentstat.get(ioroomid));
               
             //DISPLAY WAIT MSG OR NOT
             var leftp = mapgamecardready.get(ioroomid);
@@ -847,7 +876,12 @@ io.on('connection' , (socket) => {
             socket.emit('displayPostRule3' , mapgamehand.get(ioroomid));
             if(iodraw != true) socket.emit('displayBeginning3')
             else {
-                if(iodraw == true) socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , cards_auth , iolife);
+                var chara_array = [];
+                mapgameusedcard.get(ioroomid).forEach(chara_cell => {
+                    chara_array.push(chara_cell[0]);
+                });
+
+                if(iodraw == true) socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , cards_auth , iolife , chara_array , mapgametmpdisable.get(ioroomid));
             }
 
         }
@@ -1306,6 +1340,7 @@ io.on('connection' , (socket) => {
 
     });
 
+
     //START CARDANIME GAME (AFTER LAST PLAYER DRAW) AND START FIRST ROUND
     socket.on('everyPlayerDrawedEvent' , () => {
         io.to(ioroomid).emit('hideCardWaitEvent');
@@ -1324,29 +1359,15 @@ io.on('connection' , (socket) => {
             mapgamecardauthorize.set(ioroomid , true);
             io.to(ioroomid).emit('enableCardsEvent');
             
-            
-            var hando = maphandplayer.get(iousername);
-            for(let i = 0 ; i < hando.length ; i ++)  hando[i][1] = true;
-            io.to(ioroomid).emit('updateCardStatEvent' , hando)
-            
-           
-
         }, 10000);
 
       
     });
 
 
-    socket.on('onUpdateStatEvent' , (new_hand) => {
-        maphandplayer.set(iousername , new_hand);
-    });
 
-
-    socket.on('updatePlateForEveyroneEvent' , (character , character_stat) => {
-        
-        io.to(ioroomid).emit('displayCardOnPlate' , character , character_stat);
-
-
+    socket.on('tempPlateEvent' , (card_toadd_info) => {
+        io.to(ioroomid).emit('updatePlateEvent' , card_toadd_info);
     });
     
 
@@ -2784,17 +2805,18 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
 
 
-
-
-function fusionDifficulty(rid) {
-    var fcit = profile.Citation.Facile;
-    var mcit = profile.Citation.Normal;
-    var dcit = profile.Citation.Difficile;
-    var fusiondiff = fcit.concat(mcit , dcit);
-
-    mapgamedata.set(rid , fusiondiff);
-
+function editAssociate(valstat) {
+    if(valstat == 'ATK') return 0;
+    if(valstat == 'DEF') return 1;
+    if(valstat == 'INT') return 2;
+    if(valstat == 'END') return 3;
+    if(valstat == 'VIT') return 4;
+    if(valstat == 'AGI') return 5;
+    if(valstat == 'TECH') return 6;
+    if(valstat == 'LUCK') return 7;
+    return 0;
 }
+
 
 
 function generateCitation(rid) {
@@ -2824,7 +2846,7 @@ function generateHand(rid , playername) {
 
         random_nb = Math.floor(Math.random() * datac.length);
         random_chara = datac[random_nb];
-        chara_array.push([random_chara , false]);
+        chara_array.push(random_chara)
         mapgamedata.set(rid , datac.filter(el => el != random_chara));
     }
 
@@ -2954,3 +2976,13 @@ server.listen(process.env.PORT || 7000 , function(err) {
 
 //     res.end();
 // });
+
+// function fusionDifficulty(rid) {
+//     var fcit = profile.Citation.Facile;
+//     var mcit = profile.Citation.Normal;
+//     var dcit = profile.Citation.Difficile;
+//     var fusiondiff = fcit.concat(mcit , dcit);
+
+//     mapgamedata.set(rid , fusiondiff);
+
+// }

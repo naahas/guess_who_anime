@@ -6895,7 +6895,7 @@
          {
             "Character": "Midoriya",
             "Anime" : "My Hero Academia",
-            "path" : "deku.gif",
+            "path" : "deku2.gif",
             "stat" : [
                818,
                338,
@@ -6989,7 +6989,7 @@
          {
             "Character": "Dio",
             "Anime" : "Jojo",
-            "path" : "dio.gif",
+            "path" : "dio2.gif",
             "stat" : [
                614,
                431,
@@ -7198,7 +7198,7 @@
          {   
             "Character": "Itachi",
             "Anime" : "Naruto",
-            "path" : "itachi.gif",
+            "path" : "itachi4.gif",
             "stat" : [
                176,
                210,
@@ -7230,7 +7230,7 @@
          {
             "Character": "Jotaro",
             "Anime" : "Jojo",
-            "path" : "jotaro.gif",
+            "path" : "jotaro3.gif",
             "stat" : [
                771,
                596,
@@ -7246,7 +7246,7 @@
          {
             "Character": "Thorfinn",
             "Anime" : "Vinland Saga",
-            "path" : "thorfinn.gif",
+            "path" : "thorfinn2.gif",
             "stat" : [
                181,
                91,
@@ -7489,7 +7489,7 @@
          {
             "Character": "Zoro",
             "Anime" : "One Piece",
-            "path" : "zoro3.gif",
+            "path" : "zoro5.gif",
             "stat" : [
                747,
                604,
@@ -7499,6 +7499,23 @@
                181,
                835,
                19
+            ]
+         }
+
+         ,
+         {
+            "Character": "Frieren",
+            "Anime" : "Frieren",
+            "path" : "frieren.gif",
+            "stat" : [
+               313,
+               178,
+               781,
+               150,
+               111,
+               87,
+               911,
+               100
             ]
          }
 
