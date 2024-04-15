@@ -103,6 +103,7 @@ var mapgamecurrentstat = new Map();
 var mapgamecardauthorize = new Map();
 var mapgameusedcard = new Map();
 var mapgametmpdisable = new Map();
+var mapgamecardwinner = new Map();
 
 var current_user = [];
 
@@ -1384,7 +1385,7 @@ io.on('connection' , (socket) => {
     socket.on('startCardRoundTimer' , () => {
         //IF THE ONE WHO IS EMITTING THE TIMER IS THE HOST
         if(iocreate) {
-            var max_time = 5;
+            var max_time = 20;
             var initial_time = 1;
             mapgametime.set(ioroomid , max_time);
               
@@ -1400,12 +1401,17 @@ io.on('connection' , (socket) => {
                     io.to(ioroomid).emit('revealCardEvent' , winner_card);
                     io.to(ioroomid).emit('disableCardsEvent');
 
+                    //HIDE PLATE CARDS
                     setTimeout(() => {
                         io.to(ioroomid).emit('clearPlateEvent');
-                    }, 3000);
+                    }, 4000);
+
                     setTimeout(() => {
-                        io.to(ioroomid).emit('clearPlateEvent');
-                    }, 3500);
+                        clearPlate(ioroomid);
+                    }, 5200);
+                    setTimeout(() => {
+                        clearPlate(ioroomid);
+                    }, 5700);
 
                     
                     
@@ -2922,23 +2928,35 @@ function generateStat() {
 
 function getWinnerCard(rid) {
     var plate_cards = mapgameusedcard.get(rid);
+    var winner_card;
     var character;
     var best_stat = 0;
 
     plate_cards.forEach(card => {
         if(card[1] >= best_stat) {
+            winner_card = card;
             character = card[0];
             best_stat = card[1];
         }
     });
 
-
+    mapgamecardwinner.set(rid , winner_card)
     return best_stat;
 }
 
 
 
+function clearPlate(rid) {
+    mapgameusedcard.set(rid , []);
+    mapgamecurrentstat.delete(rid);
 
+    var former_winner = mapgamecardwinner.get(rid)[0];
+    mapgametmpdisable.set(rid , former_winner);
+
+    console.log(mapgametmpdisable.get(rid))
+
+
+}
 
 
 

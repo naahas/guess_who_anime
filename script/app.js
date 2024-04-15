@@ -1180,6 +1180,7 @@ var app = new Vue({
 
         socket.on('clearPlateEvent' , () => {
             $('.playedcard').addClass('hideplateclass')
+            $('.stt').addClass('hidecardtimerclass');
         });
 
     
@@ -2347,7 +2348,6 @@ $(document).on('mouseleave' , '.card' , function() {
 
 //WHEN CLICK ON CARD
 $(document).on('click', '.card', function() {
-    // this.classList.add('shadow')
     var spanused = document.createElement('span');
     spanused.classList.add('usedspan');
 
@@ -2558,17 +2558,17 @@ function editPlate(plate_info) {
 
 function playCardBackAudio() {
     var ta = document.getElementById('audio8');
-    ta.volume = 0.2;
+    ta.volume = 0.07;
     ta.loop = true;
     
-    ta.play();
+    // ta.play();
         
 }
 
 
 function revealCard(winnerc) {
 
-
+    var winner_card;
     var plate_cards = document.querySelectorAll('.playedcard');
     $('.playedcard').removeClass('playedpopclass');
 
@@ -2576,14 +2576,16 @@ function revealCard(winnerc) {
        var cspan = card.querySelector('span');
        if(cspan) {
         if(cspan.textContent == winnerc) {
-            console.log(card);
-            card.classList.add('flipclasswinner' , 'shadow');
+            winner_card = card;
+            card.classList.add('flipclasswinner');
         } else card.classList.add('flipclass');
         
        }
     });
 
-
+    setTimeout(() => {
+        winner_card.classList.add('shadow');
+    }, 1200);
  
     
 }
