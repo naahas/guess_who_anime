@@ -3886,3 +3886,19 @@ select::-ms-expand {
 
 
 
+.hideplateclass {
+  animation: hidePA 2s forwards;
+}
+
+
+@keyframes hidePA {
+  0% {
+
+  }
+
+
+  100% {
+    
+    opacity: 0;
+  }
+}

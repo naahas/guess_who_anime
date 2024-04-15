@@ -1384,7 +1384,7 @@ io.on('connection' , (socket) => {
     socket.on('startCardRoundTimer' , () => {
         //IF THE ONE WHO IS EMITTING THE TIMER IS THE HOST
         if(iocreate) {
-            var max_time = 20;
+            var max_time = 5;
             var initial_time = 1;
             mapgametime.set(ioroomid , max_time);
               
@@ -1400,7 +1400,12 @@ io.on('connection' , (socket) => {
                     io.to(ioroomid).emit('revealCardEvent' , winner_card);
                     io.to(ioroomid).emit('disableCardsEvent');
 
-                    
+                    setTimeout(() => {
+                        io.to(ioroomid).emit('clearPlateEvent');
+                    }, 3000);
+                    setTimeout(() => {
+                        io.to(ioroomid).emit('clearPlateEvent');
+                    }, 3500);
 
                     
                     

@@ -1178,6 +1178,10 @@ var app = new Vue({
         });
         
 
+        socket.on('clearPlateEvent' , () => {
+            $('.playedcard').addClass('hideplateclass')
+        });
+
     
     },
 
@@ -2557,7 +2561,7 @@ function playCardBackAudio() {
     ta.volume = 0.2;
     ta.loop = true;
     
-    // ta.play();
+    ta.play();
         
 }
 
@@ -2579,10 +2583,6 @@ function revealCard(winnerc) {
        }
     });
 
-
-    setTimeout(() => {
-        $('.playedcard').removeClass('flipclass');
-    }, 5000);
 
  
     
