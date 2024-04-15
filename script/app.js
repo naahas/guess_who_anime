@@ -13,7 +13,7 @@ var app = new Vue({
             usernamedisplay: '',
             roomid: '',
             opponents:'',
-            timer:'100',
+            timer:'0',
             currenttheme:'',
             opponentres:'',
             canswer:'',
@@ -1121,6 +1121,10 @@ var app = new Vue({
             $('.card').removeClass('disablemode3');
         });
 
+        socket.on('disableCardsEvent' , () => {
+            $('.card').addClass('disablemode3');
+        });
+
         socket.on('displayMainStatEvent' , (stat) => {
             this.current_stat = stat[0];
             this.current_stat_display = stat[0] + " (" + stat[2] + ")"; 
@@ -1161,8 +1165,8 @@ var app = new Vue({
         });
 
 
-        socket.on('revealCardEvent', () => {
-            revealCard();
+        socket.on('revealCardEvent', (winnerc) => {
+            revealCard(winnerc);
         });
 
 
@@ -2247,7 +2251,7 @@ function displayCards(cards , stat , used_cards , used_cards_tmp) {
         cardiv.classList.add('card');
         cardiv.classList.add('cardpopclass');
 
-        //DISABLE IF EVERYONE DIDNT DRAW YET
+        //DISABLE IF EVERYONE DIDNT DRAW YET (STAT)
         if(stat != true || used_cards.includes(cardname) || used_cards_tmp.includes(cardname)) cardiv.classList.add('disablemode3')
 
         cardiv.id = "cardid" + i;
@@ -2511,7 +2515,6 @@ function editPlate(plate_info) {
         var card_container = document.createElement('div');
         card_container.classList.add('playedcard');
         card_container.classList.add('playedpopclass');
-        if(app.timer <= 0)  card_container.classList.add('flipclass');
 
         var card_back = document.createElement('div');
         card_back.classList.add('playedback');
@@ -2559,6 +2562,30 @@ function playCardBackAudio() {
 }
 
 
-function revealCard() {
-    $('.playedcard').addClass('flipclass');
+function revealCard(winnerc) {
+
+
+    var plate_cards = document.querySelectorAll('.playedcard');
+    $('.playedcard').removeClass('playedpopclass');
+
+    plate_cards.forEach(card => {
+       var cspan = card.querySelector('span');
+       if(cspan) {
+        if(cspan.textContent == winnerc) {
+            console.log(card);
+            card.classList.add('flipclasswinner' , 'shadow');
+        } else card.classList.add('flipclass');
+        
+       }
+    });
+
+
+    setTimeout(() => {
+        $('.playedcard').removeClass('flipclass');
+    }, 5000);
+
+ 
+    
 }
+
+

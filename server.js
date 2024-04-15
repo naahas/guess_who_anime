@@ -861,9 +861,19 @@ io.on('connection' , (socket) => {
             }
 
 
-            //DISPLAY PLATE IF THERE IS CARDS
+            if(mapgametime.get(ioroomid) <= 0) {
+                socket.emit('disableCardsEvent');
+            }
+
+
+            //DISPLAY PLATE IF THERE IS CARDS AND REVEAL THE PLATE IF TIME IS OVER
             if(mapgameusedcard.get(ioroomid).length > 0) {
                 socket.emit('displayPlateEvent' , mapgameusedcard.get(ioroomid))
+
+                if(mapgametime.get(ioroomid) <= 0) {
+                    var winner_card = getWinnerCard(ioroomid);
+                    socket.emit('revealCardEvent' , winner_card);
+                }
             }
 
             //DISPLAY STAT
@@ -876,7 +886,6 @@ io.on('connection' , (socket) => {
 
             //DISPLAY CARDS OR NOT
             var cards_auth = mapgamecardauthorize.get(ioroomid);
-            if(cards_auth == true) socket.emit('enableCardsEvent');
 
             
             //DISPLAY DECK OR CARDS (ACCORDING TO ALREADY DRAW OR NOT)
@@ -1196,13 +1205,6 @@ io.on('connection' , (socket) => {
     });
 
 
-    //HANDLE FIRST TIMER (CARDANIME)
-    socket.on('firstCardTimerEvent' , () => {
-        var leftp = mapgamecardready.get(ioroomid);
-        
-    });
-
-
     // HANDLE TIMER (BOMBANIME)
     socket.on('handleTimerEvent' , () => {
         var btimer = setInterval(() => {
@@ -1392,14 +1394,16 @@ io.on('connection' , (socket) => {
 
                 //TIME'S UP
                 if(initial_time>max_time) {
-                   
-                    
-                    io.to(ioroomid).emit('revealCardEvent');
-                    
+                    clearInterval(ctimer);
+
+                    var winner_card = getWinnerCard(ioroomid);
+                    io.to(ioroomid).emit('revealCardEvent' , winner_card);
+                    io.to(ioroomid).emit('disableCardsEvent');
+
                     
 
                     
-                    clearInterval(ctimer);
+                    
                 }
                 
                 
@@ -2910,6 +2914,22 @@ function generateStat() {
 
 
 
+
+function getWinnerCard(rid) {
+    var plate_cards = mapgameusedcard.get(rid);
+    var character;
+    var best_stat = 0;
+
+    plate_cards.forEach(card => {
+        if(card[1] >= best_stat) {
+            character = card[0];
+            best_stat = card[1];
+        }
+    });
+
+
+    return best_stat;
+}
 
 
 
