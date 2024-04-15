@@ -772,7 +772,7 @@ io.on('connection' , (socket) => {
         if(ioplaying && ioendgame != true) {
             var time = mapgametime.get(ioroomid);
             var theme = mapgametheme.get(ioroomid);
-            socket.emit('displayBeginning')
+            socket.emit('displayBeginning');
             socket.emit('displayPostRule' , time , theme);
             
             socket.emit('startSoundEvent');
@@ -856,7 +856,7 @@ io.on('connection' , (socket) => {
             }
 
 
-            if(mapgametime.has(ioroomid)) {
+            if(mapgametime.has(ioroomid) && mapgametime.get(ioroomid) > 0) {
                 socket.emit('displayCardTime' , mapgametime.get(ioroomid));
             }
 

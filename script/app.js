@@ -1146,7 +1146,18 @@ var app = new Vue({
             if(time < 0) time = 0;
             this.timer = time;
             $('.cardtimertxt').html(time);
+            $('.cardtimertxt').addClass('timerpopclass');
             $('.cardtimertxt').show();
+            setTimeout(() => {
+                $('.cardtimertxt').removeClass('timerpopclass'); 
+            }, 600);
+            if(time == 0) {
+                setTimeout(() => {
+                    $('.cardtimertxt').addClass('timerhideclass');
+                }, 700);
+                
+            }   
+     
         });
 
 
@@ -2469,6 +2480,11 @@ function addToPlate(card_info) {
     card_author.classList.add('cardauthor');
     card_author.textContent = player;
 
+    var card_stat = document.createElement('span');
+    card_stat.classList.add('cardstat');
+    card_stat.textContent = chara_stat;
+
+    card_front.appendChild(card_stat);
     card_front.appendChild(card_pic);
     card_front.appendChild(card_author);
     card_container.appendChild(card_back);
@@ -2511,6 +2527,11 @@ function editPlate(plate_info) {
         card_author.classList.add('cardauthor');
         card_author.textContent = player;
 
+        var card_stat = document.createElement('span');
+        card_stat.classList.add('cardstat');
+        card_stat.textContent = chara_stat;
+
+        card_front.appendChild(card_stat);
         card_front.appendChild(card_pic);
         card_front.appendChild(card_author);
         card_container.appendChild(card_back);

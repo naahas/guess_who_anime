@@ -3382,8 +3382,8 @@ select::-ms-expand {
   width: 70%;
   height: 30%;
   margin: auto;
-  background-color: rgb(110, 129, 129 ,0.1);
-  top:20%;
+  background-color: rgb(110, 129, 129 ,0.05);
+  top:19%;
   left: 0;
   right: 0;
   padding: 5px;
@@ -3394,11 +3394,10 @@ select::-ms-expand {
 
 
 
-
 .playedcard {
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk8__UKzfBQsCjkoOueRWDETUYy380YSWhVPuRIeFr3TI4ZI9jCWimG-gqF0J6e_E_5Yo&usqp=CAU');
-  width: 9%;
-  height: 75%;
+  width: 10%;
+  height: calc(80% - 20px);
   border: 2px solid aliceblue;
   border-radius: 5px;
   background-color: red;
@@ -3412,12 +3411,29 @@ select::-ms-expand {
 .cardauthor {
   overflow: hidden;
   color: rgb(156, 199, 237);
-  margin: auto;
   opacity: 0.9;
-  text-shadow: rgb(155, 168, 113) 5px 0 10px; 
-
+  text-shadow: rgb(183, 183, 122) 5px 0 10px; 
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-style: oblique;
+  letter-spacing: 2px;
+  padding: 6px;
+  margin: 1px;
+  position: absolute;
+}
+
+.cardstat {
+  position: absolute;
+  color: rgb(153, 200, 242);
+  text-shadow: rgb(29, 35, 22) 5px 0 10px; 
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin: auto;
+  right: 0;
+  left: 0;
+  width: 100%;
+  letter-spacing: 3px;
+  padding: 1px;
+  background-color: rgb(20, 23, 23 , 0.9);
+  border-bottom: 1px solid aliceblue;
+  border-bottom: 2px solid aliceblue;
 }
 
 
@@ -3479,9 +3495,12 @@ select::-ms-expand {
   font-style: normal;
   font-size: 1.2rem;
   text-shadow: rgb(153, 241, 11) 1px 0 10px;
-  animation: cardtimeA 0.5s forwards;
+
 }
 
+.timerpopclass {
+  animation: cardtimeA 0.5s forwards;
+}
 
 @keyframes cardtimeA {
   0% {
@@ -3492,6 +3511,21 @@ select::-ms-expand {
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+
+.timerhideclass {
+  animation: cardtimeA2 0.5s forwards;
+}
+
+@keyframes cardtimeA2 {
+  0% {
+
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
