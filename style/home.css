@@ -3924,3 +3924,73 @@ select::-ms-expand {
     opacity: 0;
   }
 }
+
+
+.failcardpic {
+  position:absolute;
+  right: 12%;
+  bottom: 0;
+  filter: brightness(70%);
+  width: 80px;
+  animation: failCA 2s linear;
+  opacity: 0;
+}
+
+
+@keyframes failCA {
+  0% {
+  }
+
+  30% {
+    opacity: 1;
+    bottom: 10%;
+  }
+
+
+  50% {
+    opacity: 1;
+  }
+
+
+  100% {
+    bottom: 30%;
+    opacity: 0;
+  }
+}
+
+
+
+.wincardpic {
+  position:absolute;
+  right: 12%;
+  bottom: 0;
+  filter: brightness(85%);
+  width: 80px;
+  animation: failCA2 1.5s linear;
+  opacity: 0;
+}
+
+
+@keyframes failCA2 {
+  0% {
+  }
+
+  30% {
+    opacity: 1;
+    bottom: 10%;
+  }
+
+
+
+
+  50% {
+    opacity: 1;
+  }
+
+
+  100% {
+    bottom: 30%;
+    opacity: 0;
+    transform: rotate(10deg);
+  }
+}

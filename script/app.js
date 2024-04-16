@@ -82,6 +82,11 @@ var app = new Vue({
         },
 
 
+        goSetting: function() {
+            location.href = '/setting';
+        },
+
+
         playSolo: function() {
             var body = {
                 val: 'solo'
@@ -1100,20 +1105,38 @@ var app = new Vue({
 
 
 
-        socket.on('playRound' , (stat , create_stat) => {
+        socket.on('playRound' , (stat) => {
+
             this.current_stat = stat[0];
             this.current_stat_display = stat[0] + " (" + stat[2] + ")"; 
+            //RESET CLASSES BEFORE PLAY ROUND
+            document.getElementById('mainstattxt').classList.remove('endstatclass');
+            $('.headstatdiv').show();
+            $('.playedcard').removeClass('hideplateclass')
+            ////
+
+          
+            //DISPLAY MAIN STAT AND THEN HIDE MAIN STAT
             editRandomStat(stat[1]);
             setTimeout(() => {
                 $('.headstatdiv').hide();
             }, 5000);
 
-            setTimeout(() => {
-                $('.stt').show();
-                socket.emit('startCardRoundTimer');
-            }, 6000);
+
+            socket.emit('startRoundDelai')
 
             
+        });
+
+
+        socket.on('sendRoundDelai' , () => {
+            $('.cardtimertxt').removeClass('timerhideclass');
+            $('.cardtimertxt').show();
+
+            $('.stt').removeClass('hidecardtimerclass');
+            $('.cardtimertxt').text(20);
+            $('.stt').show();
+            socket.emit('startCardRoundTimer');
         });
 
 
@@ -1147,9 +1170,11 @@ var app = new Vue({
 
 
         socket.on('updateCardTimerEvent' , (time) => {
-            if(time < 0) time = 0;
+
+
+            if(time < 0) time = 20;
             this.timer = time;
-            $('.cardtimertxt').html(time);
+            $('.cardtimertxt').text(time);
             $('.cardtimertxt').addClass('timerpopclass');
             $('.cardtimertxt').show();
             setTimeout(() => {
@@ -1181,6 +1206,38 @@ var app = new Vue({
         socket.on('clearPlateEvent' , () => {
             $('.playedcard').addClass('hideplateclass')
             $('.stt').addClass('hidecardtimerclass');
+            clearPlate();
+        });
+
+
+        socket.on('displayEndRoundAnimationEvent' , (author) => {
+            if(author == this.username) editRoundMessage(0)
+            else editRoundMessage(1);
+
+            var body = {
+                val : author
+            };
+
+            var config = {
+                method: 'post',
+                url: '/updateCardLife',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                if(res.status == 202) removeCardLife();
+            })
+            .catch(function (err) {
+                
+            });
+
+
+        }); 
+
+
+        socket.on('enableEndRound' , (tmp_cards) => {
+            enableRound(tmp_cards);
         });
 
     
@@ -2216,6 +2273,7 @@ function firstCardsDisplay(cards , stat) {
 function displayCardLife(life) {
     var mainarea = document.getElementById('maindiv');
     var lifearea = document.createElement('div');
+    lifearea.id = "lifecardareaid";
     lifearea.classList.add('cardlifediv');
 
     for(let i = 0; i < life ; i ++) {
@@ -2397,6 +2455,7 @@ function editRandomStat(cstat) {
 
 
 function displayStat(value) {
+
   document.getElementById('mainstattxt').innerText = value;
 }
 
@@ -2586,8 +2645,58 @@ function revealCard(winnerc) {
     setTimeout(() => {
         winner_card.classList.add('shadow');
     }, 1200);
- 
     
 }
 
 
+
+function editRoundMessage(stat) {
+    var mainarea = document.getElementById('maindiv');
+    var wpic = document.createElement('img');
+
+    if(stat == 0) {
+        wpic.classList.add('wincardpic');
+        wpic.setAttribute('src' , 'cwin.png');
+    } else {
+        wpic.classList.add('failcardpic');
+        wpic.setAttribute('src' , 'fail2.png');
+    }
+
+
+    mainarea.appendChild(wpic);
+}
+
+
+
+
+function removeCardLife() {
+    var lifearea = document.getElementById('lifecardareaid');
+    var lastlife = lifearea.lastElementChild;
+
+    if(lastlife.tagName == "IMG") {
+        lifearea.removeChild(lastlife)
+    }
+}
+
+
+function enableRound(tmp_cards) {
+    var cards = document.querySelectorAll('.card');
+
+    cards.forEach(function(card) {
+        var charas = card.querySelector('span');
+        var finger = card.querySelectorAll('span')[1];
+        if(!tmp_cards.includes(charas.textContent)) {
+            card.classList.remove('disablemode3');
+        }
+
+        if(finger) card.removeChild(finger);
+    
+    });
+}
+
+
+
+function clearPlate() {
+    var plate = document.getElementById('plateid');
+    plate.innerHTML = '';
+}

@@ -128,6 +128,14 @@ app.get('/' , function(req,res) {
 });
 
 
+app.get('/setting' , function(req,res) {
+
+
+
+    
+    res.sendFile(__dirname + "/setting.html");
+ 
+});
 
 
 app.post('/subUsername' , function(req,res) {
@@ -446,6 +454,7 @@ app.post('/chooseCard' , function(req,res) {
     var character_stat;
     var character_pic;
     
+    
 
     var main_stat_index = editAssociate(mapgamecurrentstat.get(req.session.rid)[2]);
     
@@ -464,6 +473,22 @@ app.post('/chooseCard' , function(req,res) {
 
     
     res.send([character , character_stat , character_pic , req.session.username]);
+});
+
+
+
+app.post('/updateCardLife' , function(req,res) {
+    var winner = req.body.val;
+
+    if(winner!=req.session.username) {
+        console.log('perdant -> ' , req.session.username)
+        req.session.life--;
+        if(req.session.life < 0) req.session.life = 0;
+
+        res.sendStatus(202);
+    } else res.end();
+
+    
 });
 
 
@@ -868,11 +893,11 @@ io.on('connection' , (socket) => {
 
 
             //DISPLAY PLATE IF THERE IS CARDS AND REVEAL THE PLATE IF TIME IS OVER
-            if(mapgameusedcard.get(ioroomid).length > 0) {
-                socket.emit('displayPlateEvent' , mapgameusedcard.get(ioroomid))
+            if(mapgameusedcard.has(ioroomid) && mapgameusedcard.get(ioroomid).length > 0) {
+                if(mapgametime.has(ioroomid) && mapgametime.get(ioroomid) > 0) socket.emit('displayPlateEvent' , mapgameusedcard.get(ioroomid))
 
                 if(mapgametime.get(ioroomid) <= 0) {
-                    var winner_card = getWinnerCard(ioroomid);
+                    var winner_card = getWinnerCard(ioroomid)[0];
                     socket.emit('revealCardEvent' , winner_card);
                 }
             }
@@ -1368,7 +1393,6 @@ io.on('connection' , (socket) => {
         setTimeout(() => {
             mapgamecardauthorize.set(ioroomid , true);
             io.to(ioroomid).emit('enableCardsEvent');
-            
         }, 10000);
 
       
@@ -1382,6 +1406,13 @@ io.on('connection' , (socket) => {
     });
 
 
+    socket.on('startRoundDelai' , () => {
+        setTimeout(() => {
+            socket.emit('sendRoundDelai');
+        }, 6000);
+    })
+
+
     socket.on('startCardRoundTimer' , () => {
         //IF THE ONE WHO IS EMITTING THE TIMER IS THE HOST
         if(iocreate) {
@@ -1392,26 +1423,46 @@ io.on('connection' , (socket) => {
             var ctimer = setInterval(() => {
 
                 io.to(ioroomid).emit('updateCardTimerEvent' , mapgametime.get(ioroomid));
+                console.log(mapgametime.get(ioroomid))
 
                 //TIME'S UP
                 if(initial_time>max_time) {
                     clearInterval(ctimer);
 
-                    var winner_card = getWinnerCard(ioroomid);
+                    var winner_card = getWinnerCard(ioroomid)[0];
+                    var winner_author = getWinnerCard(ioroomid)[1];
+                    
                     io.to(ioroomid).emit('revealCardEvent' , winner_card);
                     io.to(ioroomid).emit('disableCardsEvent');
+
+
+                    setTimeout(() => {
+                        io.to(ioroomid).emit('displayEndRoundAnimationEvent' , winner_author);
+                    }, 2000);
+                    
+                    
 
                     //HIDE PLATE CARDS
                     setTimeout(() => {
                         io.to(ioroomid).emit('clearPlateEvent');
                     }, 4000);
 
+
+
                     setTimeout(() => {
-                        clearPlate(ioroomid);
-                    }, 5200);
+                        if(mapgamecardwinner.has(ioroomid) == true) clearPlate(ioroomid);
+                        var mainstat = generateStat();
+                        mapgamecurrentstat.set(ioroomid , mainstat);
+                        io.to(ioroomid).emit('playRound' , mainstat)
+                    }, 8000);
+
+
                     setTimeout(() => {
-                        clearPlate(ioroomid);
-                    }, 5700);
+                        io.to(ioroomid).emit('enableEndRound' , mapgametmpdisable.get(ioroomid))
+                    }, 13000);
+
+
+
 
                     
                     
@@ -2931,31 +2982,30 @@ function getWinnerCard(rid) {
     var winner_card;
     var character;
     var best_stat = 0;
+    var winner_author;
 
     plate_cards.forEach(card => {
         if(card[1] >= best_stat) {
             winner_card = card;
             character = card[0];
             best_stat = card[1];
+            winner_author = card[3];
         }
     });
 
     mapgamecardwinner.set(rid , winner_card)
-    return best_stat;
+    return [best_stat , winner_author];
 }
 
 
 
 function clearPlate(rid) {
     mapgameusedcard.set(rid , []);
-    mapgamecurrentstat.delete(rid);
+    console.log('ON CLEAR')
 
+    if(!mapgamecardwinner.get(rid)) mapgamecardwinner.set(rid ,['slayer' , 999 , 'slayer.png' , 'slayer'])
     var former_winner = mapgamecardwinner.get(rid)[0];
-    mapgametmpdisable.set(rid , former_winner);
-
-    console.log(mapgametmpdisable.get(rid))
-
-
+    mapgametmpdisable.set(rid , [former_winner]);
 }
 
 
