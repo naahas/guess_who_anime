@@ -12,6 +12,8 @@ const bodyParser = require('body-parser');
 var _ = require('underscore');
 const { prependOnceListener } = require('process');
 const { post } = require('jquery');
+const { formatWithOptions } = require('util');
+const { h } = require('vue');
 
 
 
@@ -102,8 +104,10 @@ var mapgamecitajoker = new Map();
 var mapgamecurrentstat = new Map();
 var mapgamecardauthorize = new Map();
 var mapgameusedcard = new Map();
+var mapgamecardchoose = new Map();
 var mapgametmpdisable = new Map();
 var mapgamecardwinner = new Map();
+var mapgamecardloser = new Map();
 
 var current_user = [];
 
@@ -432,9 +436,11 @@ app.post('/confirmSettingCardanime' , function(req,res) {
 
     //TODO : HANDLE WHEN PLAY SOLO > MAKE BOT DRAW 
     mapgamecardready.set(req.session.rid , nbp);
+    mapgamecardchoose.set(req.session.rid , nbp);
 
     req.session.isplaying = true;
     req.session.replayed = false;
+    req.session.nbref = nbp;
 
 
     io.once('connection' , (socket) => {
@@ -447,14 +453,15 @@ app.post('/confirmSettingCardanime' , function(req,res) {
 
 
 app.post('/chooseCard' , function(req,res) {
+    
+    mapgamecardchoose.set(req.session.rid , mapgamecardchoose.get(req.session.rid) - 1);
 
     var character  = req.body.val;
     var tab = mapgameusedcard.get(req.session.rid);
     var tab2 = mapgametmpdisable.get(req.session.rid);
     var character_stat;
     var character_pic;
-    
-    
+
 
     var main_stat_index = editAssociate(mapgamecurrentstat.get(req.session.rid)[2]);
     
@@ -481,7 +488,7 @@ app.post('/updateCardLife' , function(req,res) {
     var winner = req.body.val;
 
     if(winner!=req.session.username) {
-        console.log('perdant -> ' , req.session.username)
+        mapgamecardloser.set(req.session.username , req.session.rid);
         req.session.life--;
         if(req.session.life < 0) req.session.life = 0;
 
@@ -713,6 +720,7 @@ io.on('connection' , (socket) => {
     const iocitadisable = socket.request.session.citadisable;
     const iodraw = socket.request.session.hasdraw;
     const iolife = socket.request.session.life;
+    const ioref = socket.request.session.nbref;
 
 
     socket.emit('showSettingEvent' , iousername);
@@ -883,13 +891,10 @@ io.on('connection' , (socket) => {
 
 
             if(mapgametime.has(ioroomid) && mapgametime.get(ioroomid) > 0) {
+                console.log(mapgametime.get(ioroomid))
                 socket.emit('displayCardTime' , mapgametime.get(ioroomid));
             }
 
-
-            if(mapgametime.get(ioroomid) <= 0) {
-                socket.emit('disableCardsEvent');
-            }
 
 
             //DISPLAY PLATE IF THERE IS CARDS AND REVEAL THE PLATE IF TIME IS OVER
@@ -923,7 +928,7 @@ io.on('connection' , (socket) => {
                     chara_array.push(chara_cell[0]);
                 });
 
-                if(iodraw == true) socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , cards_auth , iolife , chara_array , mapgametmpdisable.get(ioroomid));
+                if(iodraw == true) socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , cards_auth , iolife , chara_array , mapgametmpdisable.get(ioroomid) , mapgametime.get(ioroomid));
             }
 
         }
@@ -1386,14 +1391,14 @@ io.on('connection' , (socket) => {
             var mainstat = generateStat();
             mapgamecurrentstat.set(ioroomid , mainstat);
             io.to(ioroomid).emit('playRound' , mainstat)
-        }, 3000);
+        }, 5000);
 
 
         //ENABLE CARDS FOR EVERYONE
         setTimeout(() => {
             mapgamecardauthorize.set(ioroomid , true);
             io.to(ioroomid).emit('enableCardsEvent');
-        }, 10000);
+        }, 12000);
 
       
     });
@@ -1403,6 +1408,9 @@ io.on('connection' , (socket) => {
     //WHEN SOMEONE CHOOSE A CARD : ITS SHOWN IN THE PLATE FOR EVERYONE
     socket.on('tempPlateEvent' , (card_toadd_info) => {
         io.to(ioroomid).emit('updatePlateEvent' , card_toadd_info);
+        setTimeout(() => {
+            if(mapgamecardchoose.get(ioroomid) <= 0) mapgametime.set(ioroomid , 0);
+        }, 500);
     });
 
 
@@ -1410,10 +1418,31 @@ io.on('connection' , (socket) => {
         setTimeout(() => {
             socket.emit('sendRoundDelai');
         }, 6000);
-    })
+    });
+
+
+    socket.on('removeLoserCardEvent' , () => {
+        for (let [key, value] of mapgamecardloser) {
+            if(value == ioroomid) {
+                mapgameusedcard.get(ioroomid).forEach(card => {
+                    var winner_card = mapgamecardwinner.get(ioroomid)[0];
+                    if(card[3] == iousername && card[0]!=winner_card) {
+                        var new_character = generateNewCard(ioroomid ,  iousername , card[0]);
+                        socket.emit('replaceCardEvent' , card[0] , new_character);
+                    }
+
+                });
+            }
+        } 
+    });
 
 
     socket.on('startCardRoundTimer' , () => {
+
+        for (let [key, value] of mapgamecardloser) {
+            if(mapgamecardloser.get(key) == ioroomid) mapgamecardloser.delete(key);
+        }                      
+
         //IF THE ONE WHO IS EMITTING THE TIMER IS THE HOST
         if(iocreate) {
             var max_time = 20;
@@ -1423,11 +1452,13 @@ io.on('connection' , (socket) => {
             var ctimer = setInterval(() => {
 
                 io.to(ioroomid).emit('updateCardTimerEvent' , mapgametime.get(ioroomid));
-                console.log(mapgametime.get(ioroomid))
+
 
                 //TIME'S UP
-                if(initial_time>max_time) {
+                if(initial_time> mapgametime.get(ioroomid)) {
                     clearInterval(ctimer);
+
+                    mapgamecardchoose.set(ioroomid , ioref);
 
                     var winner_card = getWinnerCard(ioroomid)[0];
                     var winner_author = getWinnerCard(ioroomid)[1];
@@ -1438,7 +1469,7 @@ io.on('connection' , (socket) => {
 
                     setTimeout(() => {
                         io.to(ioroomid).emit('displayEndRoundAnimationEvent' , winner_author);
-                    }, 2000);
+                    }, 1500);
                     
                     
 
@@ -1468,19 +1499,21 @@ io.on('connection' , (socket) => {
                     
                 }
                 
-                
-                max_time--;
-                mapgametime.set(ioroomid , max_time);
+                mapgametime.set(ioroomid , mapgametime.get(ioroomid) - 1);
+  
         
             }, 1000);
         }
     });
+
+
+
+    
     
 
 
 })
            
-
 
 
 /// JS FUNCTIONS
@@ -2941,6 +2974,7 @@ function generateCitation(rid) {
 
 
 
+
 function generateHand(rid , playername) {
     
     var chara_array = [];
@@ -2961,7 +2995,43 @@ function generateHand(rid , playername) {
 }
 
 
-var rd = Math.floor(Math.random() * 8);
+
+
+//GENERATE AND REPLACE HAND CARD
+function generateNewCard(rid , playername , remove_card) {
+    var chara_array;
+    var random_nb;
+    var random_chara;
+    
+    var datac = mapgamedata.get(rid);
+
+    random_nb = Math.floor(Math.random() * datac.length);
+    random_chara = datac[random_nb];
+    chara_array = random_chara;
+    mapgamedata.set(rid , datac.filter(el => el != random_chara));
+
+    var new_character = random_chara.Character;
+    var new_anime = random_chara.Anime;
+    var new_path = random_chara.path;
+    var new_stat = random_chara.stat;
+    
+
+    var hand = maphandplayer.get(playername);
+    hand.forEach(card => {
+        if(card.Character == remove_card) {
+            card.Character = new_character;
+            card.Anime = new_anime;
+            card.path = new_path;
+            card.stat = new_stat;
+        } 
+    });
+    
+
+    return chara_array;
+
+}
+
+
 
 
 function generateStat() {
@@ -3001,12 +3071,19 @@ function getWinnerCard(rid) {
 
 function clearPlate(rid) {
     mapgameusedcard.set(rid , []);
-    console.log('ON CLEAR')
 
-    if(!mapgamecardwinner.get(rid)) mapgamecardwinner.set(rid ,['slayer' , 999 , 'slayer.png' , 'slayer'])
+    if(!mapgamecardwinner.get(rid)) mapgamecardwinner.set(rid ,['gintoki' , 999 , 'slayer.png' , 'slayer'])
     var former_winner = mapgamecardwinner.get(rid)[0];
     mapgametmpdisable.set(rid , [former_winner]);
 }
+
+
+
+
+
+
+
+
 
 
 

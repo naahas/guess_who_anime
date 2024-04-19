@@ -475,7 +475,7 @@ body{
     display: inline-block;
     background-color:#00000096;
     color: rgb(255, 239, 239);
-    border-radius: 4px;
+    border-radius: 15px;
     font-weight: bold;
     text-align: center;
     letter-spacing: 2px;
@@ -488,7 +488,7 @@ body{
 
 
   #codebtn:hover {
-    background-color: aquamarine;
+    background-color: rgba(142, 207, 195, 0.708);
     color:#1b1a1a;
   }
 
@@ -2965,6 +2965,7 @@ select::-ms-expand {
   bottom: 13%;
   display: flex;
   justify-content: space-between;
+  z-index: 30;
 }
 
 .cardo {
@@ -2981,8 +2982,8 @@ select::-ms-expand {
 .card {
   margin: auto;
   border: 5px double rgba(28, 32, 36, 0.93);
-  width: 130px;
-  height: 170px;
+  width: 120px;
+  height: 155px;
   color: rgb(159, 24, 147);
   cursor: pointer;
   transition: 0.2s ease-in-out;
@@ -3125,17 +3126,6 @@ select::-ms-expand {
 
 /* --------------- DECK ----------------*/
 
-.deckwrapplate {
-  position: absolute;
-  top:0;
-  left:0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  width: fit-content;
-  height: fit-content;
-  border: 2px double rgb(28, 35, 29);
-}
 
 .deckwrap{
   display: none;
@@ -3790,7 +3780,7 @@ select::-ms-expand {
   width: 43px;
   height: 43px;
   animation: lifeA 2s infinite;
-  opacity: 0.5;
+  opacity: 0.65;
 }
 
 
@@ -3805,7 +3795,7 @@ select::-ms-expand {
   }
 
   50% {
-    transform: scale(1.15);
+    transform: scale(1.2);
   }
   
   100% {
@@ -3994,3 +3984,268 @@ select::-ms-expand {
     transform: rotate(10deg);
   }
 }
+
+
+
+
+
+
+
+
+
+/* --------------- ROUND DECK ----------------*/
+
+
+.afterdeckwrap{
+  z-index: 99;
+  position: absolute;
+  top:0;
+  left:0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  border: 2px double rgb(28, 35, 29);
+  transform: scale(1.3);
+  animation: sss 2s infinite ;
+}
+
+
+@keyframes sss {
+  0% {
+    transform: scale(1.3);
+  }
+
+  50% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1.3);
+  }
+}
+
+/* BEHIND TOP CARD */
+.aftercard-deckwrap{
+  text-align: center;
+  width:170px;
+  height:220px;
+  position:relative;
+  background:#dcc2c2;
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk8__UKzfBQsCjkoOueRWDETUYy380YSWhVPuRIeFr3TI4ZI9jCWimG-gqF0J6e_E_5Yo&usqp=CAU');
+  background-size:cover;
+  box-shadow:0px 0px 5px rgb(211, 243, 247);
+  border-radius:5px;
+  border: 2px solid rgb(29, 33, 81);
+}
+/* -------------------- */
+
+.afterdeck{
+  position:absolute;
+  width:100%;
+  height:100%;
+  /*preserve the back when fliping*/
+  transform-style:preserve-3d;
+  transition:0.5s all ease;
+  box-shadow:0px 0px 10px rgb(186, 158, 21);
+}
+
+
+.afterdeck:hover {
+  cursor: pointer;
+  filter: brightness(50%);
+  transform:translateY(-20px);
+}
+
+
+.drawclass1 {
+  animation: drawA 0.45s 1 forwards ;
+}
+
+.drawclass2 {
+  animation: drawA 0.45s 3 forwards ;
+}
+
+.drawclass4 {
+  animation: drawA 0.45s 4 forwards ;
+}
+
+
+.drawclass3 {
+  animation: drawA 0.45s 5 forwards ;
+}
+
+
+
+@keyframes drawA {
+  0% {
+    transform: translateY(-15px);
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateY(-80%) rotate(-6deg);
+    opacity: 0;
+  }
+}
+
+
+.hidedeckclass1 {
+  animation: hideDeckA 0.45s forwards;
+}
+
+.hidedeckclass2 {
+  animation: hideDeckA 1.45s forwards;
+}
+
+.hidedeckclass3  {
+  animation: hideDeckA 2.5s forwards;
+}
+
+.hidedeckclass4  {
+  animation: hideDeckA 2s forwards;
+}
+
+
+@keyframes hideDeckA {
+  0% {
+    
+  }
+
+  85% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+
+.showdeckclass {
+  animation: showDeckA 0.5s forwards;
+}
+
+
+
+@keyframes showDeckA {
+  0% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+
+
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+/*front card*/
+.afterdeck-front{
+  border-radius:5px;
+  position:absolute;
+  background:#dcc2c2;
+  width:100%;
+  height:100%;
+  /*hide backface*/
+  backface-visibility:hidden;
+  color:#333;
+  display: flex;
+  border: 2px solid rgb(29, 33, 81);
+}
+
+
+.afterdeck-front img{
+  max-width: 100%;
+  height: auto;
+}
+
+.afterdeck-front img:nth-of-type(1){
+  display:block;
+  position:absolute;
+  top:2%;
+  right:5%;
+  width: 20%;
+}
+
+
+
+.removecardclass {
+  animation: rcA 1s forwards;
+}
+
+
+@keyframes rcA {
+  0% {
+    opacity: 1; 
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(2em);
+    opacity: 0;
+  }
+}
+
+
+.bonuspic {
+  width: auto; /* Ajuste la largeur de chaque image automatiquement */
+  height: auto;
+  width: calc(50% / 2);
+  animation: bonusA 1.5s forwards linear;
+  opacity: 0.7;
+}
+
+
+.bonuscustom {
+  width: auto; /* Ajuste la largeur de chaque image automatiquement */
+  height: auto; /* Permet à la hauteur de chaque image de s'ajuster automatiquement pour préserver les proportions */
+  width: calc(70% / 2);
+  animation: bonusA 1.2s forwards linear;
+  opacity: 0.7;
+}
+
+
+@keyframes bonusA {
+  0% {
+    margin-top: 7%;
+    opacity: 0;
+  }
+
+
+  
+  50% {
+    bottom: 20%;
+  }
+
+
+  80% {
+    opacity: 0.7;
+  }
+
+
+  100% {
+    opacity: 0;
+    bottom: 30%;
+  }
+}
+
+
+
+.cardanimeclass {
+  position: absolute;
+  opacity: 0;
+  filter: brightness(0);
+  font-size: 0px;
+  display: none;
+}
+
+
+

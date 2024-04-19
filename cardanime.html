@@ -20,6 +20,7 @@
     <link rel="icon" href="bicon1.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="home.css">
+    <link rel="stylesheet" type="text/css" href="shadow.css">
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
@@ -35,6 +36,7 @@
 
 
         <div id="maindiv" class="maingame">
+
 
             <!-- <img src="backcita1.jpg" class="citabackpic"> -->
             <img src="backcita1.jpg" class="cardbackpic">
@@ -60,15 +62,15 @@
 
               <div class="postnavdiv">
 
-                <img class="closeimg2" src="close.png" alt="X">
-                <p class="headsettxt">︲ PARAMETRES ︲</p>
+                  <img class="closeimg2" src="close.png" alt="X">
+                  <p class="headsettxt">︲ PARAMETRES ︲</p>
 
-                <div class="subsetdiv rangediv">
-                    <p>👋 Main de départ </p>
-                    <hr>
-                    <p> {{hand}} </p>
-                  </div>
-            </div>
+                  <div class="subsetdiv rangediv">
+                      <p>👋 Main de départ </p>
+                      <hr>
+                      <p> {{hand}} </p>
+                    </div>
+              </div>
 
 
 
@@ -95,7 +97,7 @@
                   <div class="subsetdiv rulediv">
                     <p> RULES </p>
                     <hr>
-                    <p> Indique la main de départ et tente de collecter les cartes avec les meilleurs statistiques pour gagner le plus de points </p>
+                    <p> Indique la main de départ et tente de collecter les cartes avec les meilleurs statistiques pour gagner. </p>
                   </div>
 
                    
@@ -106,9 +108,9 @@
 
 
 
-                <p class="stt"> 
-                  <span class="cardtimertxt">  </span>  
-                  &nbsp; - &nbsp; Stat : {{current_stat_display}}  &nbsp; -
+                  <p class="stt"> 
+                    <span class="cardtimertxt">  </span>  
+                    &nbsp; - &nbsp; Stat : {{current_stat_display}}  &nbsp; -
                  </p>
        
             
@@ -142,18 +144,12 @@
                   </div> -->
                   
                     
-                  
-                </div>
 
+
+                </div>
                 
-             
-               
 
-                  
-                  
-
-                </div>
-
+       
                 
                 <div class="deckwrap" id="deckwrapid" @click="drawCard()">
                   <div class="card-deckwrap">
@@ -167,6 +163,22 @@
                     
                   </div>
                 </div>
+
+
+              <!--                         
+              <div class="afterdeckwrap" id="deckwrapid" @click="drawCard()">
+                <div class="aftercard-deckwrap">
+                  <div class="afterdeck" id="deckid">
+                    <div class="afterdeck-front">
+                      <img src="deckicon.png">
+                      <img src="deckpic3.png">
+                    </div>
+                  </div>
+                  
+                </div>
+              </div> -->
+
+
 
                 <div id="sceneid" class="scene">
 
@@ -204,10 +216,6 @@
 
 
                 <button @click="exitGame()" class="backigbtn">RETOUR</button>
-
-
-                <!-- <img src="fail2.png" class="failcardpic"> -->
-                <!-- <img src="cwin.png" class="wincardpic"> -->
             
     
         </div> <!-- end main div-->

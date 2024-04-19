@@ -868,9 +868,9 @@ var app = new Vue({
         });
 
 
-        socket.on('displayPlayerCard' , (player_cards , stat , life , used_cards , used_cards_tmp) => {
+        socket.on('displayPlayerCard' , (player_cards , stat , life , used_cards , used_cards_tmp , game_time) => {
             displayCardLife(life);
-            displayCards(player_cards , stat , used_cards , used_cards_tmp);
+            displayCards(player_cards , stat , used_cards , used_cards_tmp , game_time);
         });
 
 
@@ -1172,7 +1172,7 @@ var app = new Vue({
         socket.on('updateCardTimerEvent' , (time) => {
 
 
-            if(time < 0) time = 20;
+            if(time < 0) time = 0;
             this.timer = time;
             $('.cardtimertxt').text(time);
             $('.cardtimertxt').addClass('timerpopclass');
@@ -1204,7 +1204,6 @@ var app = new Vue({
         
 
         socket.on('clearPlateEvent' , () => {
-            $('.playedcard').addClass('hideplateclass')
             $('.stt').addClass('hidecardtimerclass');
             clearPlate();
         });
@@ -1227,6 +1226,7 @@ var app = new Vue({
             axios(config)
             .then(function (res) {
                 if(res.status == 202) removeCardLife();
+                socket.emit('removeLoserCardEvent');
             })
             .catch(function (err) {
                 
@@ -1238,6 +1238,11 @@ var app = new Vue({
 
         socket.on('enableEndRound' , (tmp_cards) => {
             enableRound(tmp_cards);
+        });
+
+
+        socket.on('replaceCardEvent' , (chara_remove , new_character) => {
+            replaceHandCard(chara_remove , new_character);
         });
 
     
@@ -2059,7 +2064,7 @@ function editRule(stat) {
 
     if(stat == 3) {
         app.ruletitle = "Cardanime";
-        app.ruletxt = "Chaque joueur doivent trouver les citations affichées à l'écran. 2 indices sont mis à disposition des joueurs mais ceux-ci perdent des points à chaque utilisation. Le joueur avec le plus de points remporte  la partie.";
+        app.ruletxt = "Chaque joueur pioche des cartes pour composer leur main. Une statistique apparaît par la suite au milieu de l'écran , chaque joueur tente alors de proposer une carte de leur main dont la statistique correspond à celle de l'écran.";
     }
 
 
@@ -2244,25 +2249,25 @@ function playDrawkSound() {
 function firstCardsDisplay(cards , stat) {
     if(cards.length == 1) {
         setTimeout(() => {
-            displayCards(cards , stat , [] , []);
+            displayCards(cards , stat , [] , [] , 20);
         }, 1500);
     }
 
     if(cards.length == 3) {
         setTimeout(() => {
-            displayCards(cards , stat , [] , []);
+            displayCards(cards , stat , [] , [] , 20);
         }, 2500);
     }
 
     if(cards.length == 4) {
         setTimeout(() => {
-            displayCards(cards , stat , [] , []);
+            displayCards(cards , stat , [] , [] , 20);
         }, 2800);
     }
 
     if(cards.length == 5) {
         setTimeout(() => {
-            displayCards(cards , stat , [] , []);
+            displayCards(cards , stat , [] , [] , 20);
         }, 3500);
     }
 
@@ -2278,7 +2283,7 @@ function displayCardLife(life) {
 
     for(let i = 0; i < life ; i ++) {
         var life_pic = document.createElement('img');
-        life_pic.setAttribute('src' , 'life3.png');
+        life_pic.setAttribute('src' , 'life2.png');
         life_pic.classList.add('lifepic');
         lifearea.appendChild(life_pic)
     }
@@ -2288,7 +2293,13 @@ function displayCardLife(life) {
 
 
 
-function displayCards(cards , stat , used_cards , used_cards_tmp) {
+function displayCards(cards , stat , used_cards , used_cards_tmp , game_time) {
+
+    var bonus_tab = checkBonus(cards);
+    setTimeout(() => {
+        editBonusAnimation(bonus_tab);
+    }, 1500);
+  
 
     var cardname;
     var cardanime;
@@ -2313,9 +2324,11 @@ function displayCards(cards , stat , used_cards , used_cards_tmp) {
         var cardiv = document.createElement('div');
         cardiv.classList.add('card');
         cardiv.classList.add('cardpopclass');
+        if(bonus_tab.includes(cardanime)) cardiv.classList.add(getBonusClasse(cardanime));
+        else cardiv.classList.remove(getBonusClasse(cardanime));
 
         //DISABLE IF EVERYONE DIDNT DRAW YET (STAT)
-        if(stat != true || used_cards.includes(cardname) || used_cards_tmp.includes(cardname)) cardiv.classList.add('disablemode3')
+        if(stat != true || used_cards.includes(cardname) || used_cards_tmp.includes(cardname) || game_time <= 0 || game_time == null) cardiv.classList.add('disablemode3')
 
         cardiv.id = "cardid" + i;
 
@@ -2358,10 +2371,15 @@ function displayCards(cards , stat , used_cards , used_cards_tmp) {
         var charname = document.createElement('span');
         charname.innerHTML = cardname;
         charname.classList.add('cardtxt');
+
+        var charanime = document.createElement('span');
+        charanime.innerHTML = cardanime;
+        charanime.classList.add('cardanimeclass');
        
 
         cardiv.appendChild(charapic);
         cardiv.appendChild(charname);
+        cardiv.appendChild(charanime);
 
         //IF THE CARD HAS BEEN CHOOSED
         if(used_cards.includes(cardname)) {
@@ -2399,7 +2417,7 @@ $(document).on('mouseenter' , '.card' , function() {
 });
 
 $(document).on('mouseleave' , '.card' , function() {
-    $(this).find('span:eq(1)').remove();
+    $(this).find('span:gt(0):last').remove();
 });
 
 
@@ -2698,5 +2716,219 @@ function enableRound(tmp_cards) {
 
 function clearPlate() {
     var plate = document.getElementById('plateid');
-    plate.innerHTML = '';
+    $('.playedcard').addClass('hideplateclass')
+    setTimeout(() => {
+        plate.innerHTML = '';
+    }, 1100);
+    
+}
+
+
+
+function replaceHandCard(toremove , new_character) {
+    var cards = document.querySelectorAll('.card');
+    var scene = document.getElementById('sceneid');
+    var anime = [];
+
+    //SELECT ANIME DOUBLON TO KNOW IF THERE IS SHADOW CLASS TO REMOVE AFTER CARD REMOVE
+    cards.forEach(function(card) {
+        var animecard = card.querySelector('span:nth-child(2)');
+        anime.push(animecard.textContent);
+    })
+
+    var bonus_tab = checkBonus(anime);
+
+    var sdiv = document.getElementById('statdivoutid');
+
+    var mainarea = document.getElementById('maindiv');
+    var statarray = ['⚔️ ATK ' , '🛡️ DEF ' , ' 💡 INT ' , '❤️ END ' , '⚡ VIT ' , '🤸🏼 AGI ' , '🎯 TECH ' , '🍀 LUCK '];
+
+    cards.forEach(function(card) {
+      
+
+        var hand_character = card.querySelector('span');
+        if(hand_character.textContent == toremove) {
+            card.classList.add('removecardclass')
+            setTimeout(() => {
+                
+                var neo_character = new_character.Character;
+                var neo_path = new_character.path;
+                var neo_anime = new_character.Anime;
+
+                var newCard = document.createElement('div');
+                newCard.classList.add('card');
+                newCard.classList.add('cardpopclass');
+                newCard.classList.add('disablemode3');
+
+
+                //WHEN CARD HOVER
+                newCard.addEventListener('mouseenter' , function(event) {
+                    if(!sdiv.classList.contains('statdivout')) sdiv.classList.add('statdivout');
+
+                    for(let j = 0 ; j< 8 ; j ++) {
+                        var pstat = document.createElement('p');
+                        var span = document.createElement('span');
+                        pstat.classList.add('skilltxtout');
+                        pstat.textContent = statarray[j];
+
+                        span.classList.add('skilltextoutspan');
+                        span.textContent = new_character.stat[j];
+
+                        pstat.appendChild(span);
+                        sdiv.appendChild(pstat);
+                    }
+                    mainarea.appendChild(sdiv);
+                });
+
+
+                //MOUSE LEAVE CARD
+                newCard.addEventListener('mouseleave' , function(event) {
+                
+                    while (sdiv.firstChild) {
+                        sdiv.removeChild(sdiv.firstChild);
+                    }
+
+                });
+
+
+                var charapic = document.createElement('img');
+                charapic.setAttribute('src', neo_path);
+                charapic.classList.add('cardpicclass');
+
+                var charname = document.createElement('span');
+                charname.innerHTML = neo_character;
+                charname.classList.add('cardtxt');
+
+                var charanime = document.createElement('span');
+                charanime.innerHTML = neo_anime;
+                charanime.classList.add('cardanimeclass');
+
+                newCard.appendChild(charapic);
+                newCard.appendChild(charname);  
+                newCard.appendChild(charanime)
+
+                scene.insertBefore(newCard, card.nextSibling);
+
+                card.remove();
+                  
+            }, 1700);
+
+        }
+
+        var cardanime = card.querySelector('span:nth-child(2)').textContent;
+        if(bonus_tab.includes(cardanime)) card.classList.add(getBonusClasse(cardanime.textContent));
+        else card.classList.remove(getBonusClasse(cardanime));
+
+    });
+}
+
+
+
+
+function checkBonus(cards) {
+    var anime = [];
+    var bonus_anime = [];
+
+    cards.forEach(card => {
+        anime.push(card.Anime);
+    });
+
+    anime.forEach(ani => {
+        if(checkTwice(anime , ani)) {
+            if(!bonus_anime.includes(ani)) bonus_anime.push(ani);
+        } 
+    });
+
+
+    return bonus_anime;
+    
+}
+
+
+function checkTwice(array , value) {
+    var c = 0;
+    for(let i = 0 ; i < array.length ; i++) {
+        if(array[i] == value) c++;
+        if(c>1) return true;
+    }
+
+     return false;
+}
+
+
+
+
+function getBonusClasse(anime) {
+    // if(anime == "Naruto") return "shadownaruto";
+    // if(anime == "One Piece") return "shadowonepiece";
+    // if(anime == "Bleach") return "shadowbleach";
+    // if(anime == "Jojo") return "shadowjojo";
+    // if(anime == "Dragon Ball") return "shadowdbz";
+    // if(anime == "Fairy Tail") return "shadowfairytail";
+    return "shadowprime";
+}
+
+
+function editBonusAnimation(animes) {
+    var handle_anime = ['Naruto' , 'One Piece' , 'Bleach' , 'Dragon Ball' , 'Fairy Tail' , 'Jojo' , 'Attack on Titan' , 'Hunter Hunter' , 'Chainsaw Man' , 'Death Note'];
+    var bonus_area = document.createElement('div');
+    var mainarea = document.getElementById('maindiv');
+
+    animes.forEach(anime => {
+        if(handle_anime.includes(anime)) {
+            var bonuspicel = document.createElement('img');
+            var path;
+            var picclass = 'bonuspic';
+
+            switch (anime) {
+                case 'Naruto':
+                    path = "narutobonus.png"
+                    picclass = "bonuscustom";
+                break;
+                case 'One Piece':
+                    path = "onepiecebonus.png"
+                break;
+                case 'Bleach':
+                    path = "bleachbonus.png"
+                break;
+                case 'Dragon Ball':
+                    path = "dbzbonus.png"
+                break;
+                case 'Fairy Tail':
+                    path = "fairytailbonus.png"
+                break;
+                case 'Jojo':
+                    path = "jojobonus.png"
+                break;
+                case 'Attack on Titan':
+                    path = "snkbonus10.png"
+                break;
+                case 'Hunter Hunter':
+                    path = "hxhbonus.png"
+                break;
+                case 'Chainsaw Man':
+                    path = "chainsawbonus.png"
+                break;
+                case 'Death Note':
+                    path = "deathbonus.png"
+                break;
+                case 'My Hero Academia':
+                    path = "mhabonus.png"
+                    picclass = "bonuscustom";
+                break;
+            }
+
+
+            bonuspicel.setAttribute('src' , path);
+            bonuspicel.classList.add(picclass);
+
+            bonus_area.appendChild(bonuspicel);
+
+            mainarea.appendChild(bonus_area)
+           
+            
+
+        }
+
+    });
 }
