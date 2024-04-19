@@ -482,42 +482,6 @@ var app = new Vue({
         },
 
 
-        incNbr: function(currentpoint ,  newpoint , stat) {
-            this.incEltNbr("spanpointid" , currentpoint , newpoint , stat);
-        },
-
-        incEltNbr: function(id , currentpoint , newpoint , stat) {
-            var elt = document.getElementById(id);
-            var endNbr = newpoint;
-            if(stat == 0) this.incNbrRec( currentpoint , endNbr, elt);
-            if(stat == 1) this.DecNbrRec( currentpoint , endNbr, elt);
-        },
-        
-        incNbrRec: function(i, endNbr, elt) {
-            var speed = 10;
-            var self = this; // save la ref à l'objet vue 
-        
-            if (i <= endNbr) {
-                elt.innerHTML = i;
-                setTimeout(() => { // flèche pour conserver la référence à l'objet vue
-                    self.incNbrRec(i + 1, endNbr, elt); 
-                }, speed);
-            }
-        },
-
-        DecNbrRec: function(currentnb, endNbr, elt) {
-            var speed = 10;
-            var self = this; // save la ref à l'objet vue 
-        
-            if (currentnb >= endNbr) {
-                elt.innerHTML = currentnb;
-                setTimeout(() => { // flèche pour conserver la référence à l'objet vue
-                    self.DecNbrRec(currentnb - 1, endNbr, elt); 
-                }, speed);
-            }
-        },
-
-
         useJoker: function(stat) {
                 var body = {
                     val : stat
@@ -1069,13 +1033,6 @@ var app = new Vue({
         });
 
 
-        socket.on('animationCitaTimerEvent' , () => {
-            $('.citatxt').addClass('endcitaclass');
-            setTimeout(() => {
-                $('.citatxt').removeClass('endcitaclass');
-            }, 1000);
-        });
-
 
         socket.on('disableJokerEvent' , () => {
             $('.joker1').addClass('jokerble');
@@ -1225,7 +1182,7 @@ var app = new Vue({
 
             axios(config)
             .then(function (res) {
-                if(res.status == 202) removeCardLife();
+                if(res.status == 202) removeCardLife(); 
                 socket.emit('removeLoserCardEvent');
             })
             .catch(function (err) {
@@ -1236,14 +1193,61 @@ var app = new Vue({
         }); 
 
 
+
         socket.on('enableEndRound' , (tmp_cards) => {
-            enableRound(tmp_cards);
+            var body = {
+                val : tmp_cards
+            };
+
+            var config = {
+                method: 'post',
+                url: '/checkEnableAuth',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                enableRound(res.data);
+            })
+            .catch(function (err) {
+                
+            });
+            
         });
 
 
         socket.on('replaceCardEvent' , (chara_remove , new_character) => {
             replaceHandCard(chara_remove , new_character);
         });
+
+
+        socket.on('endCardGameEvent' , (winner) => {
+            var body = {
+                val : winner
+            };
+
+            var config = {
+                method: 'post',
+                url: '/endCardGame',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                var data = res.data;
+                displayCardWinner(data);
+            })
+            .catch(function (err) {
+                
+            });
+           
+            
+        });
+
+        socket.on('displayPostWinner' , (data) => {
+            displayCardWinner(data);
+        });
+
 
     
     },
@@ -2296,9 +2300,10 @@ function displayCardLife(life) {
 function displayCards(cards , stat , used_cards , used_cards_tmp , game_time) {
 
     var bonus_tab = checkBonus(cards);
-    setTimeout(() => {
-        editBonusAnimation(bonus_tab);
-    }, 1500);
+    //SHOW BONUS ANIME ANIMATION
+    // setTimeout(() => {
+    //     editBonusAnimation(bonus_tab);
+    // }, 1500);
   
 
     var cardname;
@@ -2697,19 +2702,22 @@ function removeCardLife() {
 }
 
 
-function enableRound(tmp_cards) {
+function enableRound(data) {
+    // data[0] -> tmp_cards which must be disable for next round
+
     var cards = document.querySelectorAll('.card');
 
     cards.forEach(function(card) {
         var charas = card.querySelector('span');
         var finger = card.querySelectorAll('span')[1];
-        if(!tmp_cards.includes(charas.textContent)) {
-            card.classList.remove('disablemode3');
+        if(!data[0].includes(charas.textContent)) {
+            if(data[1] != "no") card.classList.remove('disablemode3');
         }
 
         if(finger) card.removeChild(finger);
     
     });
+    
 }
 
 
@@ -2931,4 +2939,20 @@ function editBonusAnimation(animes) {
         }
 
     });
+}
+
+
+
+function displayCardWinner(data) {
+    var winner = data[0];
+    app.gwinner = winner;
+    var stat = data[1];
+
+    if(stat == "yes") $('.replaybtn').show();
+    $('.scene').hide();
+    $('.stt').hide();
+    $('#lifecardareaid').hide();
+    $('.cardplate').hide();
+
+    $('.winnerdiv').show();
 }

@@ -632,7 +632,21 @@ body{
     margin: 0.1em;
   }
 
+  .winh2 {
+    color:rgb(234, 247, 246);
+    text-shadow: rgb(248, 240, 29) 1px 0 10px;  
+    word-spacing: 0.2em;
+    letter-spacing: 0.12em;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-weight: 500;
+    margin: 0.1em;
+  }
+
   .winnerdiv img {
+    transform:rotate(-7deg);
+  }
+
+  .winnerpic {
     transform:rotate(-7deg);
   }
 
