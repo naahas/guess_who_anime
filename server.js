@@ -151,7 +151,7 @@ app.post('/subUsername' , function(req,res) {
 
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Cardanime';
+        req.session.mode = 'Bombanime';
         current_user.push(nicknameup);
     }
 
