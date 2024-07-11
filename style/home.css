@@ -1797,13 +1797,12 @@ select::-ms-expand {
 }
 
 .casecontainer {
-  display: none;
   padding: 5px;
-  background-color: transparent;
   border-radius: 10px;
 }
 
 .casemode {
+  background-color: red;
   position: relative;
   filter: brightness(90%);
   margin: 1em;
@@ -1815,7 +1814,7 @@ select::-ms-expand {
   display: grid;
   place-items: center;
   box-shadow: rgba(204, 231, 180, 0.957) 0px 1px 2px 0px, rgba(141, 194, 235, 0.8) 0px 1px 3px 1px;
-  background-image: url('https://www.desktopbackground.org/download/1152x864/2010/09/15/80297_lain-paper-manga-anime-white-backgrounds-hd-wallpapers_1280x1024_h.jpg');
+  background-image: url('https://t3.ftcdn.net/jpg/03/51/51/28/360_F_351512882_2kFH8IaSe4lyA7SXBLzEXyGKNEgbO1iH.jpg');
   background-size: cover;
 }
 
@@ -1848,8 +1847,8 @@ select::-ms-expand {
 
 .casemode span {
   z-index: 1;
-  color:rgb(13, 32, 48);
-  text-shadow: 3px 0px 7px rgba(255, 201, 23, 0.8), -3px 0px 7px rgba(214, 198, 148, 0.8), 0px 4px 7px rgba(214, 147, 216, 0.8);
+  color:rgb(10, 12, 13);
+  text-shadow: 2px 0px 3px rgba(255, 201, 23, 0.8), -3px 0px 3px rgba(214, 198, 148, 0.8), 0px 2px 3px rgba(214, 147, 216, 0.8);
   font-family: cursive;
 }
 

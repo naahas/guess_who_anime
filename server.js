@@ -14,6 +14,8 @@ const { prependOnceListener } = require('process');
 const { post } = require('jquery');
 const { formatWithOptions } = require('util');
 const { h } = require('vue');
+const cors = require('cors');
+
 
 
 
@@ -49,6 +51,7 @@ const sessionMiddleware = session({
 });
 
 
+app.use(cors())
 
 app.use(sessionMiddleware , function(req,res, next) {
    
@@ -73,6 +76,7 @@ app.use(express.static(__dirname + "/script/"));
 app.use(express.static(__dirname + "/style/"));
 app.use(express.static(__dirname + "/img/"));
 app.use(express.static(__dirname + "/img/cards"));
+app.use(express.static(__dirname + "/img/moteurg"));
 app.use(express.static(__dirname + "/sound/"));
 app.use(express.static(__dirname + "/icon/"));
 app.use(express.static(__dirname + "/song/"));
