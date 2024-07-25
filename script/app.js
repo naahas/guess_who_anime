@@ -1808,6 +1808,23 @@ function editBotAnswer(botanswer) {
 }
 
 
+window.addEventListener('resize', adjustPlayerPositions);
+
+function adjustPlayerPositions() {
+    var container = document.getElementById('containerid');
+    var numberOfElements = document.querySelectorAll('.playerdiv').length;
+    var angle = (2 * Math.PI) / numberOfElements;
+    var radius = 240; // Rayon du cercle
+
+    for (var i = 0; i < numberOfElements; i++) {
+        var playerdiv = document.getElementById('playerdiv' + (i + 1));
+        var x = -Math.cos(i * angle) * radius;
+        var y = -Math.sin(i * angle) * radius;
+        playerdiv.style.top = (container.clientHeight / 2 - playerdiv.offsetHeight / 2 + y) + 'px';
+        playerdiv.style.left = (container.clientWidth / 2 - playerdiv.offsetWidth / 2 + x) + 'px';
+    }
+}
+
 
 function editOpponent(players , username) {
     

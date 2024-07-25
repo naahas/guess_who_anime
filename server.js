@@ -386,7 +386,7 @@ app.post('/confirmSettingBombanime' , function(req,res) {
     var btime = req.body.val1;
     var theme = req.body.val2;
     if(btime < 3) btime = 3;
-    if(btime > 15) btime = 15;
+    // if(btime > 15) btime = 15;
 
     if(theme == 'Naruto') mapgamedata.set(req.session.rid , profile.Character.Naruto);
     if(theme == 'One Piece') mapgamedata.set(req.session.rid , profile.Character.OnePiece);
