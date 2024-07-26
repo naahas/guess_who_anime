@@ -616,6 +616,10 @@ var app = new Vue({
             editOpponent(opponents , ruser);
         });
 
+        socket.on('displayBombaBonus' , (character) => {   
+            showBonus(character);
+        });
+
         socket.on('displayOpponents2' , (opponents , oppoint ,  ruser) => {   
             this.opponents = opponents;
             editOpponent2(opponents , oppoint,  ruser);
@@ -1249,6 +1253,24 @@ var app = new Vue({
         });
 
 
+        socket.on('updateCharaEvent' , () => {
+        
+            var config = {
+                method: 'post',
+                url: '/updateForBonusCharacter',
+                data: ''
+            };
+
+            axios(config)
+            .then(function (res) {
+                updateBombBonus(res.data.chara)
+            })
+            .catch(function (err) {
+                
+            });
+        });
+
+
     
     },
 
@@ -1276,23 +1298,27 @@ $('.p0input').on('click' , function() {
 
 
 $('.closeimg2').on('click' , function() {
-    $('.postnavdiv').slideToggle();
+    $('.postnavdiv').hide();
 });
 
 
 $('.closeimg').on('click' , function() {
-    $('.navdiv').slideToggle();
+    $('.navdiv').hide();
 });
 
 
 $('.rdiv').on('click' , function() {
-    $('.navdiv').slideToggle();
+    $('.navdiv').show();
 });
 
 
 $('.rdiv2').on('click' , function() {
-    $('.postnavdiv').slideToggle();
+    $('.postnavdiv').show();
 });
+
+
+
+
 
 
 $('.soundpic').on('click' , function() {
@@ -1597,7 +1623,9 @@ function displayWinnerHost(winner) {
 
     $('.container').hide();
     $('.bombdiv').hide();
+    $('.bonuscontainer').hide();
     $('.winnerdiv').show();
+   
 
     var ta = document.getElementById('audio1');
     ta.pause();
@@ -1637,6 +1665,7 @@ function displayWinner(winner) {
     app.gwinner = winner;
     $('.container').hide();
     $('.bombdiv').hide();
+    $('.bonuscontainer').hide();
     $('.winnerdiv').show();
 
     var ta = document.getElementById('audio1');
@@ -1814,16 +1843,108 @@ function adjustPlayerPositions() {
     var container = document.getElementById('containerid');
     var numberOfElements = document.querySelectorAll('.playerdiv').length;
     var angle = (2 * Math.PI) / numberOfElements;
-    var radius = 240; // Rayon du cercle
+    var radius = Math.min(container.clientWidth, container.clientHeight) / 3; // Ajuster le rayon en fonction de la taille du conteneur
 
     for (var i = 0; i < numberOfElements; i++) {
         var playerdiv = document.getElementById('playerdiv' + (i + 1));
         var x = -Math.cos(i * angle) * radius;
         var y = -Math.sin(i * angle) * radius;
+
+        playerdiv.style.position = 'absolute'; // Assurez-vous que la position est bien absolue
         playerdiv.style.top = (container.clientHeight / 2 - playerdiv.offsetHeight / 2 + y) + 'px';
         playerdiv.style.left = (container.clientWidth / 2 - playerdiv.offsetWidth / 2 + x) + 'px';
     }
 }
+
+
+
+function showBonus(character) {
+    var container = document.getElementById('maindiv');
+
+    // Création des conteneurs pour chaque image et texte
+    var bonusContainer = document.createElement('div');
+    bonusContainer.classList.add('bonuscontainer');
+
+    // Fonction pour créer une image avec son texte
+    function createImageWithText(pic , src, alt, text) {
+        var div = document.createElement('div');
+        div.classList.add('bonus-item');
+
+        var img = document.createElement('img');
+        img.classList.add('bombbonuspicclass');
+        
+        img.id = 'bombbonusid' + pic;
+        img.setAttribute('src', src);
+        img.setAttribute('alt', alt);
+
+        var span = document.createElement('span');
+        span.classList.add('bonus-text');
+        span.innerHTML = text;
+
+        div.appendChild(img);
+        div.appendChild(span);
+
+        return div;
+    }
+
+
+    bonusContainer.appendChild(createImageWithText(1 ,'bonus.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 7'));
+    bonusContainer.appendChild(createImageWithText(2 ,'bonus2.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 10'));
+    bonusContainer.appendChild(createImageWithText(3 , 'bonus3.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 16'));
+
+    container.appendChild(bonusContainer);
+
+
+    $('.bombbonuspicclass').on('click', function() {
+        var self = $(this);
+        self.addClass('tmpshake');
+        setTimeout(function() {
+            self.removeClass('tmpshake');
+        }, 300);  
+    });
+
+
+    if(character >= 7) {
+        var bonus1 = document.getElementById('bombbonusid1');
+        bonus1.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid1').off('click');
+        $('#bombbonusid1').addClass('bbtmpclass');
+        $("#bombbonusid1").on('click', function() {
+            activateBombBonus1()
+        });
+
+    }
+
+    if(character >= 10) {
+        var bonus1 = document.getElementById('bombbonusid2');
+        bonus1.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid2').off('click');
+        $('#bombbonusid2').addClass('bbtmpclass');
+        $("#bombbonusid2").on('click', function() {
+            activateBombBonus2()
+        });
+
+    }
+
+    if(character >= 16) {
+        var bonus1 = document.getElementById('bombbonusid3');
+        bonus1.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid3').off('click');
+        $('#bombbonusid3').addClass('bbtmpclass');
+        $("#bombbonusid3").on('click', function() {
+            activateBombBonus3()
+        });
+
+    }
+    
+}
+
+
+
+
 
 
 function editOpponent(players , username) {
@@ -1833,7 +1954,7 @@ function editOpponent(players , username) {
 
 
     var angle = (2 * Math.PI) / numberOfElements;
-    var radius = 240; // Rayon du cercle
+    var radius = 215; // Rayon du cercle
 
     for(let i = 1 ; i <= numberOfElements ; i++) {
 
@@ -1879,7 +2000,7 @@ function editOpponent(players , username) {
         var turnpic = document.createElement('img');
 
         turnpic.classList.add('turnpic' + i);
-        turnpic.setAttribute('src' , 'turnpic3.png');
+        turnpic.setAttribute('src' , 'turnpic6.png');
         turnpic.setAttribute('alt' , 'TURNPIC');
         turnpic.classList.add('turnpic');
         
@@ -2123,6 +2244,44 @@ document.addEventListener('click' , function hideRuleArea(event) {
     }
 
 });
+
+
+
+//ENABLE CASEMODE WHEN CLICK OUTSIDE NAVIDV (RULE)
+document.addEventListener('click' , function hideNavDivArea(event) {
+
+    if(document.getElementById('navdivid')) {
+        const rulebox = document.getElementById('navdivid')
+        const btnrulebox = document.getElementById('rdivid')
+        const postnavdiv = document.getElementById('postnavdivid');
+    
+        if(!rulebox.contains(event.target) && !btnrulebox.contains(event.target)) {
+            $("#navdivid").hide(); 
+            
+        }
+    }
+
+});
+
+
+
+
+//ENABLE CASEMODE WHEN CLICK OUTSIDE POSTNAVIDV (RULE)
+document.addEventListener('click' , function hideNavDivArea2(event) {
+
+    if(document.getElementById('postnavdivid')) {
+        const postrulebox = document.getElementById('postnavdivid')
+        const postbtnrulebox = document.getElementById('postrdivid')
+        const navdiv = document.getElementById('navdivid');
+    
+        if(!postrulebox.contains(event.target) && !postbtnrulebox.contains(event.target)) {
+            $('#postnavdivid').hide(); 
+        }
+            
+    }
+
+});
+
 
 
 
@@ -2974,3 +3133,56 @@ function displayCardWinner(data) {
     $('.winnerdiv').show();
 }
 
+
+
+function activateBombBonus1() {
+    alert('bonus 1 activé')
+}
+
+function activateBombBonus2() {
+    alert('bonus 2 activé')
+}
+
+function activateBombBonus3() {
+    alert('bonus 3 activé')
+}
+
+
+function updateBombBonus(character) {
+    
+    if(character >= 7) {
+        var bonus1 = document.getElementById('bombbonusid1');
+        bonus1.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid1').off('click');
+        $('#bombbonusid1').addClass('bbtmpclass');
+        $("#bombbonusid1").on('click', function() {
+            activateBombBonus1()
+        });
+
+    }
+
+    if(character >= 10) {
+        var bonus1 = document.getElementById('bombbonusid2');
+        bonus1.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid2').off('click');
+        $('#bombbonusid2').addClass('bbtmpclass');
+        $("#bombbonusid2").on('click', function() {
+            activateBombBonus2()
+        });
+
+    }
+
+    if(character >= 16) {
+        var bonus1 = document.getElementById('bombbonusid3');
+        bonus1.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid3').off('click');
+        $('#bombbonusid3').addClass('bbtmpclass');
+        $("#bombbonusid3").on('click', function() {
+            activateBombBonus3()
+        });
+
+    }
+}

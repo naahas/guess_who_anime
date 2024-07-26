@@ -33,8 +33,6 @@ const io = new Server(server , {
 })
 
 
-//TODO : display point after decrease to other player when someone uses a joker (citanime)
-
 
 
 //session middleware
@@ -53,12 +51,7 @@ const sessionMiddleware = session({
 
 app.use(cors())
 
-app.use(sessionMiddleware , function(req,res, next) {
-   
-    
-    next();
-});
-
+app.use(sessionMiddleware)
 
 
 //middlewares
@@ -278,6 +271,21 @@ app.post('/resetCitaStatus' , function(req,res) {
 });
 
 
+
+
+
+app.post('/updateForBonusCharacter' , function(req,res) {
+
+    req.session.character = req.session.character + 1;
+    console.log("characters" , " : " , req.session.character)
+
+    
+    res.send({ chara : req.session.character });
+});
+
+
+
+
 app.post('/resetID' , function(req,res)  {
 
     req.session.rid = null;
@@ -339,6 +347,7 @@ app.post('/igstatus' , function(req,res) {
 
 app.post('/ipstatus' , function(req,res) {
     req.session.isplaying = true;
+    if(req.session.mode == "Bombanime") req.session.character = 0;
 
     res.end();
 });
@@ -386,7 +395,7 @@ app.post('/confirmSettingBombanime' , function(req,res) {
     var btime = req.body.val1;
     var theme = req.body.val2;
     if(btime < 3) btime = 3;
-    if(btime > 15) btime = 15;
+    // if(btime > 15) btime = 15;
 
     if(theme == 'Naruto') mapgamedata.set(req.session.rid , profile.Character.Naruto);
     if(theme == 'One Piece') mapgamedata.set(req.session.rid , profile.Character.OnePiece);
@@ -411,6 +420,8 @@ app.post('/confirmSettingBombanime' , function(req,res) {
     mapgameturn.set(req.session.rid , req.session.username);
     mapgametimer.set(req.session.rid , 1);
     mapgamestack.set(req.session.rid , []);
+
+    req.session.character = 0;
 
     
     for (let [key, value] of mapcode) {
@@ -756,7 +767,7 @@ io.on('connection' , (socket) => {
     const iodraw = socket.request.session.hasdraw;
     const iolife = socket.request.session.life;
     const ioref = socket.request.session.nbref;
-
+    const iochara = socket.request.session.character;
 
     socket.emit('showSettingEvent' , iousername);
     socket.emit('displayJoinDiv' , ioroomid);
@@ -835,6 +846,7 @@ io.on('connection' , (socket) => {
                     if(mapcode.get(key) == ioroomid) playertab.push(key);
                 }
             socket.emit('displayOpponents' , playertab , iousername );
+            socket.emit('displayBombaBonus' , iochara)
         }
 
         //DISPLAY SKULL , TURNPIC , AND BOMB AT GAME BEGINNING AND AFTER RELOAD (BOMBANIME)
@@ -1050,8 +1062,6 @@ io.on('connection' , (socket) => {
             io.to(ioroomid).emit('displayStrikerEvent' ,  mapgamestack.get(ioroomid).length  , mapgametotal.get(ioroomid));
             
             
-            
-            
             // CHANGE TURN
             if(stat == 0) {
                 var turn_array = [];
@@ -1111,6 +1121,9 @@ io.on('connection' , (socket) => {
                 io.to(ioroomid).emit('displayTurnPicEvent' , index_player);
                 socket.broadcast.to(ioroomid).emit('resetInputForOpponent' , index_player);
                 
+
+                socket.emit('updateCharaEvent')
+             
 
                 //AFTER BOT ANSWER -> SET TURN TO HOST
             } else {
