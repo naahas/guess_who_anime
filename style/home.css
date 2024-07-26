@@ -4321,5 +4321,41 @@ select::-ms-expand {
 
 .bbtmpclass:hover {
   transform: scale(1.1);
+  opacity: 0.4;
 }
+
+
+.bhintclass {
+  position: absolute;
+  width: fit-content;
+  height: fit-content;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color:aliceblue;
+  text-shadow: rgb(171, 222, 91) 1px 0 3px;  
+  right: 0;
+  left: 0;
+  top:0;
+  margin: auto;
+  opacity: 0;
+  letter-spacing: 0.2em;
+  animation: bombhintA 0.2s forwards linear;
+}
+
+
+
+@keyframes bombhintA {
+  0% {
+  }
+
+
+
+
+
+  100% {
+    opacity: 1;
+    top:2%;
+  }
+}
+
+
 

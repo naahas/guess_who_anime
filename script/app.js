@@ -3136,16 +3136,97 @@ function displayCardWinner(data) {
 
 
 function activateBombBonus1() {
-    alert('bonus 1 activé')
+
+
+
+    var body = {
+        val: 1
+    };
+
+    var config = {
+        method: 'post',
+        url: '/generateBombBonus',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        showBombHint(res.data.hint , res.data.nb);
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
+
 }
+
+
 
 function activateBombBonus2() {
-    alert('bonus 2 activé')
+
+    var body = {
+        val: 2
+    };
+
+    var config = {
+        method: 'post',
+        url: '/generateBombBonus',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        showBombHint(res.data.hint , res.data.nb);
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
+
 }
 
+
+
 function activateBombBonus3() {
-    alert('bonus 3 activé')
+
+    var body = {
+        val: 3
+    };
+
+    var config = {
+        method: 'post',
+        url: '/generateBombBonus',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+        showBombHint(res.data.hint , res.data.nb);
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
+    
 }
+
+
+
+
+function showBombHint(hint , stat) {
+    var container = document.getElementById('maindiv');
+
+    var span = document.createElement('span');
+    span.id = "bombhintid" + stat;
+    span.classList.add('bhintclass');
+    span.innerHTML = "Indice  : " + hint;
+
+    container.append(span)
+
+
+    setTimeout(() => {
+        var bobo = document.getElementById('bombhintid' + stat)
+        $('#bombhintid' + stat).fadeOut();
+    }, 3000);
+}
+
 
 
 function updateBombBonus(character) {
@@ -3157,6 +3238,19 @@ function updateBombBonus(character) {
         $('#bombbonusid1').off('click');
         $('#bombbonusid1').addClass('bbtmpclass');
         $("#bombbonusid1").on('click', function() {
+            $('#bombbonusid1').removeClass('bbtmpclass');
+            bonus1.style.filter = 'brightness(40%)';
+            $('#bombbonusid1').off('click');
+            $('#bombbonusid1').on('click', function() {
+                var self = $(this);
+                self.addClass('tmpshake');
+                setTimeout(function() {
+                    self.removeClass('tmpshake');
+                }, 300);  
+            });
+
+
+
             activateBombBonus1()
         });
 
