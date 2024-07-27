@@ -616,8 +616,8 @@ var app = new Vue({
             editOpponent(opponents , ruser);
         });
 
-        socket.on('displayBombaBonus' , (character) => {   
-            showBonus(character);
+        socket.on('displayBombaBonus' , (character , auth1 , auth2 , auth3) => {   
+            showBonus(character , auth1 , auth2 , auth3);
         });
 
         socket.on('displayOpponents2' , (opponents , oppoint ,  ruser) => {   
@@ -1263,7 +1263,7 @@ var app = new Vue({
 
             axios(config)
             .then(function (res) {
-                updateBombBonus(res.data.chara)
+                updateBombBonus(res.data.chara , res.data.auth1 , res.data.auth2 , res.data.auth3)
             })
             .catch(function (err) {
                 
@@ -1858,93 +1858,6 @@ function adjustPlayerPositions() {
 
 
 
-function showBonus(character) {
-    var container = document.getElementById('maindiv');
-
-    // Création des conteneurs pour chaque image et texte
-    var bonusContainer = document.createElement('div');
-    bonusContainer.classList.add('bonuscontainer');
-
-    // Fonction pour créer une image avec son texte
-    function createImageWithText(pic , src, alt, text) {
-        var div = document.createElement('div');
-        div.classList.add('bonus-item');
-
-        var img = document.createElement('img');
-        img.classList.add('bombbonuspicclass');
-        
-        img.id = 'bombbonusid' + pic;
-        img.setAttribute('src', src);
-        img.setAttribute('alt', alt);
-
-        var span = document.createElement('span');
-        span.classList.add('bonus-text');
-        span.innerHTML = text;
-
-        div.appendChild(img);
-        div.appendChild(span);
-
-        return div;
-    }
-
-
-    bonusContainer.appendChild(createImageWithText(1 ,'bonus.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 7'));
-    bonusContainer.appendChild(createImageWithText(2 ,'bonus2.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 10'));
-    bonusContainer.appendChild(createImageWithText(3 , 'bonus3.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 16'));
-
-    container.appendChild(bonusContainer);
-
-
-    $('.bombbonuspicclass').on('click', function() {
-        var self = $(this);
-        self.addClass('tmpshake');
-        setTimeout(function() {
-            self.removeClass('tmpshake');
-        }, 300);  
-    });
-
-
-    if(character >= 7) {
-        var bonus1 = document.getElementById('bombbonusid1');
-        bonus1.style.filter = 'brightness(95%)';
-
-        $('#bombbonusid1').off('click');
-        $('#bombbonusid1').addClass('bbtmpclass');
-        $("#bombbonusid1").on('click', function() {
-            activateBombBonus1()
-        });
-
-    }
-
-    if(character >= 10) {
-        var bonus1 = document.getElementById('bombbonusid2');
-        bonus1.style.filter = 'brightness(95%)';
-
-        $('#bombbonusid2').off('click');
-        $('#bombbonusid2').addClass('bbtmpclass');
-        $("#bombbonusid2").on('click', function() {
-            activateBombBonus2()
-        });
-
-    }
-
-    if(character >= 16) {
-        var bonus1 = document.getElementById('bombbonusid3');
-        bonus1.style.filter = 'brightness(95%)';
-
-        $('#bombbonusid3').off('click');
-        $('#bombbonusid3').addClass('bbtmpclass');
-        $("#bombbonusid3").on('click', function() {
-            activateBombBonus3()
-        });
-
-    }
-    
-}
-
-
-
-
 
 
 function editOpponent(players , username) {
@@ -2032,6 +1945,9 @@ function editOpponent(players , username) {
             pinput.addEventListener("input", function(e) {
                 socket.emit('showTypingEvent' , e.target.value);
             });
+
+
+            pinput.focus();
             
             
         }
@@ -2042,7 +1958,7 @@ function editOpponent(players , username) {
         playerdiv.appendChild(padlockpic);
         playerdiv.appendChild(pinput);
 
-        pinput.focus();
+        
         
     }       
 }
@@ -3229,15 +3145,160 @@ function showBombHint(hint , stat) {
 
 
 
-function updateBombBonus(character) {
+
+
+function showBonus(character , auth1 , auth2 , auth3) {
+    console.log(auth1 , auth2 , auth3)
+    console.log(character)
+
+    var container = document.getElementById('maindiv');
+
+    var bonusContainer = document.createElement('div');
+    bonusContainer.classList.add('bonuscontainer');
+
     
-    if(character >= 7) {
+    function createImageWithText(pic , src, alt, text) {
+        var div = document.createElement('div');
+        div.classList.add('bonus-item');
+
+        var img = document.createElement('img');
+        img.classList.add('bombbonuspicclass');
+        
+        img.id = 'bombbonusid' + pic;
+        img.setAttribute('src', src);
+        img.setAttribute('alt', alt);
+
+        var span = document.createElement('span');
+        span.classList.add('bonus-text');
+        span.innerHTML = text;
+
+        div.appendChild(img);
+        div.appendChild(span);
+
+        return div;
+    }
+
+
+    bonusContainer.appendChild(createImageWithText(1 ,'bonus.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 10'));
+    bonusContainer.appendChild(createImageWithText(2 ,'bonus2.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 30'));
+    bonusContainer.appendChild(createImageWithText(3 , 'bonus3.png', 'BONUSPIC', '<i class="fa fa-user-times" aria-hidden="true"></i> 50'));
+
+    container.appendChild(bonusContainer);
+
+
+    $('.bombbonuspicclass').on('click', function() {
+        var self = $(this);
+        self.addClass('tmpshake');
+        setTimeout(function() {
+            self.removeClass('tmpshake');
+        }, 300);  
+    });
+
+
+    if(character >= 10 && auth1) {
         var bonus1 = document.getElementById('bombbonusid1');
         bonus1.style.filter = 'brightness(95%)';
 
         $('#bombbonusid1').off('click');
         $('#bombbonusid1').addClass('bbtmpclass');
         $("#bombbonusid1").on('click', function() {
+            $('.tmpinputclass').focus();
+
+            $('#bombbonusid1').removeClass('bbtmpclass');
+            bonus1.style.filter = 'brightness(40%)';
+            $('#bombbonusid1').off('click');
+            $('#bombbonusid1').on('click', function() {
+                var self = $(this);
+                self.addClass('tmpshake');
+                setTimeout(function() {
+                    self.removeClass('tmpshake');
+                }, 300);  
+            });
+
+
+
+            activateBombBonus1()
+            
+
+
+        });
+
+    }
+
+    if(character >= 30 && auth2) {
+        var bonus2 = document.getElementById('bombbonusid2');
+        bonus2.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid2').off('click');
+        $('#bombbonusid2').addClass('bbtmpclass');
+        $("#bombbonusid2").on('click', function() {
+            $('.tmpinputclass').focus();
+
+            $('#bombbonusid2').removeClass('bbtmpclass');
+            bonus2.style.filter = 'brightness(40%)';
+            $('#bombbonusid2').off('click');
+            $('#bombbonusid2').on('click', function() {
+                var self = $(this);
+                self.addClass('tmpshake');
+                setTimeout(function() {
+                    self.removeClass('tmpshake');
+                }, 300);  
+            });
+
+
+
+            activateBombBonus2()
+        });
+
+    }
+
+    if(character >= 50 && auth3) {
+        var bonus3 = document.getElementById('bombbonusid3');
+        bonus3.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid3').off('click');
+        $('#bombbonusid3').addClass('bbtmpclass');
+        $("#bombbonusid3").on('click', function() {
+            $('.tmpinputclass').focus();
+
+            $('#bombbonusid3').removeClass('bbtmpclass');
+            bonus3.style.filter = 'brightness(40%)';
+            $('#bombbonusid3').off('click');
+            $('#bombbonusid3').on('click', function() {
+                var self = $(this);
+                self.addClass('tmpshake');
+                setTimeout(function() {
+                    self.removeClass('tmpshake');
+                }, 300);  
+            });
+
+
+
+            activateBombBonus3()
+        });
+
+    }
+    
+}
+
+
+
+
+
+
+function updateBombBonus(character , auth1 , auth2 , auth3) {
+    console.log(auth1 , auth2 , auth3)
+    console.log(character)
+    
+    if(character >= 10 && auth1) {
+        var bonus1 = document.getElementById('bombbonusid1');
+        bonus1.style.filter = 'brightness(95%)';
+
+        $('#bombbonusid1').off('click');
+        $('#bombbonusid1').addClass('bbtmpclass');
+        $("#bombbonusid1").on('click', function() {
+            $('.tmpinputclass').focus();
+
             $('#bombbonusid1').removeClass('bbtmpclass');
             bonus1.style.filter = 'brightness(40%)';
             $('#bombbonusid1').off('click');
@@ -3256,27 +3317,61 @@ function updateBombBonus(character) {
 
     }
 
-    if(character >= 10) {
-        var bonus1 = document.getElementById('bombbonusid2');
-        bonus1.style.filter = 'brightness(95%)';
+    if(character >= 30 && auth2) {
+        var bonus2 = document.getElementById('bombbonusid2');
+        bonus2.style.filter = 'brightness(95%)';
 
         $('#bombbonusid2').off('click');
         $('#bombbonusid2').addClass('bbtmpclass');
         $("#bombbonusid2").on('click', function() {
+            $('.tmpinputclass').focus();
+
+            $('#bombbonusid2').removeClass('bbtmpclass');
+            bonus2.style.filter = 'brightness(40%)';
+            $('#bombbonusid2').off('click');
+            $('#bombbonusid2').on('click', function() {
+                var self = $(this);
+                self.addClass('tmpshake');
+                setTimeout(function() {
+                    self.removeClass('tmpshake');
+                }, 300);  
+            });
+
+
+
             activateBombBonus2()
         });
 
     }
 
-    if(character >= 16) {
-        var bonus1 = document.getElementById('bombbonusid3');
-        bonus1.style.filter = 'brightness(95%)';
+    if(character >= 50 && auth3) {
+        var bonus3 = document.getElementById('bombbonusid3');
+        bonus3.style.filter = 'brightness(95%)';
 
         $('#bombbonusid3').off('click');
         $('#bombbonusid3').addClass('bbtmpclass');
         $("#bombbonusid3").on('click', function() {
+            $('.tmpinputclass').focus();
+
+            $('#bombbonusid3').removeClass('bbtmpclass');
+            bonus3.style.filter = 'brightness(40%)';
+            $('#bombbonusid3').off('click');
+            $('#bombbonusid3').on('click', function() {
+                var self = $(this);
+                self.addClass('tmpshake');
+                setTimeout(function() {
+                    self.removeClass('tmpshake');
+                }, 300);  
+            });
+
+
+
             activateBombBonus3()
         });
 
     }
 }
+
+
+
+

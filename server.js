@@ -280,7 +280,7 @@ app.post('/updateForBonusCharacter' , function(req,res) {
     console.log("characters" , " : " , req.session.character)
 
     
-    res.send({ chara : req.session.character });
+    res.send({ chara : req.session.character , auth1 : req.session.hint1 , auth2 : req.session.hint2 , auth3 : req.session.hint3 });
 });
 
 
@@ -288,6 +288,9 @@ app.post('/updateForBonusCharacter' , function(req,res) {
 app.post('/generateBombBonus' , function(req,res) {
 
     var bval = req.body.val;
+    if(bval == 1) req.session.hint1 = false;
+    if(bval == 2) req.session.hint2 = false;
+    if(bval == 3) req.session.hint3 = false;
 
     var rnb =  Math.floor(Math.random() * mapgamedata.get(req.session.rid).length)
     var charahint = mapgamedata.get(req.session.rid)[rnb];
@@ -359,7 +362,12 @@ app.post('/igstatus' , function(req,res) {
 
 app.post('/ipstatus' , function(req,res) {
     req.session.isplaying = true;
-    if(req.session.mode == "Bombanime") req.session.character = 0;
+    if(req.session.mode == "Bombanime") {
+        req.session.character = 0;
+        req.session.hint1 = true;
+        req.session.hint2 = true;
+        req.session.hint3 = true;
+    }
 
     res.end();
 });
@@ -434,6 +442,9 @@ app.post('/confirmSettingBombanime' , function(req,res) {
     mapgamestack.set(req.session.rid , []);
 
     req.session.character = 0;
+    req.session.hint1 = true;
+    req.session.hint2 = true;
+    req.session.hint3 = true;
 
     
     for (let [key, value] of mapcode) {
@@ -780,6 +791,9 @@ io.on('connection' , (socket) => {
     const iolife = socket.request.session.life;
     const ioref = socket.request.session.nbref;
     const iochara = socket.request.session.character;
+    const iohint1 = socket.request.session.hint1;
+    const iohint2 = socket.request.session.hint2;
+    const iohint3 = socket.request.session.hint3;
 
     socket.emit('showSettingEvent' , iousername);
     socket.emit('displayJoinDiv' , ioroomid);
@@ -858,7 +872,7 @@ io.on('connection' , (socket) => {
                     if(mapcode.get(key) == ioroomid) playertab.push(key);
                 }
             socket.emit('displayOpponents' , playertab , iousername );
-            socket.emit('displayBombaBonus' , iochara)
+            socket.emit('displayBombaBonus' , iochara , iohint1 , iohint2 , iohint3);
         }
 
         //DISPLAY SKULL , TURNPIC , AND BOMB AT GAME BEGINNING AND AFTER RELOAD (BOMBANIME)

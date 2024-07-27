@@ -4329,7 +4329,8 @@ select::-ms-expand {
   position: absolute;
   width: fit-content;
   height: fit-content;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: 'Times New Roman', Times, serif;
+  font-style: italic;
   color:aliceblue;
   text-shadow: rgb(171, 222, 91) 1px 0 3px;  
   right: 0;
