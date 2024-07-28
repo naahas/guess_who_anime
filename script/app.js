@@ -18,7 +18,7 @@ var app = new Vue({
             opponentres:'',
             canswer:'',
             gwinner: 'SLAYER',
-            nbplayer: 0,
+            nbplayer: 1,
             currentmode: 'Bombanime',
             difficulty: 'Normal',
             playerpoint: 1242,
@@ -578,7 +578,7 @@ var app = new Vue({
 
         socket.on('joinNotificationEvent' , (nbplayer) => {
             // $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 1/1 (" + player + ")");
-            this.nbplayer = nbplayer;
+            this.nbplayer = nbplayer + 1;
             $('.kickdiv').show();
             $('.startbtn').removeClass('disablemode');
         });
@@ -586,8 +586,8 @@ var app = new Vue({
 
         //AFTER RELOAD
         socket.on('joinCountNotificationEvent' , (nbplayer) => {
-            this.nbplayer = nbplayer;
-            if(nbplayer > 0) $('.startbtn').removeClass('disablemode');
+            this.nbplayer = nbplayer + 1;
+            if(nbplayer > 1) $('.startbtn').removeClass('disablemode');
             $('.kickdiv').show();
         });
 
@@ -676,7 +676,7 @@ var app = new Vue({
 
 
         socket.on('notifHostCancelFromPlayer' , () => {
-            this.nbplayer = 0;
+            this.nbplayer = 1;
             $('.startbtn').addClass('disablemode');
 
         });
