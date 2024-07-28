@@ -28,6 +28,9 @@ Basé sur le jeu Bomparty disponible sur le site de https://jklm.fun/ , le jeu p
 ![bomb](rdpic/bomb.png)
 
 
+> DE 2 A 10 JOUEURS
+![ice_screenshot_20240728-033711](https://github.com/user-attachments/assets/062a2975-9d4c-453d-90f2-1416ee3bc7e4)
+
 
 ## TECHNOLOGIES / TECH
 Les différentes technologies utilisés pour le bon fonctionnement de l'application
