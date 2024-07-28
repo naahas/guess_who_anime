@@ -574,7 +574,7 @@ var app = new Vue({
             if(roomid !=null) $('.waitplayerdiv').show();
             else $('.joindiv').show();
         });
-
+ 
 
         socket.on('joinNotificationEvent' , (nbplayer) => {
             // $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 1/1 (" + player + ")");
