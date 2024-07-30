@@ -111,7 +111,6 @@ var current_user = [];
 
 //path handle
 app.get('/' , function(req,res) {
-
     if(req.session.ingame == true) {
         res.redirect('/game');
     } else {
@@ -120,7 +119,10 @@ app.get('/' , function(req,res) {
             res.sendFile(__dirname + "/create.html");
         } else if(req.session.joined) {
             res.sendFile(__dirname + "/join.html");
-        } else res.sendFile(__dirname + "/home.html");
+            req.session.formerid = null;
+        } else {
+            res.sendFile(__dirname + "/home.html");
+        }
 
     }
 
@@ -302,7 +304,7 @@ app.post('/generateBombBonus' , function(req,res) {
 
 
 app.post('/resetID' , function(req,res)  {
-
+    req.session.formerid = req.session.rid;
     req.session.rid = null;
     req.session.back = null;
     res.end();
@@ -603,12 +605,17 @@ app.post('/kickPlayer' , function(req,res) {
 
 
 app.post('/returnBackJoin' , async function(req,res) {
+   
     req.session.joined = false;
     req.session.solop = false;
     req.session.back = true;
 
     mapcode.delete(req.session.username);
     mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
+
+    io.once('connection' , (socket) => {
+        io.to(req.session.rid).emit('reloadForHost');
+    }); 
 
 
     res.end();
@@ -779,6 +786,7 @@ io.on('connection' , (socket) => {
     const iojoin = socket.request.session.joined;
     const iousername= socket.request.session.username;
     const ioroomid = socket.request.session.rid;
+    const ioformerid = socket.request.session.formerid;
     const ioingame = socket.request.session.ingame;
     const ioplaying = socket.request.session.isplaying;
     const ioendgame = socket.request.session.endgame;
@@ -796,7 +804,10 @@ io.on('connection' , (socket) => {
     const iohint3 = socket.request.session.hint3;
 
     socket.emit('showSettingEvent' , iousername);
-    socket.emit('displayJoinDiv' , ioroomid);
+    console.log(ioroomid)
+
+    
+    if(iocreate != true) socket.emit('displayJoinDiv' , ioroomid);
 
     
     if(iousername) socket.emit('displayUsernameEvent' , iousername);
@@ -807,12 +818,13 @@ io.on('connection' , (socket) => {
         socket.join(ioroomid);
         socket.emit('displayCodeEvent' , ioroomid);
         
-        var nbplayer = 0;
+        var nbplayer = 1;
         for (let [key, value] of mapcode) {
             if(key!=iousername && mapcode.get(key) == ioroomid) nbplayer++;
             // if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
         }
 
+        console.log(nbplayer)
         socket.emit('joinCountNotificationEvent' , (nbplayer));   
             
     }
@@ -828,8 +840,8 @@ io.on('connection' , (socket) => {
     if(iojoin == true && ioroomid) {
         if(io.sockets.adapter.rooms.get(ioroomid)) {
             var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
-            if(roomsize == 9) mapcodefull.push(ioroomid);
-            if(roomsize<=9) {
+            if(roomsize == 6) mapcodefull.push(ioroomid);
+            if(roomsize<=6) {
                 mapcode.set(iousername , ioroomid);
                 socket.join(ioroomid);
 
@@ -1042,9 +1054,9 @@ io.on('connection' , (socket) => {
     }
 
 
-    if(ioback) {
-        socket.to(ioroomid).emit('notifHostCancelFromPlayer');
-        socket.emit('resetid');
+    if(ioback == true) {
+        console.log('jss mort')
+        socket.to(ioformerid).emit('notifHostCancelFromPlayer' , iousername);
     }
 
 
@@ -1422,7 +1434,7 @@ io.on('connection' , (socket) => {
 
     // HANDLE KICK PLAYER
     socket.on('kickPlayerEvent' , () => {
-        socket.emit('notifHostCancelFromPlayer');
+        socket.emit('notifHostCancelKickAllPlayer');
         for (let [key, value] of mapcode) {
             if(key!=iousername && mapcode.get(key) == ioroomid) mapcode.delete(key);
             mapcodefull = mapcodefull.filter(item => item!=ioroomid);
@@ -1603,6 +1615,13 @@ io.on('connection' , (socket) => {
             }
         }
     });
+
+
+
+
+    socket.on('verifyReloadForHost' , () => {
+        if(iocreate == true) socket.emit('reloadFinalHost')
+    })
 
 
 

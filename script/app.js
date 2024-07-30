@@ -293,6 +293,7 @@ var app = new Vue({
         returnHome: function() {
             location.href = '/';
         },
+        
 
 
         returnBack: function(backval) {
@@ -311,7 +312,22 @@ var app = new Vue({
 
                 axios(config)
                 .then(function (res) {
-                    location.reload();
+                    var body = {
+                        val : 'val'
+                    };
+        
+                    var config = {
+                        method: 'post',
+                        url: '/resetID',
+                        data: body
+                    };
+        
+                    axios(config)
+                    .then(function (res) {
+                        location.reload();
+                    })
+                    .catch(function (err) {    
+                    })
                 })
                 .catch(function (err) {
                     
@@ -550,6 +566,15 @@ var app = new Vue({
 
    
     mounted: async function() {
+
+        socket.on('reloadForHost', () => {
+            socket.emit('verifyReloadForHost')
+        });
+
+
+        socket.on('reloadFinalHost' , () => {
+            location.reload();
+        });
         
         socket.on('showSettingEvent' , (iouser) => {
             if(iouser != null) $('.cjdiv').show();
@@ -586,7 +611,7 @@ var app = new Vue({
 
         //AFTER RELOAD
         socket.on('joinCountNotificationEvent' , (nbplayer) => {
-            this.nbplayer = nbplayer + 1;
+            this.nbplayer = nbplayer;
             if(nbplayer > 1) $('.startbtn').removeClass('disablemode');
             $('.kickdiv').show();
         });
@@ -675,32 +700,40 @@ var app = new Vue({
         });
 
 
-        socket.on('notifHostCancelFromPlayer' , () => {
-            this.nbplayer = 1;
-            $('.startbtn').addClass('disablemode');
+        socket.on('notifHostCancelFromPlayer' , (uuu) => {
+            this.nbplayer -= 1;
+            if(this.nbplayer < 2 ) $('.startbtn').addClass('disablemode')
+
+            // if(this.username == uuu) {
+            //         var body = {
+            //             val : 'val'
+            //         };
+        
+            //         var config = {
+            //             method: 'post',
+            //             url: '/resetID',
+            //             data: body
+            //         };
+        
+            //         axios(config)
+            //         .then(function (res) {
+            //             location.reload();
+            //         })
+            //         .catch(function (err) {    
+            //     })
+            // }
 
         });
 
 
-        socket.on('resetid' , () => {
-            var body = {
-                val : 'val'
-            };
+        socket.on('notifHostCancelKickAllPlayer' , (uuu) => {
+            this.nbplayer = 1;
+            $('.startbtn').addClass('disablemode')
+        });
 
-            var config = {
-                method: 'post',
-                url: '/resetID',
-                data: body
-            };
 
-            axios(config)
-            .then(function (res) {
-                
-            })
-            .catch(function (err) {
-                
-            });
-        })
+
+        
 
 
         socket.on('notifKickPlayerEvent' , () => {
