@@ -591,6 +591,7 @@ var app = new Vue({
 
         //for host
         socket.on('displayCodeEvent' , (roomid) => {
+            this.roomid = roomid;
             editCode(roomid);
         });
 
@@ -1426,7 +1427,8 @@ function editError(error) {
 
 
 function editCode(roomid) {
-    $('.codetxt').html('CODE DU SALON : ' + roomid)
+    $('.codetrue').html(roomid)
+    $('.codetxt').show();
 }
 
 
@@ -3396,109 +3398,17 @@ function updateBombBonus(character , auth1 , auth2 , auth3) {
 
 
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     const playersContainer = document.getElementById('players-container');
-//     const numberOfPlayers = 5; // Changez ce nombre en fonction du nombre de joueurs
-    
-//     const radius = 230; // Rayon du cercle
-    
-//     // Suppression des anciens joueurs s'il y en a
-//     while (playersContainer.firstChild) {
-//         playersContainer.removeChild(playersContainer.firstChild);
-//     }
+function copyCode() {
+    var codeText = $('.codetxt').text();
+    navigator.clipboard.writeText(app.roomid).then(function() {
+        $('.pastedtxt').addClass('pastedAnimclass')
+        $('.pastedtxt').show();
+        setTimeout(() => {
+            $('.pastedtxt').hide();
+            $('.pastedtxt').removeClass('pastedAnimclass')
+        }, 2000);
+    }).catch(function(error) {
+        console.error('Erreur lors de la copie du texte : ', error);
+    });
 
-//     for (let i = 0; i < numberOfPlayers; i++) {
-//         const player = document.createElement('div');
-//         player.classList.add('ppp');
-//         player.textContent = `Joueur ${i + 1}`;
-        
-//         // Calculer l'angle pour la position
-//         const angle = (360 / numberOfPlayers) * i;
-        
-//         // Convertir les degrés en radians
-//         const angleInRadians = angle * (Math.PI / 180);
-        
-//         // Positionner le joueur
-//         player.style.transform = `rotate(${angle}deg) translate(${radius}px) rotate(-${angle}deg)`;
-        
-//         playersContainer.appendChild(player);
-//     }
-
-
-// })
-
-
-
-
-
-
-/***************************** */
-
-// var playertxt = document.createElement('p');
-
-        // playertxt.classList.add('ptxt');
-        // playertxt.classList.add('ptxt' + i);
-        // playertxt.innerHTML = players[i];
-
-        // var pinput = document.createElement('input');
-
-        // pinput.classList.add('p0input');
-        // pinput.classList.add('pindex' + i);
-        // pinput.classList.add('disablemode2');
-        // pinput.setAttribute('disabled' , 'true');
-        // pinput.type = 'text';
-
-
-        // var padlockpic = document.createElement('img');
-        
-        // padlockpic.setAttribute('alt' , 'LOCKPIC');
-        // padlockpic.setAttribute('src' , 'padlock5.png');
-        // padlockpic.classList.add('lockpic');
-
-        // var turnpic = document.createElement('img');
-
-        // turnpic.classList.add('turnpic' + i);
-        // turnpic.setAttribute('src' , 'turnpic6.png');
-        // turnpic.setAttribute('alt' , 'TURNPIC');
-        // turnpic.classList.add('turnpic');
-        
-        // var skullpic = document.createElement('img');
-
-        // skullpic.classList.add('skullpic' + i);
-        // skullpic.setAttribute('src' , 'skull1.png');
-        // skullpic.setAttribute('alt' , 'SKULLPIC');
-        // skullpic.classList.add('skullpic');
-
-
-        // if(players[i] == username) {
-       
-        //     playertxt.classList.add('tmptxtclass');
-        //     pinput.classList.add('tmpinputclass');
-        //     padlockpic.classList.add('tmplockclass');
-        //     turnpic.classList.add('tmpturnclass');
-        //     skullpic.classList.add('tmpskullpic');
-        //     pinput.setAttribute('v-model' , 'canswer');
-
-        //     pinput.addEventListener('keypress' , function(event) {
-        //         if(event.key === 'Enter') {
-        //             app.checkAnswer(this);
-
-        //         }
-        //     });
-
-
-        //     pinput.addEventListener("input", function(e) {
-        //         socket.emit('showTypingEvent' , e.target.value);
-        //     });
-
-
-        //     pinput.focus();
-            
-            
-        // }
-
-        // playerdiv.appendChild(turnpic);
-        // playerdiv.appendChild(skullpic);
-        // playerdiv.appendChild(playertxt)
-        // playerdiv.appendChild(padlockpic);
-        // playerdiv.appendChild(pinput);
+}

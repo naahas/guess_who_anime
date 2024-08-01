@@ -49,26 +49,28 @@
                 <span class="currenthometxt currentxt"> {{usernamedisplay}} </span>
             </div>
 
-            <div class="btndiv">
+          
                 
             <div class="usernamediv">
-                <h2> RENTRE TON PSEUDO </h2>
+                <h2>RENTRE TON PSEUDO </h2>
                 <hr>
                 <input @keyup.enter = "submitUsername" placeholder="Ton Pseudo..." maxlength="15" minlength="4" autocomplete="off" v-model="username" type="text" id="usernameinput">
                 <span class="errortxt">  </span>
                 <br>
                 <hr>
                 <button id="subnick" @click="submitUsername()">VALIDER</button>
-            </div>
+            </div>  
 
-            <div class="cjdiv">
-                <button class="pbtn" @click="playSolo()" > <span>💣</span> JOUER SOLO</button> <br>
-                <button class="pbtn" @click="redirectMode()" > <span>🕹️</span> MODE DE JEU</button> <br>
-                <button class="pbtn" @click="createLobby()" > <span>⚔️</span> CRÉER SALON</button> <br>
-                <button class="pbtn" @click="joinLobby()"> <span>🛡️</span> REJOINDRE SALON</button>
-                <!-- <button class="pbtn" @click="goSetting()"> <span>⚙️</span> PARAMETRE</button> -->
-            </div>
 
+            <div class="btndiv">
+
+                <div class="cjdiv">
+                    <button class="pbtn" @click="playSolo()" > <span>💣</span> JOUER SOLO</button> <br>
+                    <button class="pbtn" @click="redirectMode()" > <span>🕹️</span> MODE DE JEU</button> <br>
+                    <button class="pbtn" @click="createLobby()" > <span>⚔️</span> CRÉER SALON</button> <br>
+                    <button class="pbtn" @click="joinLobby()"> <span>🛡️</span> REJOINDRE SALON</button>
+                    <!-- <button class="pbtn" @click="goSetting()"> <span>⚙️</span> PARAMETRE</button> -->
+                </div>
 
             </div>
 

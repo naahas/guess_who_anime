@@ -804,7 +804,6 @@ io.on('connection' , (socket) => {
     const iohint3 = socket.request.session.hint3;
 
     socket.emit('showSettingEvent' , iousername);
-    console.log(ioroomid)
 
     
     if(iocreate != true) socket.emit('displayJoinDiv' , ioroomid);
@@ -824,7 +823,6 @@ io.on('connection' , (socket) => {
             // if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
         }
 
-        console.log(nbplayer)
         socket.emit('joinCountNotificationEvent' , (nbplayer));   
             
     }
@@ -1057,7 +1055,6 @@ io.on('connection' , (socket) => {
 
 
     if(ioback == true) {
-        console.log('jss mort')
         socket.to(ioformerid).emit('notifHostCancelFromPlayer' , iousername);
     }
 

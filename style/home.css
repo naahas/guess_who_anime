@@ -84,6 +84,17 @@ body{
 }
 
 
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+  #mainback {
+    width: 100%;
+    height: 100%;
+    object-fit:none;
+}
+
+
+}
+
+
 .backmode {
   z-index: -10;
   filter: brightness(20%);
@@ -94,7 +105,6 @@ body{
 
 
 .btndiv {
-    
     position: absolute;
     width: 50%;
     height: fit-content;
@@ -143,22 +153,25 @@ body{
  }
 
 
- @media (max-width:431px) {
+ @media screen and (max-width: 432px) {
     .pbtn {
         width: 100%;
-        font-size: 90%;
+        font-size: 60%;
+        height: 5.5em;
+        margin: 1.5em;
     }
   }
 
 
 @media screen and (orientation:landscape) and (max-width:950px)  { 
     .pbtn {
-        width: 70%;
-        font-size: 90%;
+        width: 60%;
+        font-size: 60%;
+        height: 5em;
     }
   
   
-  }
+}
   
 
 
@@ -167,8 +180,9 @@ body{
     text-shadow: rgb(20, 97, 184) 1px 0 10px;  
     word-spacing: 0.2em;
     letter-spacing: 0.12em;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family:Georgia, 'Times New Roman', Times, serif;
     font-weight: 500;
+    margin-bottom: 1em;
   }
 
 
@@ -188,19 +202,27 @@ body{
 	  border: 0.2em solid rgb(110, 129, 129);
     padding: 1em;
     text-shadow: rgb(61, 46, 55) 1px 1px 1px;  
-    width: 75%;
+    width: 55%;
     height: 80%;
   }
 
 
+  #usernameinput::-webkit-input-placeholder {
+    color: black;
+    opacity: 0.6;
+}
+
+
+
+
 
   #subnick{
-	min-width: 30%;
+	min-width: 35%;
 	height: 3.5em;
-    margin: 1em;
+  margin: 1.5em;
 	border-radius: 30px;
-    font-family: 'Times New Roman', Times, serif;
-    letter-spacing: 0.2em;
+  font-family: 'Times New Roman', Times, serif;
+  letter-spacing: 0.2em;
 	border: 3px solid #f8f0f4;
 	background-color: transparent;
 	text-align: center;
@@ -223,6 +245,8 @@ body{
     position: absolute;
     color:red;
 }
+
+
 
 
 .userdiv {
@@ -274,19 +298,116 @@ body{
 
 .usernamediv {
     display: none;
+    position: absolute;
+    height: fit-content;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top:0;
+    margin: auto; position: absolute;
+    width: 50%;
+    height: fit-content;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top:0;
+    margin: auto;
 }
 
 
-@media (max-width:431px) {
-  .currentxt {
+
+
+@media screen and (max-width: 432px) {
+    .currentxt {
     font-size: 0.7em;
   }
+
+  .usernamediv {
+    position: absolute;
+    height: fit-content;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top:0;
+    margin: auto; position: absolute;
+    width: 80%;
+    height: fit-content;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top:0;
+    margin: auto;
+  }
+
+
+  .usernamediv h2 {
+    font-size: 1.2em;
+    margin-bottom: 1.5em;
+  }
+
+
+  #subnick {
+    width: 60%;
+    height: 3.5em;
+    font-size: 0.8em;
+  }
+
+
+  .errortxt {
+    font-size: 0.6em;
+    padding: 0.5em;
+}
+
+  #usernameinput {
+    font-size: 0.6em;
+    width: 60%;
+    height: 4em;
+  }
+
 }
 
 
 @media screen and (orientation:landscape) and (max-width:950px)  { 
   .currentxt {
     font-size: 0.7em;
+  }
+
+  .usernamediv {
+    position: absolute;
+    height: fit-content;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top:0;
+    margin: auto; position: absolute;
+    width: 70%;
+    height: fit-content;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top:0;
+    margin: auto;
+  }
+
+
+  #subnick {
+    width: 20%;
+  }
+
+
+  .errortxt {
+    font-size: 1em;
+    padding: 0.5em;
+}
+
+
+  .usernamediv h2 {
+    font-size: 1.3em;
+  }
+
+  #usernameinput {
+    width: 40%;
+    height: 60%;
   }
   
 }
@@ -333,11 +454,72 @@ body{
 
 
 .codetxt {
+    display: none;
     color:azure;
     letter-spacing: 0.1em;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     text-shadow: rgb(240, 188, 235) 5px 0 10px;  
 }
+
+
+.pastedtxt {
+  display: none;
+  position: absolute;
+  right: 4%;
+  top:-10%;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color:aliceblue;
+  text-shadow: rgb(248, 254, 254) 5px 0 10px;  
+  text-transform: uppercase;
+  padding: 0.6em;
+  padding-left: 1em;
+  padding-right: 1em;
+  font-size: 0.8em;
+  background-color: rgba(221, 241, 241, 0.15);
+  border-radius: 0.9em;
+  letter-spacing: 1px;
+}
+
+
+.pastedAnimclass {
+  animation: pastedA 2s ease-in-out forwards;
+
+}
+
+@keyframes pastedA {
+  0% {
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+
+.codetrue {
+  cursor: pointer;
+}
+
+
+.codetrue:hover {
+  opacity: 0.7;
+}
+
+
+.codetrue:active {
+  opacity: 0.3;
+  background-color: rgba(221, 241, 241, 0.2);
+}
+
 
 
 .startbtn {
@@ -493,7 +675,7 @@ body{
   }
 
 
-  @media (max-width:431px) {
+  @media screen and (max-width: 432px) {
     .joindiv {
         width: 70%;
         
@@ -845,7 +1027,7 @@ body{
     filter: brightness(70%);
   }
 
-  @media (max-width:431px) {
+  @media screen and (max-width: 432px) {
     .logopic {
       width: 21%;
       height: 10%;
@@ -920,7 +1102,7 @@ body{
   }
 
 
-  @media (max-width:431px) {
+  @media screen and (max-width: 432px) {
     .bombpic {
       width: 85%;
     }
@@ -953,7 +1135,7 @@ body{
   }
 
 
-  @media (max-width:431px) {
+  @media screen and (max-width: 432px) {
     #subbtn {
       display:inline;
     }
@@ -1150,9 +1332,7 @@ body{
 }
 
 
-@media (max-width:431px) {
-  
-}
+
 
 
 @media screen and (orientation:landscape) and (max-width:950px)  { 
@@ -1525,7 +1705,7 @@ select::-ms-expand {
 
 
 
-@media (max-width:431px) {
+@media screen and (max-width: 432px) {
   .navdiv {
     width: fit-content;
     height: 100%;
@@ -1601,7 +1781,7 @@ select::-ms-expand {
 
 
 
-@media (max-width:431px) {
+@media screen and (max-width: 432px) {
   .opponentdiv {
     top:9%;
   }
@@ -1894,7 +2074,7 @@ select::-ms-expand {
 }
 
 
-@media (max-width:431px) {
+@media screen and (max-width: 432px) {
   .bombpic {
     width: 85%;
   }
@@ -2057,8 +2237,8 @@ select::-ms-expand {
   filter: brightness(90%);
   z-index: 99;
   position: absolute;
-  width: 4rem;
-  height: 4rem;
+  width: 3.7rem;
+  height: 3.7rem;
   animation: skullA .3s forwards;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
 }
@@ -2068,7 +2248,7 @@ select::-ms-expand {
 
   0% {
     opacity: 0;
-    transform: scale(1.5);
+    transform: scale(1.5) translateY(-0.3em);
   }
 
   50% {
@@ -2076,7 +2256,7 @@ select::-ms-expand {
 
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(-0.3em);
   }
 
 }
@@ -2344,6 +2524,8 @@ select::-ms-expand {
 
 
 }
+
+
 
 
 
