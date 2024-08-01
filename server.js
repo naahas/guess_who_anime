@@ -160,7 +160,7 @@ app.post('/subUsername' , function(req,res) {
         current_user.push(nicknameup);
     }
 
-     
+      
 
     res.end(cres);
        
