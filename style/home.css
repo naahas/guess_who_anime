@@ -1952,15 +1952,8 @@ select::-ms-expand {
 
 
 
-.container {
-  position: absolute ;
-  top:0;
-  bottom: 7%;
-  right: 0;
-  left: 0;
-  margin: auto;
-}
 
+/* 
 .playerdiv {
   position: absolute;
   top:0;
@@ -1969,43 +1962,60 @@ select::-ms-expand {
   bottom: 0;
   width: 20%;
   height: fit-content;
-  /* if height removed then zoom in and out bug resolved but mobile display still bad */
   display: flex;
   justify-content: center;
   align-items: center;
   color: black;
   font-weight: bold;
+} */
+
+
+
+.playerdiv {
+  position: absolute;
+  width: 6.6em;
+  
+  border-radius: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #fff;
 }
+
+
 
 
 .p0input {
   width: 8em;
   text-align: center;
   font-family:'Courier New', Courier, monospace;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   border: 0;
   font-weight: 600;
   text-shadow: .0.7em .1em 0 hsl(195, 10%, 8%);
-  border-bottom: 0.05em solid rgba(240, 248, 255, 0.591);
-  color:rgba(224, 203, 203, 0.694);
+  border-bottom: 0.04em solid rgba(236, 246, 255, 0.591);
+  color:rgba(255, 228, 228, 0.989);
   outline: 0;
-  font-size: 1.2rem;
-  color: rgb(179, 241, 247);
+  font-size: 1.1rem;
   padding:1em 0.7em 0.7em 1em;
-  background-color: transparent;
+  background-color: rgba(240, 91, 210, 0.08);
+  border-top-right-radius: 20%;
+  border-top-left-radius: 20%;
 }
 
 
 .ptxt {
   position: absolute;
-  transform: translateY(-170%);
+  transform: translateY(-220%);
   letter-spacing: 1.2px;
   font-family:Georgia, 'Times New Roman', Times, serif;
   color:aliceblue;
   text-shadow: rgb(125, 145, 68) 5px 0 10px;  
   text-transform: uppercase;
-  font-size: 80%;
+  font-size: 78%;
+  font-style: italic;
 }
 
 .lostclass {
@@ -2018,26 +2028,25 @@ select::-ms-expand {
 .turnpic {
   position: absolute;
   display: none;
-  width: 30px;
-  height: 30px;
-  transform: translateX(-5em);
-  animation: turnF .7s infinite;
+  width: 1.5em;
+  height: 1.5em;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  animation: turnF .6s infinite;
 }
 
 
 @keyframes turnF {
 
   0% {
-    transform: translate(-7em , -1em);
+    transform: translateX(-7em) translateY(-0.3em);
   }
 
   50% {
-    transform: translate(-6.5em, -1em);
+    transform: translateX(-6.5em) translateY(-0.3em);
   }
 
   100% {
-    transform: translate(-7em , -1em);
+    transform: translateX(-7em) translateY(-0.3em);;
   }
 
 }
@@ -2086,14 +2095,43 @@ select::-ms-expand {
 
 @keyframes movelock {
   0% {
-    transform: rotate(-10deg) translateY( -50%) translateX(-5em);
+    transform: rotate(10deg) translateY( -50%) translateX(6em);
   }
 
   100% {
     opacity: 0;
-    transform: rotate(-10deg) translateY( -100%) translateX(-5em);
+    transform: rotate(10deg) translateY( -100%) translateX(6em);
   }
 }
+
+
+
+
+
+
+@media screen and (max-width: 432px)  {
+  .playerdiv {
+    width: 1.5em;
+    height: 2.5em;
+  }
+
+  
+
+  .ptxt {
+    font-size: 0.6rem;
+    transform: translateY(-200%);
+  }
+
+
+  .skullpic {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+
+
+
 
 
 .loststyle {
@@ -4359,4 +4397,130 @@ select::-ms-expand {
 }
 
 
+
+
+
+
+#players-container {
+  position: absolute;
+  top:0;
+  right: 7%;
+  left: 0;
+  bottom: 5%;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  background-color: rgb(52, 179, 233);
+}
+
+
+
+#containerid {
+  display: none;
+  position: absolute;
+  top:0;
+  right: 7%;
+  left: 0;
+  bottom: 5%;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  background-color: rgb(52, 179, 233);
+}
+
+
+
+.circle {
+    border: 2px solid #333;
+    box-sizing: border-box;
+}
+
+
+.outer-circle {
+  width: 100%;
+  height: 100%;
+  border-color: #18334f;
+}
+
+
+
+@media screen and (max-width: 432px) {
+    .bonuscontainer {
+      top: 3.5em;
+      right: 1em;
+      bottom: unset;
+      bottom: none;
+    }
+
+
+    .bombbonuspicclass {
+      filter: brightness(40%);
+      width: 2em;
+    }
+
+
+    .bonus-text {
+      margin-left: 1em;
+      font-size: 0.8em;
+    }
+
+
+    .bonuscontainer {
+      gap: 1em;
+    }
+    
+
+
+    .picpic {
+      width: 50%;
+      height: 50%;
+    }
+
+
+    .turnpic {
+      position: absolute;
+      display: none;
+      width: 1.3em;
+      height: 1.3em;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+      animation: turnF .6s infinite;
+    }
+    
+    
+    @keyframes turnF {
+    
+      0% {
+        transform: translateX(-3.5em) translateY(-0.3em);
+      }
+    
+      50% {
+        transform: translateX(-4em) translateY(-0.3em);
+      }
+    
+      100% {
+        transform: translateX(-3.5em) translateY(-0.3em);;
+      }
+    
+    }
+    
+
+
+    .p0input {
+      width: 7.2em;
+      font-size: 0.5rem;
+    }
+    
+    
+
+    .playerdiv {
+   
+    }
+
+
+  
+    
+    
+
+
+}
 

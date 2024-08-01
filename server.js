@@ -840,8 +840,8 @@ io.on('connection' , (socket) => {
     if(iojoin == true && ioroomid) {
         if(io.sockets.adapter.rooms.get(ioroomid)) {
             var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
-            if(roomsize == 6) mapcodefull.push(ioroomid);
-            if(roomsize<=6) {
+            if(roomsize == 7) mapcodefull.push(ioroomid);
+            if(roomsize<=7) {
                 mapcode.set(iousername , ioroomid);
                 socket.join(ioroomid);
 
@@ -869,6 +869,8 @@ io.on('connection' , (socket) => {
         if(!ioplaying && iomode == 'Bombanime') socket.emit('displaySetting');
         if(!ioplaying && iomode == 'Citanime') socket.emit('displaySetting');
         if(!ioplaying && iomode == 'Cardanime') socket.emit('displaySetting');
+        if(!ioplaying && iomode == 'Trivianime') socket.emit('displaySetting');
+
         
     }
 

@@ -1657,7 +1657,9 @@ function displayWinnerHost(winner) {
     $('.container').hide();
     $('.bombdiv').hide();
     $('.bonuscontainer').hide();
+    $('#containerid').hide();
     $('.winnerdiv').show();
+
    
 
     var ta = document.getElementById('audio1');
@@ -1700,6 +1702,7 @@ function displayWinner(winner) {
     $('.bombdiv').hide();
     $('.bonuscontainer').hide();
     $('.winnerdiv').show();
+    $('#containerid').hide();
 
     var ta = document.getElementById('audio1');
     ta.pause();
@@ -1870,57 +1873,29 @@ function editBotAnswer(botanswer) {
 }
 
 
-window.addEventListener('resize', adjustPlayerPositions);
-
-function adjustPlayerPositions() {
-    var container = document.getElementById('containerid');
-    var numberOfElements = document.querySelectorAll('.playerdiv').length;
-    var angle = (2 * Math.PI) / numberOfElements;
-    var radius = Math.min(container.clientWidth, container.clientHeight) / 3; // Ajuster le rayon en fonction de la taille du conteneur
-
-    for (var i = 0; i < numberOfElements; i++) {
-        var playerdiv = document.getElementById('playerdiv' + (i + 1));
-        var x = -Math.cos(i * angle) * radius;
-        var y = -Math.sin(i * angle) * radius;
-
-        playerdiv.style.position = 'absolute'; // Assurez-vous que la position est bien absolue
-        playerdiv.style.top = (container.clientHeight / 2 - playerdiv.offsetHeight / 2 + y) + 'px';
-        playerdiv.style.left = (container.clientWidth / 2 - playerdiv.offsetWidth / 2 + x) + 'px';
-    }
-}
-
-
 
 
 
 function editOpponent(players , username) {
     
     var container = document.getElementById('containerid');
-    var numberOfElements = players.length;
+    var numberOfPlayers = 3;
+
+    while (container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
 
 
-    var angle = (2 * Math.PI) / numberOfElements;
-    var radius = 215; // Rayon du cercle
+    var radius = window.innerWidth < 432 ? 120 : 220; // Adjust radius for smaller screens
 
-    for(let i = 1 ; i <= numberOfElements ; i++) {
+    for(let i = 0 ; i < numberOfPlayers ; i++) {
 
         var playerdiv = document.createElement('div');  
         playerdiv.setAttribute('id' , 'playerdiv' + i);
         playerdiv.classList.add('playerdiv');
-        
-        container.appendChild(playerdiv);
 
-    }
-
-
-
-    
-    for (var i = 0; i < numberOfElements; i++) {
-        var playerdiv = document.getElementById('playerdiv' + (i + 1));
-        var x = - Math.cos(i * angle) * radius;
-        var y = - Math.sin(i * angle) * radius;
-        playerdiv.style.top = container.clientHeight / 2 - playerdiv.offsetHeight / 2 + y + 'px';
-        playerdiv.style.left = container.clientWidth / 2 - playerdiv.offsetWidth / 2 + x + 'px';
+        const angle =  (360 / numberOfPlayers) * i
+        const angleInRadians = angle * (Math.PI / 180);
 
         var playertxt = document.createElement('p');
 
@@ -1991,9 +1966,15 @@ function editOpponent(players , username) {
         playerdiv.appendChild(padlockpic);
         playerdiv.appendChild(pinput);
 
-        
-        
-    }       
+
+
+        playerdiv.style.transform = `rotate(${angle}deg) translate(${radius}px) rotate(-${angle}deg)`;
+        container.appendChild(playerdiv);
+
+        $('#containerid').show();
+    }
+
+    
 }
 
 
@@ -2157,6 +2138,15 @@ function editRule(stat) {
         app.ruletitle = "Cardanime";
         app.ruletxt = "Chaque joueur pioche des cartes pour composer leur main. Une statistique apparaît par la suite au milieu de l'écran , chaque joueur tente alors de proposer une carte de leur main dont la statistique correspond à celle de l'écran.";
     }
+
+
+    if(stat == 4) {
+        app.ruletitle = "Trivianime";
+        app.ruletxt = "Trivial MM";
+    }
+
+
+
 
 
 
@@ -3181,8 +3171,6 @@ function showBombHint(hint , stat) {
 
 
 function showBonus(character , auth1 , auth2 , auth3) {
-    console.log(auth1 , auth2 , auth3)
-    console.log(character)
 
     var container = document.getElementById('maindiv');
 
@@ -3408,3 +3396,109 @@ function updateBombBonus(character , auth1 , auth2 , auth3) {
 
 
 
+// document.addEventListener('DOMContentLoaded', () => {
+//     const playersContainer = document.getElementById('players-container');
+//     const numberOfPlayers = 5; // Changez ce nombre en fonction du nombre de joueurs
+    
+//     const radius = 230; // Rayon du cercle
+    
+//     // Suppression des anciens joueurs s'il y en a
+//     while (playersContainer.firstChild) {
+//         playersContainer.removeChild(playersContainer.firstChild);
+//     }
+
+//     for (let i = 0; i < numberOfPlayers; i++) {
+//         const player = document.createElement('div');
+//         player.classList.add('ppp');
+//         player.textContent = `Joueur ${i + 1}`;
+        
+//         // Calculer l'angle pour la position
+//         const angle = (360 / numberOfPlayers) * i;
+        
+//         // Convertir les degrés en radians
+//         const angleInRadians = angle * (Math.PI / 180);
+        
+//         // Positionner le joueur
+//         player.style.transform = `rotate(${angle}deg) translate(${radius}px) rotate(-${angle}deg)`;
+        
+//         playersContainer.appendChild(player);
+//     }
+
+
+// })
+
+
+
+
+
+
+/***************************** */
+
+// var playertxt = document.createElement('p');
+
+        // playertxt.classList.add('ptxt');
+        // playertxt.classList.add('ptxt' + i);
+        // playertxt.innerHTML = players[i];
+
+        // var pinput = document.createElement('input');
+
+        // pinput.classList.add('p0input');
+        // pinput.classList.add('pindex' + i);
+        // pinput.classList.add('disablemode2');
+        // pinput.setAttribute('disabled' , 'true');
+        // pinput.type = 'text';
+
+
+        // var padlockpic = document.createElement('img');
+        
+        // padlockpic.setAttribute('alt' , 'LOCKPIC');
+        // padlockpic.setAttribute('src' , 'padlock5.png');
+        // padlockpic.classList.add('lockpic');
+
+        // var turnpic = document.createElement('img');
+
+        // turnpic.classList.add('turnpic' + i);
+        // turnpic.setAttribute('src' , 'turnpic6.png');
+        // turnpic.setAttribute('alt' , 'TURNPIC');
+        // turnpic.classList.add('turnpic');
+        
+        // var skullpic = document.createElement('img');
+
+        // skullpic.classList.add('skullpic' + i);
+        // skullpic.setAttribute('src' , 'skull1.png');
+        // skullpic.setAttribute('alt' , 'SKULLPIC');
+        // skullpic.classList.add('skullpic');
+
+
+        // if(players[i] == username) {
+       
+        //     playertxt.classList.add('tmptxtclass');
+        //     pinput.classList.add('tmpinputclass');
+        //     padlockpic.classList.add('tmplockclass');
+        //     turnpic.classList.add('tmpturnclass');
+        //     skullpic.classList.add('tmpskullpic');
+        //     pinput.setAttribute('v-model' , 'canswer');
+
+        //     pinput.addEventListener('keypress' , function(event) {
+        //         if(event.key === 'Enter') {
+        //             app.checkAnswer(this);
+
+        //         }
+        //     });
+
+
+        //     pinput.addEventListener("input", function(e) {
+        //         socket.emit('showTypingEvent' , e.target.value);
+        //     });
+
+
+        //     pinput.focus();
+            
+            
+        // }
+
+        // playerdiv.appendChild(turnpic);
+        // playerdiv.appendChild(skullpic);
+        // playerdiv.appendChild(playertxt)
+        // playerdiv.appendChild(padlockpic);
+        // playerdiv.appendChild(pinput);
