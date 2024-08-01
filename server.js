@@ -158,8 +158,6 @@ app.post('/subUsername' , function(req,res) {
         req.session.username = nickname;
         req.session.mode = 'Bombanime';
         current_user.push(nicknameup);
-
-        addNewUser(nickname)
     }
 
     
