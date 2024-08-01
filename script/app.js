@@ -1879,7 +1879,7 @@ function editBotAnswer(botanswer) {
 function editOpponent(players , username) {
     
     var container = document.getElementById('containerid');
-    var numberOfPlayers = 3;
+    var numberOfPlayers = players.length;
 
     while (container.firstChild) {
         container.removeChild(container.firstChild);
