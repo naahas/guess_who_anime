@@ -76,6 +76,11 @@ app.use(express.static(__dirname + "/song/"));
 
 
 
+
+  /* ---------------------------------------------------- */
+
+
+
 var mapcode = new Map();
 var mapcodefull = [];
 var mapgametime = new Map();
@@ -148,11 +153,16 @@ app.post('/subUsername' , function(req,res) {
     var nicknameup = nickname.toUpperCase();
     var cres = checkUsername(nicknameup);
 
+    // good si le format du pseudo après vérification est correct
     if(cres == "good") {
         req.session.username = nickname;
         req.session.mode = 'Bombanime';
         current_user.push(nicknameup);
+
+        addNewUser(nickname)
     }
+
+    
 
     res.end(cres);
        
@@ -3194,6 +3204,43 @@ function clearPlate(rid) {
 
 
 
+function addNewUser(username) {
+    const filePath = 'counter.txt';
+    
+    // Lire le contenu du fichier
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          const newLine = `1 ${username}\n`;
+          fs.writeFile(filePath, newLine, (err) => {
+            if (err) throw err;
+          });
+        } else {
+          throw err;
+        }
+      } else {
+        const lines = data.split('\n').filter(line => line.trim() !== '');
+        const lastLine = lines[lines.length - 1];
+        const lastNumber = lastLine ? parseInt(lastLine.split(' ')[0]) : 0;
+  
+        // Ajouter une nouvelle ligne avec le nouveau numéro et le nom d'utilisateur
+        const newLine = `${lastNumber + 1} ${username}\n`;
+        fs.appendFile(filePath, newLine, (err) => {
+          if (err) throw err;
+        });
+      }
+    });
+  }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3215,6 +3262,7 @@ server.listen(process.env.PORT || 7000 , function(err) {
     if(err) throw err;
     console.log("-------------------");
     console.log("Server on " , server.address().port);
+    console.log("-------------------");
 
 })
 
