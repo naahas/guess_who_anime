@@ -3202,33 +3202,7 @@ function clearPlate(rid) {
 
 
 
-function addNewUser(username) {
-    const filePath = 'counter.txt';
-    
-    // Lire le contenu du fichier
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        if (err.code === 'ENOENT') {
-          const newLine = `1 ${username}\n`;
-          fs.writeFile(filePath, newLine, (err) => {
-            if (err) throw err;
-          });
-        } else {
-          throw err;
-        }
-      } else {
-        const lines = data.split('\n').filter(line => line.trim() !== '');
-        const lastLine = lines[lines.length - 1];
-        const lastNumber = lastLine ? parseInt(lastLine.split(' ')[0]) : 0;
-  
-        // Ajouter une nouvelle ligne avec le nouveau numéro et le nom d'utilisateur
-        const newLine = `${lastNumber + 1} ${username}\n`;
-        fs.appendFile(filePath, newLine, (err) => {
-          if (err) throw err;
-        });
-      }
-    });
-  }
+
 
 
 
