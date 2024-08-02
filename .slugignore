@@ -1,2 +1,5 @@
 
-node_modules
+node_modules/
+rdpic/
+npm-debug.log
+.gitignore
