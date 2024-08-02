@@ -1,5 +1,4 @@
-
 node_modules/
-rdpic/
 npm-debug.log
+.git
 .gitignore
