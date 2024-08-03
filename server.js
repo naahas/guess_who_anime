@@ -61,7 +61,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 io.engine.use(sessionMiddleware);
 
-var profile = JSON.parse(fs.readFileSync('./data.json'));
+var profile = JSON.parse(fs.readFileSync('./bombdata.json'));
 
 
 //folder handler
@@ -88,29 +88,10 @@ var mapgametheme = new Map();
 var mapgameturn = new Map();
 var mapgametimer = new Map();
 var mapgamewinner = new Map();
-var mapgamewinnerpoint = new Map();
 var mapgamedata = new Map();
 var mapgamestack = new Map();
 var mapgametotal = new Map();
 var mapcodecopy = new Map();
-var mapgamedifficulty = new Map();
-var mapgamecitaturn = new Map();
-var mapgamecitaturnorigin = new Map();
-var mapgameplayerpoint = new Map();
-var mapgamecitation = new Map();
-var mapgamehand = new Map();
-var maphandplayer = new Map();
-var mapgameitationanswer = new Map();
-var mapgamecitajoker = new Map();
-var mapgamecurrentstat = new Map();
-var mapgamecardauthorize = new Map();
-var mapgameusedcard = new Map();
-var mapgamecardchoose = new Map();
-var mapgametmpdisable = new Map();
-var mapgamecardwinner = new Map();
-var mapgameleftplayer = new Map();
-var mapgamecardloser = new Map();
-var mapgamecardready = new Map();
 
 var current_user = [];
 
@@ -138,12 +119,7 @@ app.get('/' , function(req,res) {
 
 
 app.get('/setting' , function(req,res) {
-
-
-
-    
     res.sendFile(__dirname + "/setting.html");
- 
 });
 
 
@@ -217,18 +193,7 @@ app.post('/replay' , function(req,res) {
     req.session.replayed = true;
 
     mapgamewinner.delete(req.session.rid); 
-    mapgamewinnerpoint.delete(req.session.rid); 
-    mapgamecardwinner.delete(req.session.rid);
     mapgametime.delete(req.session.rid);
-    mapgamecurrentstat.delete(req.session.rid)
-    mapgamecardauthorize.delete(req.session.rid) 
-    mapgameusedcard.delete(req.session.rid)  
-    mapgamecardchoose.delete(req.session.rid)  
-    mapgametmpdisable.delete(req.session.rid);
-    mapgamecardloser.delete(req.session.rid); 
-    mapgamecardready.delete(req.session.rid);
-    mapgameleftplayer.delete(req.session.rid);
-    mapgamehand.delete(req.session.rid);
   
 
     res.end();
@@ -255,27 +220,6 @@ app.post('/replayPlayer' , function(req,res) {
     req.session.isplaying = null;
     req.session.endgame = null;
 
-
-    res.end();
-});
-
-
-app.post('/checkCitaAnswer' , function(req,res) {
-
-    var answer = req.body.val;
-    var answerUp = answer.toUpperCase();
-    var rid = req.session.rid;
-
-    if(mapgameitationanswer.get(rid).includes(answerUp)) req.session.citadisable = true;
-    else req.session.citadisable = false;
-
-    res.end();
-});
-
-
-app.post('/resetCitaStatus' , function(req,res) {
-
-    req.session.citadisable = false;
 
     res.end();
 });
@@ -321,7 +265,6 @@ app.post('/resetID' , function(req,res)  {
 
 app.post('/game' , function(req,res) {
 
-
     io.once('connection' , (socket) => {
         socket.to(req.session.rid).emit('changeGamePlayerStatusEvent' , req.session.mode);
     });  
@@ -337,11 +280,12 @@ app.post('/game' , function(req,res) {
 
 
 app.get('/game' , function(req,res) {
-    console.log(req.session.life)
+    if(req.session.mode == "Bombanime") {
+        if(mapgameturn.get(req.session.rid) != req.session.username && req.session.solop == true) mapgameturn.set(req.session.rid , req.session.username);
+    }
 
     //IF PLAYER TRY TO RELOAD AFTER HOST LEAVE THE GAME
     if(req.session.isplaying == true && req.session.joined == true && !mapgamedata.has(req.session.rid)) {
-        req.session.hasdraw = null;
         req.session.endgame = null;
         req.session.ingame = null;
         req.session.joined = false;
@@ -383,36 +327,6 @@ app.post('/ipstatus' , function(req,res) {
 });
 
 
-app.post('/useJoker' , function(req,res) {
-
-    var ppoint = mapgameplayerpoint.get(req.session.username);
-
-    if(req.body.val == 1 && req.session.usedJK1 != true) {
-        var new_point = (ppoint - 50) >= 0 ? (ppoint - 50) : 0 ;
-        mapgameplayerpoint.set(req.session.username , new_point)
-        req.session.usedJK1 = true;
-    }
-
-    if(req.body.val == 2 && req.session.usedJK2 != true) {
-        var new_point = (ppoint - 50) >= 0 ? (ppoint - 50) : 0 ;
-        mapgameplayerpoint.set(req.session.username , new_point)
-        
-        req.session.usedJK2 = true;
-    }
-
-    
-    res.end();
-});
-
-
-app.post('/resetJoker' , function(req,res) {
-
-    req.session.usedJK1 = false;
-    req.session.usedJK2 = false;
-
-    
-    res.end();
-});
 
 
 // GAME START AFTER CONFIRM SETTING (BOMBANIME)
@@ -476,115 +390,6 @@ app.post('/confirmSettingBombanime' , function(req,res) {
     res.end();
 });
 
-
-
-
-
-app.post('/confirmSettingCardanime' , function(req,res) {
-    var handc = req.body.val1;
-    if(handc != 1 && handc != 3 && handc!=4 && handc != 5) handc = 4;
-
-    mapgamehand.set(req.session.rid , parseInt(handc));
-    mapgamedata.set(req.session.rid , profile.Cards);
-    mapgamecardauthorize.set(req.session.rid , false);
-    mapgameusedcard.set(req.session.rid , []);
-    mapgametmpdisable.set(req.session.rid , []);
-
-    var nbp = 0;
-    for (let [key, value] of mapcode) {
-        if(mapcode.get(key) == req.session.rid) nbp++
-    }
-
-    //TODO : HANDLE WHEN PLAY SOLO > MAKE BOT DRAW 
-    mapgamecardready.set(req.session.rid , nbp);
-    mapgamecardchoose.set(req.session.rid , nbp);
-    mapgameleftplayer.set(req.session.rid , nbp);
-
-    req.session.isplaying = true;
-    req.session.replayed = false;
-    req.session.nbref = nbp;
-
-
-    io.once('connection' , (socket) => {
-        socket.to(req.session.rid).emit('makePlayerPlayingEvent');
-    });  
-
-
-    res.end();
-});
-
-
-app.post('/chooseCard' , function(req,res) {
-    mapgamecardchoose.set(req.session.rid , mapgamecardchoose.get(req.session.rid) - 1);
-    var character  = req.body.val;
-    var tab = mapgameusedcard.get(req.session.rid);
-    var tab2 = mapgametmpdisable.get(req.session.rid);
-    var character_stat;
-    var character_pic;
-
-
-    var main_stat_index = editAssociate(mapgamecurrentstat.get(req.session.rid)[2]);
-    
-    var hand = maphandplayer.get(req.session.username);
-    hand.forEach(card => {
-        if(card.Character == character) {
-            character_stat = card.stat[main_stat_index];
-            character_pic = card.path;
-        } else if(!tab2.includes(card.Character)) tab2.push(card.Character);
-    });
-
-
-    if(!tab.includes(character)) tab.push([character , character_stat , character_pic ,  req.session.username]);
-    mapgameusedcard.set(req.session.rid , tab);
-    mapgametmpdisable.set(req.session.rid , tab2);
-
-    
-    res.send([character , character_stat , character_pic , req.session.username]);
-});
-
-
-app.post('/checkEnableAuth' , function(req,res) {
-    var tmp_cards = req.body.val;
-    if(req.session.life <= 0) res.send([tmp_cards , "no"])
-    else res.send([tmp_cards , "yes"])
-
-});
-
-
-app.post('/updateCardLife' , function(req,res) {
-    var winner = req.body.val;
-    if(winner!=req.session.username && winner != null) {
-        req.session.life = req.session.life - 1;
-        mapgamecardloser.set(req.session.username , req.session.rid);
-        
-        if(req.session.life <= 0) {
-            req.session.life = 0;
-            mapgameleftplayer.set(req.session.rid , mapgameleftplayer.get(req.session.rid) - 1);
-        }
-        res.sendStatus(202);
-    } else res.end();
-
-    
-});
-
-
-app.post('/drawCard' , function(req,res) {
-    generateHand(req.session.rid , req.session.username);
-    
-    req.session.hasdraw = true;
-    req.session.life = 5;
-
-    var actual_playerdraw = mapgamecardready.get(req.session.rid);
-    mapgamecardready.set(req.session.rid , actual_playerdraw - 1);
-
-    var hand = maphandplayer.get(req.session.username);
-
-    //LAST PLAYER TO DRAW
-    res.send([hand , mapgamecardauthorize.get(req.session.rid) , req.session.life , mapgamecardready.get(req.session.rid)]);
-   
-
-    
-});
 
 
 app.post('/playSolo' , function(req,res) {
@@ -691,24 +496,12 @@ app.post('/cancelPreGame' , function(req,res) {
 });
 
 
-app.post('/endCardGame' , function(req,res) {
-    req.session.endgame = true;
-    var winner = req.body.val[3];
-    
-    maphandplayer.delete(req.session.username);
-    req.session.hasdraw = null;
-
-    if(req.session.created == true) res.send([winner , 'yes'])
-    else res.send([winner , 'no'])
-});
 
 
 app.post('/endGame' , function(req,res) {
     req.session.endgame = true;
 
     var winner = req.body.val;
-    if(req.body.val2) mapgamewinnerpoint.set(req.session.rid , req.body.val2);
-    
     mapgamewinner.set(req.session.rid , winner);
 
     res.end();
@@ -747,13 +540,9 @@ app.post('/exitGame' , function(req,res) {
         }
 
 
-        mapgameplayerpoint.delete(req.session.username);
         mapcode.delete(req.session.username);
         mapcodefull = mapcodefull.filter(item => item!=req.session.rid);
         mapgametime.delete(req.session.rid);
-        mapgamehand.delete(req.session.rid);
-        mapgamecitaturn.delete(req.session.rid);
-        mapgamedifficulty.delete(req.session.rid);
         mapgametheme.delete(req.session.rid);
         mapgameturn.delete(req.session.rid);
         mapgametimer.delete(req.session.rid);
@@ -764,7 +553,6 @@ app.post('/exitGame' , function(req,res) {
     }
 
     mapcode.delete(req.session.username);
-    maphandplayer.delete(req.session.username);
     req.session.created = null;
     req.session.rid = null;
     res.redirect('/');
@@ -802,21 +590,15 @@ io.on('connection' , (socket) => {
     const iosolo = socket.request.session.solop;
     const ioback = socket.request.session.back;
     const iomode = socket.request.session.mode;
-    const iocitadisable = socket.request.session.citadisable;
-    const iodraw = socket.request.session.hasdraw;
-    const iolife = socket.request.session.life;
-    const ioref = socket.request.session.nbref;
     const iochara = socket.request.session.character;
     const iohint1 = socket.request.session.hint1;
     const iohint2 = socket.request.session.hint2;
     const iohint3 = socket.request.session.hint3;
 
+
+
     socket.emit('showSettingEvent' , iousername);
-
-    
     if(iocreate != true) socket.emit('displayJoinDiv' , ioroomid);
-
-    
     if(iousername) socket.emit('displayUsernameEvent' , iousername);
 
   
@@ -842,7 +624,7 @@ io.on('connection' , (socket) => {
 
 
 
-    //JOIN THE ROOM
+    //JOIN THE ROOM AND DEFINE MAX PLAYERS IN ROOM
     if(iojoin == true && ioroomid) {
         if(io.sockets.adapter.rooms.get(ioroomid)) {
             var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
@@ -873,11 +655,7 @@ io.on('connection' , (socket) => {
     
     if(iocreate && ioingame == true) {
         if(!ioplaying && iomode == 'Bombanime') socket.emit('displaySetting');
-        if(!ioplaying && iomode == 'Citanime') socket.emit('displaySetting');
-        if(!ioplaying && iomode == 'Cardanime') socket.emit('displaySetting');
-        if(!ioplaying && iomode == 'Trivianime') socket.emit('displaySetting');
-
-        
+        if(!ioplaying && iomode == 'Trivianime') socket.emit('displaySetting');  
     }
 
 
@@ -966,87 +744,12 @@ io.on('connection' , (socket) => {
     }
 
 
-   
-
-    if(iomode == "Cardanime") {
-        if(ioplaying && ioendgame != true) {
-            socket.emit('playBackCardanimeAudioEvent')
-
-            //DISPLAY OPPONENT (CARDANIME)
-            if(ioplaying && ioingame == true) {
-                var playertab = [];
-                for (let [key, value] of mapcode) {
-                    if(mapcode.get(key) == ioroomid) playertab.push(key);
-                }
-              
-                socket.emit('displayOpponents3' , playertab ,  iousername );                        
-            }
-
-
-            if(mapgametime.has(ioroomid) && mapgametime.get(ioroomid) > 0) {
-                socket.emit('displayCardTime' , mapgametime.get(ioroomid));
-            }
-
-
-
-            //DISPLAY PLATE IF THERE IS CARDS AND REVEAL THE PLATE IF TIME IS OVER
-            if(mapgameusedcard.has(ioroomid) && mapgameusedcard.get(ioroomid).length > 0) {
-                if(mapgametime.has(ioroomid) && mapgametime.get(ioroomid) > 0) socket.emit('displayPlateEvent' , mapgameusedcard.get(ioroomid))
-
-                if(mapgametime.get(ioroomid) <= 0) {
-                    var winner_card = getWinnerCard(ioroomid)[0];
-                    socket.emit('revealCardEvent' , winner_card);
-                }
-            }
-
-            //DISPLAY STAT
-            if(mapgamecurrentstat.has(ioroomid)) socket.emit('displayMainStatEvent' , mapgamecurrentstat.get(ioroomid));
-              
-            //DISPLAY WAIT MSG OR NOT
-            var leftp = mapgamecardready.get(ioroomid);
-            if(leftp > 0) socket.emit('displayCardWaitEvent');
-            else socket.emit('hideCardWaitEvent');
-
-            //DISPLAY CARDS OR NOT
-            var cards_auth = mapgamecardauthorize.get(ioroomid);
-
-            
-            //DISPLAY DECK OR CARDS (ACCORDING TO ALREADY DRAW OR NOT)
-            socket.emit('displayPostRule3' , mapgamehand.get(ioroomid));
-            if(iodraw != true) socket.emit('displayBeginning3')
-            else {
-                var chara_array = [];
-                mapgameusedcard.get(ioroomid).forEach(chara_cell => {
-                    chara_array.push(chara_cell[0]);
-                });
-
-                if(iodraw == true) socket.emit('displayPlayerCard' , maphandplayer.get(iousername) , cards_auth , iolife , chara_array , mapgametmpdisable.get(ioroomid) , mapgametime.get(ioroomid));
-            }
-
-
-            if(iolife <= 0) socket.emit('disableCardsEvent')
-
-        }
-
-        if(ioplaying && ioendgame == true) {
-            var host = "no";
-            if(iocreate == true) host = "yes"
-            socket.emit('displayPostWinner' , [mapgamecardwinner.get(ioroomid)[3] , host]);
-        }
-    }
-
-
-
     if(ioendgame) {
         if(iomode == "Bombanime") {
             socket.emit('displayPostRule' , mapgametime.get(ioroomid) , mapgametheme.get(ioroomid));
             socket.emit('endGameEventAfterReload' , mapgamewinner.get(ioroomid));
         }
 
-        if(iomode == "Citanime") {
-            socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid) , mapgamecitaturn.get(ioroomid) );
-            socket.emit('endGameEventAfterReload2' , mapgamewinner.get(ioroomid) , mapgamewinnerpoint.get(ioroomid));
-        }
     }
 
 
@@ -1058,7 +761,6 @@ io.on('connection' , (socket) => {
     if(ioreplay) {
         socket.broadcast.to(ioroomid).emit('replayNotifPlayerEvent');
         if(iomode == "Bombanime") socket.emit('keepSettingEvent' , mapgametheme.get(ioroomid) , mapgametime.get(ioroomid));
-        if(iomode == "Citanime") socket.emit('keepSettingEvent2' , mapgamecitaturnorigin.get(ioroomid)  , mapgamedifficulty.get(ioroomid) , mapgametime.get(ioroomid));
     }
 
 
@@ -1230,111 +932,7 @@ io.on('connection' , (socket) => {
     });
 
 
-    // CHECK ANSWER HERE (CITANIME)
-    socket.on('sendAnswerEvent2' , (answer) => {
-        var canswer = answer.toUpperCase();
-        var answers = mapgameitationanswer.get(ioroomid);
-
-        if(iocitadisable != true) {
-        
-            //ANSWER RIGHT
-            if(answers.includes(canswer)) {
-                socket.emit('playRightAudio2');
-                
-                //INCREASE PLAYER POINT
-                var prepoint = 500;
-                prepoint = mapgameplayerpoint.get(iousername);
-
-                mapgameplayerpoint.set(iousername , mapgameplayerpoint.get(iousername) + 200);
-                var postpoint = mapgameplayerpoint.get(iousername);
-
-                socket.emit("increasePointEvent" , prepoint,  postpoint);       
-
-                    
-                //DISPLAY NEW PLAYER POINT TO OTHER PLAYERS
-                var index_player = 0;
-                for (let [key, value] of mapgameplayerpoint) {
-                    if(key == iousername && mapcode.get(key) == ioroomid) break;
-                    if(mapcode.get(key) == ioroomid) index_player++; 
-                }
-
-                socket.broadcast.to(ioroomid).emit('increasePointForOtherEvent' , index_player , postpoint);     
-                
-
-                socket.emit('disableJokerEvent');
-                socket.emit('disableCitaInputEvent');
-                
-                //WRONG ANSWER (CITANIME)
-            } else {
-                socket.emit('answerErrorEvent2');
-
-            }
-        }
-
-        
-    });
-
-
-    // HANDLE TIMER (CITANIME)
-    socket.on('handleTimerEvent2' , () => {
-        
-        var btimer = setInterval(() => {
-            var current_time = mapgametimer.get(ioroomid);
-            var game_time = mapgametime.get(ioroomid);
-
-
-            if(game_time - current_time == 1) {
-                io.to(ioroomid).emit('animationCitaTimerEvent');
-            }
-
-
-            //TIME'S UP
-            if(current_time>=game_time) {
-                mapgamecitaturn.set(ioroomid , mapgamecitaturn.get(ioroomid) - 1);
-
-                if(mapgamecitaturn.get(ioroomid) > 0) {
-
-                    mapgametimer.set(ioroomid , 0);
-                    generateCitation(ioroomid);
-                    
-                    var origin_turnb = parseInt(mapgamecitaturnorigin.get(ioroomid));
-                    var turnDisplay = (origin_turnb+1) - mapgamecitaturn.get(ioroomid);
-
-                    io.to(ioroomid).emit('changeCitationEvent' , turnDisplay , mapgamecitation.get(ioroomid));
-                    io.to(ioroomid).emit('enableCitaInputEvent' , 1);
-                    io.to(ioroomid).emit('resetJokerEvent');
-
-                    //NO MORE TURN
-                } else {
-                    clearInterval(btimer);
-                    var winner = iousername;
-                    var winnerpoint = mapgameplayerpoint.get(iousername);
-
-                    for (let [key, value] of mapgameplayerpoint) {
-                        if(mapcode.get(key) == ioroomid) {
-                            if(value > winnerpoint) { winnerpoint = value; winner = key };
-                        }
-                    }
-
-                    io.to(ioroomid).emit('endGameEvent2' , winner , winnerpoint , iousername + " (vous)");
-                    
-                }
-                //RESET TIMER
-                
-                
-
-                
-               
-            }
-            
-            
-            var new_timer_value = mapgametime.get(ioroomid) - mapgametimer.get(ioroomid);
-            if(mapgamecitaturn.get(ioroomid) > 0) io.to(ioroomid).emit("updateTimer" , new_timer_value);
-            mapgametimer.set(ioroomid , mapgametimer.get(ioroomid)+1);
-    
-        }, 1000);
-    });
-
+  
 
     // HANDLE TIMER (BOMBANIME)
     socket.on('handleTimerEvent' , () => {
@@ -1456,175 +1054,6 @@ io.on('connection' , (socket) => {
 
 
 
-    socket.on('useJokerEvent' , (stat) => {
-        var jk = mapgamecitajoker.get(ioroomid);
-        var hint;
-        if(stat == 1) hint = jk[0];
-        if(stat == 2) hint = jk[1];
-
-        socket.emit('displayJokerEvent' , stat , hint);
-
-        //DISPLAY DECREASE POINT TO OTHER PLAYER
-        var prepoint = mapgameplayerpoint.get(iousername);
-        var postpoint = (prepoint - 50) >= 0 ? (prepoint - 50) : 0 ;
-
-        var index_player = 0;
-
-        for (let [key, value] of mapgameplayerpoint) {
-            if(key == iousername && mapcode.get(key) == ioroomid) break;
-            if(mapcode.get(key) == ioroomid) index_player++; 
-        }
-
-        socket.broadcast.to(ioroomid).emit('increasePointForOtherEvent' , index_player , postpoint)  
-
-
-    });
-
-
-    //START CARDANIME GAME (AFTER LAST PLAYER DRAW) AND START FIRST ROUND
-    socket.on('everyPlayerDrawedEvent' , () => {
-        io.to(ioroomid).emit('hideCardWaitEvent');
-
-
-        //PLAY FIRST ROUND
-        setTimeout(() => {
-            var mainstat = generateStat();
-            mapgamecurrentstat.set(ioroomid , mainstat);
-            io.to(ioroomid).emit('playRound' , mainstat)
-        }, 5000);
-
-
-        //ENABLE CARDS FOR EVERYONE
-        setTimeout(() => {
-            mapgamecardauthorize.set(ioroomid , true);
-            io.to(ioroomid).emit('enableCardsEvent');
-        }, 12000);
-
-      
-    });
-
-
-
-    //WHEN SOMEONE CHOOSE A CARD : ITS SHOWN IN THE PLATE FOR EVERYONE
-    socket.on('tempPlateEvent' , (card_toadd_info) => {        
-        io.to(ioroomid).emit('updatePlateEvent' , card_toadd_info);
-        
-
-        setTimeout(() => { 
-            if(mapgamecardchoose.get(ioroomid) <= 0) {
-                mapgametime.set(ioroomid , 0);
-            }
-        }, 500);
-    });
-
-
-    socket.on('startRoundDelai' , () => {
-        setTimeout(() => {
-            socket.emit('sendRoundDelai');
-        }, 6000);
-    });
-
-
-    socket.on('removeLoserCardEvent' , () => {
-        if(mapgameleftplayer.get(ioroomid) <= 1) {
-        io.to(ioroomid).emit('endCardGameEvent' , mapgamecardwinner.get(ioroomid));
-        } else {
-
-            mapgameusedcard.get(ioroomid).forEach(card => {
-                var winner_card = mapgamecardwinner.get(ioroomid)[0];
-                if(card[3] == iousername && card[0]!=winner_card) {
-                    var new_character = generateNewCard(ioroomid ,  iousername , card[0]);
-                    socket.emit('replaceCardEvent' , card[0] , new_character);
-                }
-
-            });   
-        
-        }
-           
-    });
-
-
-    socket.on('startCardRoundTimer' , () => {
-
-        for (let [key, value] of mapgamecardloser) {
-            if(mapgamecardloser.get(key) == ioroomid) mapgamecardloser.delete(key);
-        }  
-        
-        if(mapgameleftplayer.get(ioroomid) > 1) {
-
-            //IF THE ONE WHO IS EMITTING THE TIMER IS THE HOST
-            if(iocreate) {
-                var max_time = 20;
-                var initial_time = 1;
-                mapgametime.set(ioroomid , max_time);
-                
-                var ctimer = setInterval(() => {
-
-                    io.to(ioroomid).emit('updateCardTimerEvent' , mapgametime.get(ioroomid));
-
-                    
-
-                    //TIME'S UP
-                    if(initial_time> mapgametime.get(ioroomid)) {
-
-                        clearInterval(ctimer);
-
-                        mapgamecardchoose.set(ioroomid , ioref);
-
-                        var winner_card = getWinnerCard(ioroomid)[0];
-                        var winner_author = getWinnerCard(ioroomid)[1];
-                        
-                        io.to(ioroomid).emit('revealCardEvent' , winner_card);
-                        io.to(ioroomid).emit('disableCardsEvent');
-
-
-                        setTimeout(() => {
-                            io.to(ioroomid).emit('displayEndRoundAnimationEvent' , winner_author);
-                        }, 1500);
-                        
-                        
-
-                        //HIDE PLATE CARDS
-                        setTimeout(() => {
-                            io.to(ioroomid).emit('clearPlateEvent');
-                        }, 4000);
-
-
-                        
-                        setTimeout(() => {
-                            if(mapgameleftplayer.get(ioroomid) > 1) {
-                                if(mapgamecardwinner.has(ioroomid) == true) clearPlate(ioroomid);
-                                var mainstat = generateStat();
-                                mapgamecurrentstat.set(ioroomid , mainstat);
-                                io.to(ioroomid).emit('playRound' , mainstat)
-                            }
-                        }, 8000);
-
-
-                        setTimeout(() => {
-                            if(mapgameleftplayer.get(ioroomid) > 1) {
-                                io.to(ioroomid).emit('enableEndRound' , mapgametmpdisable.get(ioroomid))
-                            }
-                        }, 13000);     
-                        
-
-
-
-
-                        
-                        
-                    }
-                    
-                    mapgametime.set(ioroomid , mapgametime.get(ioroomid) - 1);
-    
-            
-                }, 1000);
-            }
-        }
-    });
-
-
-
 
     socket.on('verifyReloadForHost' , () => {
         if(iocreate == true) socket.emit('reloadFinalHost')
@@ -1632,11 +1061,13 @@ io.on('connection' , (socket) => {
 
 
 
-    
 
 
 })
            
+
+
+
 
 
 /// JS FUNCTIONS
@@ -3058,147 +2489,11 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
 
     return similar_u;
 
- 
-     
-
-
-
-}
-
-
-
-function editAssociate(valstat) {
-    if(valstat == 'ATK') return 0;
-    if(valstat == 'DEF') return 1;
-    if(valstat == 'INT') return 2;
-    if(valstat == 'END') return 3;
-    if(valstat == 'VIT') return 4;
-    if(valstat == 'AGI') return 5;
-    if(valstat == 'TECH') return 6;
-    if(valstat == 'LUCK') return 7;
-    return 0;
-}
-
-
-
-function generateCitation(rid) {
-    var datab = mapgamedata.get(rid);
-    var totalc = Math.floor(Math.random() * datab.length);
-    var toRemove = datab[totalc];
-    var c_citation = datab[totalc].citation;
-    var c_answer = datab[totalc].reponses;
-    var c_joker = datab[totalc].joker;
-    mapgamecitation.set(rid , c_citation);
-    mapgameitationanswer.set(rid ,c_answer);
-    mapgamecitajoker.set(rid , c_joker);
-
-    mapgamedata.set(rid , mapgamedata.get(rid).filter(item => item!=toRemove));
 }
 
 
 
 
-function generateHand(rid , playername) {
-    
-    var chara_array = [];
-    var random_nb;
-    var random_chara;
-
-    for(let i = 0 ; i < mapgamehand.get(rid) ; i ++) {
-        var datac = mapgamedata.get(rid);
-
-        random_nb = Math.floor(Math.random() * datac.length);
-        random_chara = datac[random_nb];
-        chara_array.push(random_chara)
-        mapgamedata.set(rid , datac.filter(el => el != random_chara));
-    }
-
-
-    maphandplayer.set(playername , chara_array);
-}
-
-
-
-
-//GENERATE AND REPLACE HAND CARD
-function generateNewCard(rid , playername , remove_card) {
-    var chara_array;
-    var random_nb;
-    var random_chara;
-    
-    var datac = mapgamedata.get(rid);
-
-    random_nb = Math.floor(Math.random() * datac.length);
-    random_chara = datac[random_nb];
-    chara_array = random_chara;
-    mapgamedata.set(rid , datac.filter(el => el != random_chara));
-
-    var new_character = random_chara.Character;
-    var new_anime = random_chara.Anime;
-    var new_path = random_chara.path;
-    var new_stat = random_chara.stat;
-    
-
-    var hand = maphandplayer.get(playername);
-    hand.forEach(card => {
-        if(card.Character == remove_card) {
-            card.Character = new_character;
-            card.Anime = new_anime;
-            card.path = new_path;
-            card.stat = new_stat;
-        } 
-    });
-    
-
-    return chara_array;
-
-}
-
-
-
-
-function generateStat() {
-    var stats = [ ['ATTAQUE' , '⚔️ATTAQUE⚔️' , 'ATK'] , ['DEFENSE' , '🛡️DEFENSE🛡️' , 'DEF'] , ['INTELLIGENCE' , '💡INTELLIGENCE💡' , 'INT'] , ['ENDURANCE' , '❤️ENDURANCE❤️' , 'END'] , ['VITESSE' , '⚡VITESSE⚡' , 'VIT'] , ['AGILITÉ' , '🤸🏼AGILITÉ🤸🏼' , 'AGI'] , ['TECHNIQUE' , '🎯TECHNIQUE🎯' , 'TECH'] , ['CHANCE' , '🍀CHANCE🍀' , 'LUCK']];
-    var rd = Math.floor(Math.random() * stats.length);
-    var rds = stats[rd][0];
-    var rds2 = stats[rd][1];
-    var rds3 = stats[rd][2]
-
-    return [rds , rds2 , rds3]
-}
-
-
-
-
-function getWinnerCard(rid) {
-    var plate_cards = mapgameusedcard.get(rid);
-    var winner_card;
-    var character;
-    var best_stat = 0;
-    var winner_author;
-
-    plate_cards.forEach(card => {
-        if(card[1] >= best_stat) {
-            winner_card = card;
-            character = card[0];
-            best_stat = card[1];
-            winner_author = card[3];
-        }
-    });
-
-    mapgamecardwinner.set(rid , winner_card)
-    return [best_stat , winner_author];
-}
-
-
-
-function clearPlate(rid) {
-    mapgameusedcard.set(rid , []);
-
-    if(!mapgamecardwinner.get(rid)) mapgamecardwinner.set(rid ,['gintoki' , 999 , 'slayer.png' , 'slayer'])
-    var former_winner = mapgamecardwinner.get(rid)[0];
-    mapgametmpdisable.set(rid , [former_winner]);
-}
 
 
 
@@ -3245,89 +2540,3 @@ server.listen(process.env.PORT || 7000 , function(err) {
 
 
 
-
-
-// if(iomode == "Citanime") {
-//     if(ioplaying && ioendgame != true) {
-//         //DISPLAY OPPONENT (CITANIME)
-//         if(ioplaying && ioingame == true) {
-//             var oplayer = 'SLAYERBOT';
-//             var playertab = [];
-//             var playerpoint = [];
-//                 for (let [key, value] of mapcode) {
-//                     if(mapcode.get(key) == ioroomid) playertab.push(key);
-//                 }
-//                 for (let [key, value] of mapgameplayerpoint) {
-//                     if(mapcode.get(key) == ioroomid) playerpoint.push(value);
-//                 }
-//             // console.log(playerpoint)
-//             socket.emit('displayOpponents2' , playertab , playerpoint ,  iousername );
-//         }
-
-//         if(iocitadisable == true) socket.emit("disableCitaInputEvent");
-//         else socket.emit('enableCitaInputEvent' , 0);
-
-//         socket.emit('displayPostRule2' , mapgametime.get(ioroomid) , mapgamedifficulty.get(ioroomid) , mapgamecitaturnorigin.get(ioroomid) );
-//         socket.emit('displayBeginning2')
-
-//         var origin_turnb = parseInt(mapgamecitaturnorigin.get(ioroomid));
-//         var turnDisplay = (origin_turnb+1) - mapgamecitaturn.get(ioroomid);
-//         socket.emit('displayCitationData' , turnDisplay , mapgamecitation.get(ioroomid));
-//     }
-// }
-
-
-// GAME START AFTER CONFIRM SETTING (CITANIME)
-// app.post('/confirmSettingCitanime' , function(req,res) {
-//     var btime = req.body.val1;
-//     if(btime < 5) btime = 5;
-//     if(btime > 20) btime = 20;
-
-//     var difficulty = req.body.val2;
-//     if(difficulty != "Facile" && difficulty != "Normal" && difficulty != "Difficile" && difficulty != "Tout") difficulty = "Normal";
-
-//     var nbturn = req.body.val3;
-//     if(nbturn > 20) nbturn = 20;
-//     if(nbturn < 5) nbturn = 5;
-
-//     mapgametime.set(req.session.rid , btime++);
-//     mapgameturn.set(req.session.rid , req.session.username);
-//     mapgametimer.set(req.session.rid , 1);
-//     mapgamedifficulty.set(req.session.rid , difficulty);
-//     mapgamecitaturn.set(req.session.rid , nbturn);
-//     mapgamecitaturnorigin.set(req.session.rid , nbturn);
-
-//     req.session.citadisable = false;
-
-//     if(difficulty == "Facile") mapgamedata.set(req.session.rid , profile.Citation.Facile);
-//     if(difficulty == "Normal")  mapgamedata.set(req.session.rid , profile.Citation.Normal);
-//     if(difficulty == "Difficile") mapgamedata.set(req.session.rid , profile.Citation.Difficile);
-//     if(difficulty == "Tout") fusionDifficulty(req.session.rid);
-        
-//     generateCitation(req.session.rid);
-    
-//     for (let [key, value] of mapcode) {
-//         // if(value == req.session.rid) mapcodecopy.set(key, value);
-//         if(value == req.session.rid) mapgameplayerpoint.set(key, 500);
-//     }
-
-//     req.session.isplaying = true;
-//     req.session.replayed = false;
-
-//     io.once('connection' , (socket) => {
-//         socket.to(req.session.rid).emit('makePlayerPlayingEvent');
-//     });  
-
-
-//     res.end();
-// });
-
-// function fusionDifficulty(rid) {
-//     var fcit = profile.Citation.Facile;
-//     var mcit = profile.Citation.Normal;
-//     var dcit = profile.Citation.Difficile;
-//     var fusiondiff = fcit.concat(mcit , dcit);
-
-//     mapgamedata.set(rid , fusiondiff);
-
-// }
