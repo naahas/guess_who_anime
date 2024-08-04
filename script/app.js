@@ -35,8 +35,11 @@ var app = new Vue({
             hand: 3,
             ruletxt: '',
             ruletitle: '',
-            
+            trivia_default_mode: 'Aléatoire',
+            trivia_default_theme : 'Tout',
+             trivia_default_life : 3
         }
+
     },
 
 
@@ -296,6 +299,34 @@ var app = new Vue({
         },
 
 
+
+        launchTriviaGame: function() {
+            // var mode = this.trivia_default_mode;
+            // var life = this.trivia_default_life;
+            // var theme = this.trivia_default_theme;
+
+            var body = {
+                mode : this.trivia_default_mode,
+                life :this.trivia_default_life,
+                theme : this.trivia_default_theme
+            };
+
+            var config = {
+                method: 'post',
+                url: '/confirmSettingTrivianime',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.href = "/";
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+        },
+
+
         returnHome: function() {
             location.href = '/';
         },
@@ -366,31 +397,20 @@ var app = new Vue({
         },
 
 
-        sendCitaAnswer: function() {
-            var citanswer = $('.citaput').val();
-            $('.citaput').val('');
 
-            var body = {
-                val : citanswer
-            };
-
-            var config = {
-                method: 'post',
-                url: '/checkCitaAnswer',
-                data: body
-            };
-
-            axios(config)
-            .then(function (res) {
-                
-            })
-            .catch(function (err) {
-                
-            });
-
-            socket.emit('sendAnswerEvent2' , citanswer)
-            
+        setTriviaMode: function(mode) {
+            this.trivia_default_mode = mode;
         },
+
+        setTriviaLife: function(life) {
+            this.trivia_default_life = life;
+
+            showTriviaLifeRule(life);
+
+
+        },
+        
+
 
 
         checkAnswer: function(elem) {
@@ -522,6 +542,10 @@ var app = new Vue({
    
     mounted: async function() {
 
+        socket.on('updateMode' , (mode) => {
+            this.currentmode = mode;
+        })
+
         socket.on('reloadForHost', () => {
             socket.emit('verifyReloadForHost')
         });
@@ -588,6 +612,12 @@ var app = new Vue({
             $('.navdiv').show();
             // if(nmode == 1) $('.navdiv').show();
             // if(nmode == 2) $('.navdiv2').show();
+        });
+
+
+        socket.on('displaySettingTrivia' , () => {
+            $('.trivianavbar').show();
+            $('.triviarule').show();
         });
 
 
@@ -814,6 +844,12 @@ var app = new Vue({
         });
 
 
+
+        socket.on('showTriviaLifeEvent' , () => {
+            showTriviaLifeRule(3);
+        });
+
+
     
     },
 
@@ -824,6 +860,56 @@ var app = new Vue({
 
 
 //JS AND JQUERY SECTION
+
+$('.triviatitle4').on('mouseenter' , () => {
+    $('.triviaarrowpic').show();
+    $('.triviaarrowpic2').show();
+});
+
+$('.triviatitle4').on('mouseleave' , () => {
+    $('.triviaarrowpic').hide();
+    $('.triviaarrowpic2').hide();
+});
+
+
+
+$('.triviacell').on('click' , function() {
+    var name = $(this).attr('name');
+    app.trivia_default_theme = name;
+    $('.triviacell').css('filter' , 'brightness(100%)')
+    $(this).css('filter' , 'brightness(50%)')
+
+    $('.triviatheme').hide();
+});
+
+$('.triviamodelist').on('click', function() {
+    $(".triviamodelist").css('filter' , 'brightness(100%)');
+    $(this).css('filter' , 'brightness(50%)');
+    $(this).closest('.submenu2').addClass('hidden');
+  });
+  
+
+
+  $('.triviatitle2').on('mouseenter', function() {
+    $(this).find('.submenu2').removeClass('hidden');
+  });
+
+
+
+
+
+  $('.trivialifelist').on('click', function() {
+    $(".trivialifelist").css('filter' , 'brightness(100%)');
+    $(this).css('filter' , 'brightness(50%)');
+    $(this).closest('.submenu1').addClass('hidden');
+  });
+  
+  $('.triviatitle1').on('mouseenter', function() {
+    $(this).find('.submenu1').removeClass('hidden');
+  });
+
+
+
 
 $('.casecontainer').show();
 
@@ -836,7 +922,6 @@ $('#subbtn').on('touchend click', function(event) {
 
 
 $('.p0input').on('click' , function() {
-    console.log('mdr')
 });
 
 
@@ -1053,7 +1138,7 @@ function ingameRequest(imode) {
 
 function isplayingRequest() {
     var body = {
-        val: 'val'
+        life : app.trivia_default_life
     };
 
     var config = {
@@ -1568,6 +1653,32 @@ document.addEventListener('click' , function hideRuleArea(event) {
 
 
 
+//SHOW/HIDE TRIVIATHEME
+document.addEventListener('DOMContentLoaded', function() {
+    var triviatitle3 = document.querySelector('.triviatitle3');
+    var triviatheme = document.querySelector('.triviatheme');
+  
+    triviatitle3.addEventListener('mouseenter', function() {
+      triviatheme.style.display = 'block';
+    });
+  
+    triviatheme.addEventListener('mouseenter', function() {
+      triviatheme.style.display = 'block';
+    });
+  
+    triviatitle3.addEventListener('mouseleave', function(event) {
+      if (!event.relatedTarget || (!event.relatedTarget.closest('.triviatheme') && !event.relatedTarget.closest('.triviatitle3'))) {
+        triviatheme.style.display = 'none';
+      }
+    });
+  
+    triviatheme.addEventListener('mouseleave', function(event) {
+      if (!event.relatedTarget || (!event.relatedTarget.closest('.triviatheme') && !event.relatedTarget.closest('.triviatitle3'))) {
+        triviatheme.style.display = 'none';
+      }
+    });
+  });
+
 
 
 
@@ -1837,8 +1948,6 @@ function showBonus(character , auth1 , auth2 , auth3) {
 
 
 function updateBombBonus(character , auth1 , auth2 , auth3) {
-    console.log(auth1 , auth2 , auth3)
-    console.log(character)
     
     if(character >= 10 && auth1) {
         var bonus1 = document.getElementById('bombbonusid1');
@@ -1942,3 +2051,17 @@ function copyCode() {
 
 
 
+function showTriviaLifeRule(life) {
+    var tt = document.getElementById('triviarulelifeid')
+    tt.innerHTML = '';
+
+    for(let i = 0 ; i < life ; i++) {
+        var img = document.createElement('img');
+        img.src = 'trivialife.png'; 
+        img.width = 45;
+
+        tt.append(img)
+    }
+
+
+}

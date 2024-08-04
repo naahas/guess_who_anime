@@ -7,15 +7,10 @@ const { Http2ServerRequest } = require("http2");
 const { Server } = require('socket.io');
 const mysql = require('mysql2');
 const session = require('express-session');
-const { reset } = require('nodemon');
 const bodyParser = require('body-parser');
 var _ = require('underscore');
-const { prependOnceListener } = require('process');
-const { post } = require('jquery');
-const { formatWithOptions } = require('util');
-const { h } = require('vue');
 const cors = require('cors');
-
+const { createClient } = require ('@clickhouse/client')
 
 
 
@@ -54,6 +49,20 @@ app.use(cors())
 app.use(sessionMiddleware)
 
 
+
+
+//bdd client connect
+const bdd = createClient({
+    url: 'https://kmwqw7w4h7.germanywestcentral.azure.clickhouse.cloud:8443',
+    username: 'default',
+    password: '_wLdyBztU9gz7',
+  });
+
+
+
+
+
+
 //middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded( { extended: true }));
@@ -62,6 +71,8 @@ app.use(express.json());
 io.engine.use(sessionMiddleware);
 
 var profile = JSON.parse(fs.readFileSync('./bombdata.json'));
+var profile2 = JSON.parse(fs.readFileSync('./triviadata.json'));
+
 
 
 //folder handler
@@ -92,6 +103,8 @@ var mapgamedata = new Map();
 var mapgamestack = new Map();
 var mapgametotal = new Map();
 var mapcodecopy = new Map();
+var mapgametriviamode = new Map();
+var mapgametriviatheme = new Map();
 
 var current_user = [];
 
@@ -132,7 +145,7 @@ app.post('/subUsername' , function(req,res) {
     // good si le format du pseudo après vérification est correct
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Bombanime';
+        req.session.mode = 'Trivianime';
         current_user.push(nicknameup);
     }
 
@@ -316,6 +329,11 @@ app.post('/igstatus' , function(req,res) {
 
 app.post('/ipstatus' , function(req,res) {
     req.session.isplaying = true;
+
+    if(req.session.mode == "Trivianime") {
+        req.session.life = req.body.life;
+    }
+
     if(req.session.mode == "Bombanime") {
         req.session.character = 0;
         req.session.hint1 = true;
@@ -381,6 +399,40 @@ app.post('/confirmSettingBombanime' , function(req,res) {
 
     req.session.isplaying = true;
     req.session.replayed = false;
+
+    io.once('connection' , (socket) => {
+        socket.to(req.session.rid).emit('makePlayerPlayingEvent');
+    });  
+
+
+    res.end();
+});
+
+
+
+
+// GAME START AFTER CONFIRM SETTING (TRIVIANIME)
+app.post('/confirmSettingTrivianime' , function(req,res) {
+
+    //DEFAULT
+
+    var mode = req.body.mode;
+    var theme = req.body.theme;
+    var life = req.body.life;
+
+
+    for (let [key, value] of mapcode) {
+        if(value == req.session.rid) mapcodecopy.set(key, value);
+    }
+
+
+    req.session.isplaying = true;
+    req.session.replayed = false;
+    req.session.life = life;
+
+    mapgametriviamode.set(req.session.rid , mode);
+    mapgametriviatheme.set(req.session.rid , theme);
+
 
     io.once('connection' , (socket) => {
         socket.to(req.session.rid).emit('makePlayerPlayingEvent');
@@ -594,10 +646,14 @@ io.on('connection' , (socket) => {
     const iohint1 = socket.request.session.hint1;
     const iohint2 = socket.request.session.hint2;
     const iohint3 = socket.request.session.hint3;
+    const iotrivialife = socket.request.session.life;
+    const iotriviamode = socket.request.session.triviamode;
+    const iotriviatheme = socket.request.session.triviatheme;
 
 
 
     socket.emit('showSettingEvent' , iousername);
+    socket.emit('updateMode' , iomode)
     if(iocreate != true) socket.emit('displayJoinDiv' , ioroomid);
     if(iousername) socket.emit('displayUsernameEvent' , iousername);
 
@@ -655,7 +711,7 @@ io.on('connection' , (socket) => {
     
     if(iocreate && ioingame == true) {
         if(!ioplaying && iomode == 'Bombanime') socket.emit('displaySetting');
-        if(!ioplaying && iomode == 'Trivianime') socket.emit('displaySetting');  
+        if(!ioplaying && iomode == 'Trivianime') socket.emit('displaySettingTrivia');  
     }
 
 
@@ -741,6 +797,13 @@ io.on('connection' , (socket) => {
         }
 
 
+    }
+
+
+    if(iomode == "Trivianime") {
+        if(iocreate) {
+            socket.emit('showTriviaLifeEvent');
+        }
     }
 
 

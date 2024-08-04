@@ -42,46 +42,9 @@
 
             <img src="backcita1.jpg" class="citabackpic">
 
-            <div id="rdivid" class="rdiv">
-                <img src="down2.png" alt="SHOW">
-                <span>REGLES</span>
-            </div>
-
-            <div id="postrdivid" class="rdiv2">
-                <img src="down2.png" alt="SHOW">
-                <span>REGLES  </span>
-            </div>
-
+           
 
             <p class="waitgametxt">L'HÔTE EDITE LES RÈGLES ...</p>
-
-
-            <div id="postnavdivid" class="postnavdiv">
-
-                <img class="closeimg2" src="close.png" alt="X">
-                <p class="headsettxt">︲ PARAMETRES ︲</p>
-
-                <div class="subsetdiv rangediv">
-                    <p >💣​ TEMPS BOMBE (sec)</p>
-                    <hr>
-                    <p> {{timer}} secondes </p>
-                  </div>
-
-                  
-
-
-                  <div class="subsetdiv themediv">
-                    <p>🗒️​ THÈME ACTUEL</p>
-                    <hr>
-                    
-                    <p>{{currenttheme}}</p>
-
-                  </div>
-                  
-
-
-            </div>
-
 
 
 
@@ -93,16 +56,136 @@
 
 
 
-                <div class="headquestiondiv">
+                <nav class="trivianavbar">
+                    <ul>
+                        <li class="triviatitle1 triviatitle"><a href="#"> Vie </a>
+                            <ul class="submenu submenu1">
+                                <li @click="setTriviaLife(1)" class="trivialifelist"><a href="#"><img width="30" src="trivialife.png"> </a></li>
+                                <li @click="setTriviaLife(2)" class="trivialifelist"><a href="#"><img width="30" src="trivialife.png"> <img width="30" src="trivialife.png"> </a></li>
+                                <li @click="setTriviaLife(3)" class="trivialifelist"><a href="#"><img width="30" src="trivialife.png"> <img width="30" src="trivialife.png"> <img width="30" src="trivialife.png"></a></li>
+                            </ul>
+                        </li>
+    
+                      
+                      <li class="triviatitle2 triviatitle"><a href="#"> Mode </a>
+                        <ul class="submenu submenu2">
+                            <li class="triviamodelist" @click = "setTriviaMode('Progressif')"> <a href="#"> Progressif <img src="triviainfo.png" width="20"> <span> Difficulté croissante </span> </a></li>
+                            <li class="triviamodelist" @click = "setTriviaMode('Aléatoire')"> <a href="#"> Aléatoire <img src="triviainfo.png" width="20"> <span> Difficulté aléatoire </span>  </a></li>
+                        </ul>
+                      </li>
 
-                </div>
+
+
+                      <li class="triviatitle triviatitle3"><a href="#"> Theme </a>
+                        
+                      </li>
+
+
+                      <li @click = "launchTriviaGame()" class="triviatitle triviatitle4"><a href="#">  <img class="triviaarrowpic2" src="triviaarrow2.png" width="18">  JOUER  <img class="triviaarrowpic" src="triviaarrow.png" width="18"> </a>
+                        <ul class="submenu submenu4">
+
+                          </ul>
+                      </li>
+                      
+                    </ul>
+                  </nav>
+
+
+                  <div class="triviatheme">
+                    <div class="triviacellcontainer">
+
+                        <div class="triviacell" name="Mainstream">
+                            <span class="spancell"> Mainstream <br> <hr> </span>
+                            <img src="mainstreamcell.jpg">
+                        </div>
+
+                        <div class="triviacell" name="Tout">
+                            <span class="spancell"> Tout <br> <hr> </span>
+                            <img src="overallcell.jpg">
+                        </div>
+                        
+                
+                        <div class="triviacell" name="Naruto">
+                            <span class="spancell"> Naruto <br> <hr> </span>
+                            <img src="narutocell2.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="One Piece">
+                            <span class="spancell"> One Piece <br> <hr> </span>
+                            <img src="onepiececell2.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Attack on Titan">
+                            <span class="spancell"> Attack on Titan <br> <hr> </span>
+                            <img src="snkcell.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Dragon Ball Z">
+                            <span class="spancell"> Dragon Ball Z <br> <hr> </span>
+                            <img src="dbzcell.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="My Hero Academia">
+                            <span class="spancell"> My Hero Academia <br> <hr> </span>
+                            <img src="mhacell2.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Hunter Hunter">
+                            <span class="spancell"> Hunter Hunter <br> <hr> </span>
+                            <img src="hxhcell.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Jojo's">
+                            <span class="spancell"> Jojo's <br> <hr> </span>
+                            <img src="jojocell2.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Bleach">
+                            <span class="spancell"> Bleach <br> <hr> </span>
+                            <img src="bleachcell.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Demon Slayer">
+                            <span class="spancell"> Demon Slayer <br> <hr> </span>
+                            <img src="knycell.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Jujutsu Kaisen">
+                            <span class="spancell"> Jujutsu Kaisen <br> <hr> </span>
+                            <img src="jjkcell.jpg">
+                        </div>
+    
+                        <div name="Fairy Tail" class="triviacell">
+                            <span class="spancell"> Fairy Tail  <br> <hr> </span>
+                            <img src="ftcell.jpg">
+                        </div>
+    
+                    </div>
+                  </div>
 
 
 
-                <div class="answerdiv">
-                    
-                </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+                  <div class="triviarule"> 
+                    <p> Règles <hr> </p>
+                    <span id="triviarulelifeid" class="triviarulelife">  </span>
+                    <span> <span class="triviaruledata"> {{trivia_default_mode}} </span> </span> 
+                    <span> <span class="triviaruledata"> {{trivia_default_theme}} </span> </span> 
+                 </div>
+
+                
 
 
 
