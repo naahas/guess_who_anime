@@ -36,7 +36,7 @@ var app = new Vue({
             ruletxt: '',
             ruletitle: '',
             trivia_default_mode: 'Aléatoire',
-            trivia_default_theme : 'Tout',
+            trivia_default_theme : 'Mainstream',
              trivia_default_life : 3
         }
 
@@ -861,6 +861,14 @@ var app = new Vue({
 
 //JS AND JQUERY SECTION
 
+$('.triviatheme , .triviatitle3').on('mouseenter' , () => {
+    $('.triviarule').css('opacity' , 0.2);
+});
+
+$('.triviatheme , .triviatitle3').on('mouseleave' , () => {
+    $('.triviarule').css('opacity' , 1);
+});
+
 $('.triviatitle4').on('mouseenter' , () => {
     $('.triviaarrowpic').show();
     $('.triviaarrowpic2').show();
@@ -1654,7 +1662,7 @@ document.addEventListener('click' , function hideRuleArea(event) {
 
 
 //SHOW/HIDE TRIVIATHEME
-document.addEventListener('DOMContentLoaded', function() {
+if(document.getElementById('triviathemeid')) {
     var triviatitle3 = document.querySelector('.triviatitle3');
     var triviatheme = document.querySelector('.triviatheme');
   
@@ -1677,8 +1685,9 @@ document.addEventListener('DOMContentLoaded', function() {
         triviatheme.style.display = 'none';
       }
     });
-  });
-
+    
+    
+}
 
 
 

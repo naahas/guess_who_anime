@@ -293,22 +293,26 @@ app.post('/game' , function(req,res) {
 
 
 app.get('/game' , function(req,res) {
+
+    /* IF RELOADING WHEN ITS BOT'S TURN */
     if(req.session.mode == "Bombanime") {
         if(mapgameturn.get(req.session.rid) != req.session.username && req.session.solop == true) mapgameturn.set(req.session.rid , req.session.username);
+    
+         //IF PLAYER TRY TO RELOAD AFTER HOST LEAVE THE GAME
+        if(req.session.isplaying == true && req.session.joined == true && !mapgamedata.has(req.session.rid)) {
+            req.session.endgame = null;
+            req.session.ingame = null;
+            req.session.joined = false;
+            req.session.isplaying = false;
+            req.session.rid = null;
+        }
     }
 
-    //IF PLAYER TRY TO RELOAD AFTER HOST LEAVE THE GAME
-    if(req.session.isplaying == true && req.session.joined == true && !mapgamedata.has(req.session.rid)) {
-        req.session.endgame = null;
-        req.session.ingame = null;
-        req.session.joined = false;
-        req.session.isplaying = false;
-        req.session.rid = null;
-    }
-    
 
     if(mapgamewinner.get(req.session.rid)!=null) req.session.endgame = true;
+    
 
+    console.log(req.session.username , " ingame : " , req.session.ingame  , " isplaying : " , req.session.isplaying)
     if(req.session.ingame == true) {
         var modfilename = req.session.mode.toLowerCase();
         console.log("launched mode -> " , modfilename)
@@ -801,9 +805,20 @@ io.on('connection' , (socket) => {
 
 
     if(iomode == "Trivianime") {
-        if(iocreate) {
+        if(iocreate && ioplaying != true) {
             socket.emit('showTriviaLifeEvent');
         }
+
+        if(ioplaying && ioingame == true) {
+            var oplayer = 'SLAYERBOT';
+            var playertab = [];
+                for (let [key, value] of mapcode) {
+                    if(mapcode.get(key) == ioroomid) playertab.push(key);
+                }
+        }
+
+        
+
     }
 
 
