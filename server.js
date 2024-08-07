@@ -105,6 +105,10 @@ var mapgametotal = new Map();
 var mapcodecopy = new Map();
 var mapgametriviamode = new Map();
 var mapgametriviatheme = new Map();
+var mapgametriviapretime = new Map();
+var mapgametriviapretimebegan = new Map();
+var mapgametriviapretimedone = new Map();
+
 
 var current_user = [];
 
@@ -312,7 +316,6 @@ app.get('/game' , function(req,res) {
     if(mapgamewinner.get(req.session.rid)!=null) req.session.endgame = true;
     
 
-    console.log(req.session.username , " ingame : " , req.session.ingame  , " isplaying : " , req.session.isplaying)
     if(req.session.ingame == true) {
         var modfilename = req.session.mode.toLowerCase();
         console.log("launched mode -> " , modfilename)
@@ -436,6 +439,9 @@ app.post('/confirmSettingTrivianime' , function(req,res) {
 
     mapgametriviamode.set(req.session.rid , mode);
     mapgametriviatheme.set(req.session.rid , theme);
+    mapgametriviapretime.set(req.session.rid , 3);
+    mapgametriviapretimebegan.set(req.session.rid , false)
+    mapgametriviapretimedone.set(req.session.rid , false)
 
 
     io.once('connection' , (socket) => {
@@ -653,11 +659,12 @@ io.on('connection' , (socket) => {
     const iotrivialife = socket.request.session.life;
     const iotriviamode = socket.request.session.triviamode;
     const iotriviatheme = socket.request.session.triviatheme;
+    const iotriviapretime = socket.request.session.triviapretime;
 
 
 
     socket.emit('showSettingEvent' , iousername);
-    socket.emit('updateMode' , iomode)
+    if(iousername) socket.emit('updateMode' , iomode)
     if(iocreate != true) socket.emit('displayJoinDiv' , ioroomid);
     if(iousername) socket.emit('displayUsernameEvent' , iousername);
 
@@ -804,6 +811,8 @@ io.on('connection' , (socket) => {
     }
 
 
+  
+
     if(iomode == "Trivianime") {
         if(iocreate && ioplaying != true) {
             socket.emit('showTriviaLifeEvent');
@@ -815,6 +824,44 @@ io.on('connection' , (socket) => {
                 for (let [key, value] of mapcode) {
                     if(mapcode.get(key) == ioroomid) playertab.push(key);
                 }
+            
+            if(iocreate == true &&  mapgametriviapretimebegan.get(ioroomid) != true ) {
+                mapgametriviapretimebegan.set(ioroomid , true);
+                // var preint = setInterval(() => {
+                //     var current_pretimer = mapgametriviapretime.get(ioroomid);
+                //     io.to(ioroomid).emit('displayPreTriviaEvent' , current_pretimer);
+                //     mapgametriviapretime.set(ioroomid , current_pretimer - 1);
+
+                //     if(current_pretimer <= 0) {
+                //         clearInterval(preint);
+                //     }
+                
+                // }, 1000);
+                
+
+
+                // setTimeout(() => {
+                //     io.to(ioroomid).emit('displayTriviaDataEvent' , 0)
+                //     mapgametriviapretimedone.set(ioroomid , true);
+                // }, 8500);
+
+
+                io.to(ioroomid).emit('displayTriviaDataEvent')
+             
+            } else {
+                socket.emit('displayTriviaDataEvent')
+            }
+
+            
+         
+    
+        }
+
+
+        if(ioplaying && ioendgame != true) {
+
+            
+
         }
 
         

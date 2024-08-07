@@ -850,6 +850,20 @@ var app = new Vue({
         });
 
 
+
+        socket.on('displayTriviaDataEvent' , () => {
+            showTriviaQR();
+        });
+
+
+        socket.on('displayPreTriviaEvent' , (time) => {
+            showTriviaTimer(time);
+        });
+
+
+     
+
+
     
     },
 
@@ -2074,3 +2088,169 @@ function showTriviaLifeRule(life) {
 
 
 }
+
+
+
+function showTriviaQR() {
+        const maindiv = document.getElementById('maindiv');
+        
+        const triviaHeadQuestionDiv = document.createElement('div');
+        triviaHeadQuestionDiv.className = 'triviaheadquestiondiv';
+
+        const img = document.createElement('img');
+        img.id = 'diffimgid';
+        img.className = 'diffimg';
+        img.src = 'veryeasy.png';
+        img.alt = 'diffpic';
+        triviaHeadQuestionDiv.appendChild(img);
+
+        const headQuestionP = document.createElement('p');
+        headQuestionP.id = 'headquestion';
+        headQuestionP.innerHTML = '1 &nbsp; &nbsp;  - &nbsp;  <span class="spanserie"> Naruto Shippuden </span>';
+        triviaHeadQuestionDiv.appendChild(headQuestionP);
+
+        const hr = document.createElement('hr');
+        triviaHeadQuestionDiv.appendChild(hr);
+
+        const mainQuestionP = document.createElement('p');
+        mainQuestionP.id = 'mainquestion';
+        mainQuestionP.innerText = 'Parmi tes tantes , lequel, lequel isons , lequel nraisons  nraisons fréquentes ne l\'a t-il pas fait ?';
+        triviaHeadQuestionDiv.appendChild(mainQuestionP);
+
+        const trivialifediv = document.createElement('div');
+        trivialifediv.className = "trivialifediv";
+
+        for(let i = 0 ; i < 3; i++) {
+            const trivialifepic = document.createElement('img');
+            trivialifepic.src = 'trivialife.png';
+            trivialifepic.alt = 'life';
+            trivialifepic.className = "trivialifepic";
+
+            trivialifediv.appendChild(trivialifepic)
+        }
+        
+
+        maindiv.appendChild(trivialifediv);
+        maindiv.appendChild(triviaHeadQuestionDiv);
+
+
+        const triviaAnswerDiv = document.createElement('div');
+        triviaAnswerDiv.className = 'triviaanswerdiv';
+
+        const answers = [
+            'ta mere',
+            'ta grande soeur',
+            'Sartorius',
+            'lzalkeazkeakzleklazeklazek lke k azelkaze azek lazkle'
+        ];
+
+
+
+        answers.forEach(answer => {
+            const answerDiv = document.createElement('div');
+            answerDiv.className = 'triviasubans';
+            answerDiv.innerText = answer;
+            triviaAnswerDiv.appendChild(answerDiv);
+        });
+
+        maindiv.appendChild(triviaAnswerDiv)
+
+
+        const neoshin = document.createElement('img');
+        neoshin.src = 'shinchan.png';
+        neoshin.alt = 'GO Image';
+        neoshin.className = "shinclass";
+
+        maindiv.appendChild(neoshin);
+        
+    
+
+}
+
+
+function createCountdown() {
+    const maindiv = document.getElementById('maindiv');
+    // Create counter div
+    const counter = document.createElement('div');
+    counter.className = 'counter';
+    
+    // Create nums div
+    const trivia_spans = document.createElement('div');
+    trivia_spans.className = 'triviaspandiv';
+
+    // Create span elements for the countdown
+    const numbers = ['3', '2', '1', '0'];
+    numbers.forEach(number => {
+        const span = document.createElement('span');
+        span.textContent = number;
+        trivia_spans.appendChild(span);
+    });
+
+    counter.appendChild(trivia_spans);
+    maindiv.appendChild(counter);
+
+
+    const finalMessage = document.createElement('div');
+    finalMessage.className = 'triviapretimerfinal';
+
+    const message = document.createElement('p');
+    message.textContent = "C'est parti..";
+    message.id = "triviamsg";
+    finalMessage.appendChild(message);
+
+    const finalhr = document.createElement('hr');
+
+    const img = document.createElement('img');
+    img.src = 'shinchan.png';
+    img.alt = 'GO Image';
+    img.id = "shinpicid";
+    
+
+
+    maindiv.append(finalMessage , img);
+
+
+}
+
+
+function showTriviaTimer(time) {
+
+    createCountdown()
+
+    const trivia_spans = document.querySelectorAll('.triviaspandiv span');
+    const counter = document.querySelector('.counter');
+    const finalMessage = document.querySelector('.triviapretimerfinal');
+
+    runAnimation(time , trivia_spans, counter, finalMessage)
+}
+
+
+
+function runAnimation(time , trivia_spans, counter, finalMessage) {
+        let current = 3 - time;
+        
+        if (current < trivia_spans.length) {
+            const num = trivia_spans[current];
+            num.classList.add('triviacounterin');
+            
+            num.addEventListener('animationend', (e) => {
+                if (e.animationName === 'goIn' && current !== trivia_spans.length - 1) {
+                    num.classList.remove('triviacounterin');
+                    num.classList.add('triviacounterout');
+                } else if (e.animationName === 'goOut' && num.nextElementSibling) {
+                    num.nextElementSibling.classList.add('triviacounterin');
+                } else {
+                    counter.classList.add('triviaprehide');
+                    finalMessage.classList.add('showtriviapretimerfinal');
+
+                    setTimeout(() => {
+                        $('#shinpicid').addClass('showshinclass');
+                    }, 3000);
+                }
+            });
+        }
+
+
+}
+
+
