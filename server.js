@@ -852,6 +852,8 @@ io.on('connection' , (socket) => {
     if(iomode == "Trivianime") {
         if(iocreate && ioplaying != true) {
 
+            socket.emit('showTriviaLifeEvent' , 3);
+          
             // FIRST GENERATE
             generateNewQuestion().then(data => {
                 mapgametriviaquestion.set(ioroomid , data[0])

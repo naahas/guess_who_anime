@@ -844,6 +844,13 @@ var app = new Vue({
         });
 
 
+
+        socket.on('showTriviaLifeEvent' , (life) => {
+            showTriviaLifeRule(life);
+        });
+
+
+
         socket.on('displayTriviaDataEvent' , (data , nbq , clife) => {
             showTriviaQR(data , nbq , clife);
         });
