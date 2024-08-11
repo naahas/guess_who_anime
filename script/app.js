@@ -602,8 +602,8 @@ var app = new Vue({
         });
 
 
-        socket.on('makePlayerPlayingEvent' , () => {
-            isplayingRequest();
+        socket.on('makePlayerPlayingEvent' , (life) => {
+            isplayingRequest(life);
         });
 
 
@@ -844,15 +844,8 @@ var app = new Vue({
         });
 
 
-
-        socket.on('showTriviaLifeEvent' , () => {
-            showTriviaLifeRule(3);
-        });
-
-
-
-        socket.on('displayTriviaDataEvent' , () => {
-            showTriviaQR();
+        socket.on('displayTriviaDataEvent' , (data , nbq , clife) => {
+            showTriviaQR(data , nbq , clife);
         });
 
 
@@ -861,8 +854,61 @@ var app = new Vue({
         });
 
 
-     
 
+        socket.on('updateTriviaTimer', (timeLeft) => {
+            $('#countdown-container').show();
+
+            if(timeLeft <= 0) $('.triviasubans').addClass('triviadisableanswer');
+
+            const countdownTimer = document.getElementById('countdown-timer');
+            const progressBar = document.getElementById('progress-bar');
+            
+            // countdownTimer.textContent = (timeLeft/10).toFixed(1) + ' seconds';
+            // countdownTimer.textContent = Math.floor(timeLeft/10);
+   
+            const progressPercentage = 100 - timeLeft
+       
+            progressBar.style.filter = `saturate(${timeLeft}%)`;
+            progressBar.style.height = progressPercentage + '%';
+        });
+
+
+        
+        socket.on('endtriviatimer', () => {
+            handleEndTriviaRoundAnswer();
+        });
+
+
+        socket.on('updateAnswerStatEvent' , (answer , data , stat) => {
+          
+            var tmp = 1;
+            document.querySelectorAll('.triviasubans').forEach(el => {
+                if(el.textContent == answer && stat == 1) {
+                    el.classList.add('triviaselectedanswer');
+                    $('.triviasubans').addClass('triviadisableanswer')
+    
+                    $('.triviaselectedanswer').css('background-color' , 'rgba(250, 254, 145, 0.904)')
+                    $('.triviaselectedanswer').css('color' , 'white')
+                } else if(stat == 0) {
+                    if(tmp == data.coanswer) {
+                        el.classList.add('triviagoodanswer');
+                    } else {
+                        if(answer == el.textContent) {
+                            el.classList.add('triviawronganswer')
+                        }
+                    }
+
+
+                    $('.triviasubans').addClass('triviadisableanswer')
+                    $('.triviaselectedanswer').css('background-color' , 'rgba(250, 254, 145, 0.904)')
+                    $('.triviaselectedanswer').css('color' , 'white')
+
+                }
+
+                tmp++;
+
+            });
+        });
 
     
     },
@@ -1158,9 +1204,9 @@ function ingameRequest(imode) {
 }
 
 
-function isplayingRequest() {
+function isplayingRequest(tlife) {
     var body = {
-        life : app.trivia_default_life
+        life : tlife
     };
 
     var config = {
@@ -1393,7 +1439,6 @@ function hideTool() {
 }
 
 function displayTurnPic(indexp) {
-    // console.log("passez la fleche a " , indexp)
     $('.turnpic').hide();
     $('.turnpic' + indexp).show();
 }
@@ -2091,7 +2136,8 @@ function showTriviaLifeRule(life) {
 
 
 
-function showTriviaQR() {
+function showTriviaQR(data , nbq , clife) {
+      
         const maindiv = document.getElementById('maindiv');
         
         const triviaHeadQuestionDiv = document.createElement('div');
@@ -2100,13 +2146,44 @@ function showTriviaQR() {
         const img = document.createElement('img');
         img.id = 'diffimgid';
         img.className = 'diffimg';
-        img.src = 'veryeasy.png';
         img.alt = 'diffpic';
+
+        switch (data.diff_ans) {
+            case 'veryeasy':
+                img.src = 'veryeasy.png';
+                img.title = 'Très Facile';
+                break;
+            case 'easy':
+                img.src = 'easy.png';
+                img.title = 'Facile';
+                break;
+            case 'medium':
+                img.src = 'medium.png';
+                img.title = 'Moyen';
+                break;
+            case 'hard':
+                img.src = 'hard.png';
+                img.title = 'Difficile';
+                break;
+            case 'veryhard':
+                img.src = 'veryhard.png';
+                img.title = 'Très Difficile';
+                break;
+            case 'extreme':
+                img.src = 'extreme.png';
+                img.title = 'Extrême';
+                break;
+            default:
+                img.src = 'medium.png';
+                img.title = 'Moyen';
+                break;
+        }
+
         triviaHeadQuestionDiv.appendChild(img);
 
         const headQuestionP = document.createElement('p');
         headQuestionP.id = 'headquestion';
-        headQuestionP.innerHTML = '1 &nbsp; &nbsp;  - &nbsp;  <span class="spanserie"> Naruto Shippuden </span>';
+        headQuestionP.innerHTML = nbq + '&nbsp; &nbsp;  - &nbsp;  <span class="spanserie"> ' + data.serie_ans + '</span>';
         triviaHeadQuestionDiv.appendChild(headQuestionP);
 
         const hr = document.createElement('hr');
@@ -2114,13 +2191,13 @@ function showTriviaQR() {
 
         const mainQuestionP = document.createElement('p');
         mainQuestionP.id = 'mainquestion';
-        mainQuestionP.innerText = 'Parmi tes tantes , lequel, lequel isons , lequel nraisons  nraisons fréquentes ne l\'a t-il pas fait ?';
+        mainQuestionP.innerText = data.question;
         triviaHeadQuestionDiv.appendChild(mainQuestionP);
 
         const trivialifediv = document.createElement('div');
         trivialifediv.className = "trivialifediv";
 
-        for(let i = 0 ; i < 3; i++) {
+        for(let i = 0 ; i < clife ; i++) {
             const trivialifepic = document.createElement('img');
             trivialifepic.src = 'trivialife.png';
             trivialifepic.alt = 'life';
@@ -2128,7 +2205,8 @@ function showTriviaQR() {
 
             trivialifediv.appendChild(trivialifepic)
         }
-        
+
+
 
         maindiv.appendChild(trivialifediv);
         maindiv.appendChild(triviaHeadQuestionDiv);
@@ -2138,10 +2216,10 @@ function showTriviaQR() {
         triviaAnswerDiv.className = 'triviaanswerdiv';
 
         const answers = [
-            'ta mere',
-            'ta grande soeur',
-            'Sartorius',
-            'lzalkeazkeakzleklazeklazek lke k azelkaze azek lazkle'
+            data.answer1 ,
+            data.answer2 ,
+            data.answer3 ,
+            data.answer4 
         ];
 
 
@@ -2151,6 +2229,20 @@ function showTriviaQR() {
             answerDiv.className = 'triviasubans';
             answerDiv.innerText = answer;
             triviaAnswerDiv.appendChild(answerDiv);
+
+            answerDiv.addEventListener('click' , () => {
+                answerDiv.classList.add('triviaselectedanswer');
+                $('.triviasubans').addClass('triviadisableanswer')
+
+                sendTriviaAnswer(answerDiv.textContent)
+                socket.emit('sendTriviaAnswerEvent' , answerDiv.textContent)
+
+                $('.triviaselectedanswer').css('background-color' , 'rgba(250, 254, 145, 0.904)')
+                $('.triviaselectedanswer').css('color' , 'white')
+              
+
+            });
+
         });
 
         maindiv.appendChild(triviaAnswerDiv)
@@ -2254,3 +2346,77 @@ function runAnimation(time , trivia_spans, counter, finalMessage) {
 }
 
 
+
+
+
+function sendTriviaAnswer(answer) {
+    var body = {
+        val: answer
+    };
+
+    var config = {
+        method: 'post',
+        url: '/sendTriviaAnswer',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+    
+    })
+    .catch(function (err) {
+        console.log(err);
+    });
+}
+
+
+
+function handleEndTriviaRoundAnswer() {
+        var body = {
+            val: 'val'
+        };
+    
+        var config = {
+            method: 'post',
+            url: '/handleEndTriviaRoundVisual',
+            data: body
+        };
+    
+        axios(config)
+        .then(function (res) {
+            finalTriviaRoundAnswerVisual(res.data[0] , res.data[1])
+        })
+        .catch(function (err) {
+            
+        });
+    
+}
+
+
+
+
+function finalTriviaRoundAnswerVisual(data , player_ans) {
+    console.log(player_ans)
+    console.log(data)
+
+    var tmp = 1;
+    document.querySelectorAll('.triviasubans').forEach(el => {    
+        if(tmp == data.coanswer) {
+            console.log(el)
+            el.classList.add('triviagoodanswer');
+
+            $('.triviaselectedanswer').css('background-color' , 'rgba(250, 254, 145, 0.904)')
+            $('.triviaselectedanswer').css('color' , 'white')
+        } else {
+            if(player_ans == el.textContent) {
+                el.classList.add('triviawronganswer')
+               
+            }
+        }
+        
+
+        tmp++;
+
+    });      
+            
+}
