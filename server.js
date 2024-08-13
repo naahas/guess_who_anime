@@ -10,19 +10,8 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 var _ = require('underscore');
 const cors = require('cors');
-const { bdd2, getRandomQuestion } = require('./bdd')
-
-
-
-
-
-/* QUERY RETRIEVE EX 
-var vvv = getAllQuestions().then(v => {
-    console.log(v[0].question)
-}).catch(error => {
-    console.error('Error:', error);
-});
-*/
+const { bdd2, getRandomQuestion } = require('./bdd');
+const { Console } = require('console');
 
 
 
@@ -113,9 +102,10 @@ var mapgametriviatheme = new Map();
 var mapgametriviapretime = new Map();
 var mapgametriviapretimebegan = new Map();
 var mapgametriviatimeleft = new Map();
-var mapgametriviatimeon = new Map();
 var mapgametriviaquestion = new Map();
 var mapgametrivianbquestion = new Map();
+var mapgametriviaroundon = new Map();
+var mapgametrivianumberq = new Map();
 
 
 var current_user = [];
@@ -344,10 +334,6 @@ app.post('/igstatus' , function(req,res) {
 app.post('/ipstatus' , function(req,res) {
     req.session.isplaying = true;
 
-    if(req.session.mode == "Trivianime") {
-        req.session.life = req.body.life;
-    }
-
     if(req.session.mode == "Bombanime") {
         req.session.character = 0;
         req.session.hint1 = true;
@@ -364,25 +350,50 @@ app.post('/ipstatus' , function(req,res) {
 // TO CHANGE VISUAL ANSWERS CLIENT SIDE FOR EVERY PLAYER (TRIVIANIME)
 app.post('/handleEndTriviaRoundVisual' , function(req,res) {
     res.send([mapgametriviaquestion.get(req.session.rid) , req.session.triviaanswer]);
+
+    // var tdata = mapgametriviaquestion.get(req.session.rid);
+    // var correct_answer = tdata[`answer${tdata.coanswer}`];
+
+    // if(req.session.triviaanswer != correct_answer) {
+     
+    // }
 });
 
 
+
+// GO TO NEXT QUESTION (TRIVIANIME) AND CHECK IF BTN HAS BEEN ENABLED WITHOUT PERMISSION
+app.post('/triggerNextTriviaQuestion' , function(req,res) {
+        if(req.session.created == true && mapgametriviatimeleft.get(req.session.rid) <= 0) res.sendStatus(200)
+        else res.sendStatus(400)
+});
+
+
+
+
+// ENABLE TRIVIA NEXT Q BUTTON FOR HOST (TRIVIANIME)
+app.post('/enableNextTriviaQBTNForHost' , function(req,res) {
+    if(req.session.created == true) res.sendStatus(200)
+    else res.sendStatus(400)
+});
 
 
 
 // GET ANSWER (TRIVIANIME)
 app.post('/sendTriviaAnswer' , function(req,res) {
-
     var ans = req.body.val;
-  
-    if(ans) {
-        req.session.triviaanswer = ans;
-    }
-
+    if(ans) req.session.triviaanswer = ans;
 
     res.end();
 });
 
+
+
+
+// RESET ANSWER (TRIVIANIME)
+app.post('/resetTriviaAnswer' , function(req,res) {
+    req.session.triviaanswer = null;
+    res.end();
+});
 
 
 
@@ -453,12 +464,9 @@ app.post('/confirmSettingBombanime' , function(req,res) {
 
 // GAME START AFTER CONFIRM SETTING (TRIVIANIME)
 app.post('/confirmSettingTrivianime' , function(req,res) {
-
-    //DEFAULT
-
     var mode = req.body.mode;
     var theme = req.body.theme;
-    var life = req.body.life;
+    var nbq = req.body.nbq;
 
 
     for (let [key, value] of mapcode) {
@@ -468,19 +476,19 @@ app.post('/confirmSettingTrivianime' , function(req,res) {
 
     req.session.isplaying = true;
     req.session.replayed = false;
-    req.session.life = life;
 
     mapgametriviamode.set(req.session.rid , mode);
     mapgametriviatheme.set(req.session.rid , theme);
     mapgametriviapretime.set(req.session.rid , 3);
     mapgametriviapretimebegan.set(req.session.rid , false)
     mapgametriviatimeleft.set(req.session.rid , 100);
-    mapgametriviatimeon.set(req.session.rid , false);
-    mapgametrivianbquestion.set(req.session.rid , 1);
+    mapgametrivianbquestion.set(req.session.rid , nbq);
+    mapgametriviaroundon.set(req.session.rid , true);
+    mapgametrivianumberq.set(req.session.rid , 0);
 
 
     io.once('connection' , (socket) => {
-        socket.to(req.session.rid).emit('makePlayerPlayingEvent' , life);
+        socket.to(req.session.rid).emit('makePlayerPlayingEvent');
     });  
 
 
@@ -692,7 +700,6 @@ io.on('connection' , (socket) => {
     const iohint1 = socket.request.session.hint1;
     const iohint2 = socket.request.session.hint2;
     const iohint3 = socket.request.session.hint3;
-    const iotrivialife = socket.request.session.life;
     const iotriviamode = socket.request.session.triviamode;
     const iotriviatheme = socket.request.session.triviatheme;
     const iotriviapretime = socket.request.session.triviapretime;
@@ -852,7 +859,7 @@ io.on('connection' , (socket) => {
     if(iomode == "Trivianime") {
         if(iocreate && ioplaying != true) {
 
-            socket.emit('showTriviaLifeEvent' , 3);
+            socket.emit('showTriviaNbqEvent' , 10);
           
             // FIRST GENERATE
             generateNewQuestion().then(data => {
@@ -862,7 +869,7 @@ io.on('connection' , (socket) => {
             });
         }
 
-        if(ioplaying && ioingame == true) {
+        if(ioplaying == true && ioingame == true) {
             var oplayer = 'SLAYERBOT';
             var playertab = [];
                 
@@ -871,26 +878,20 @@ io.on('connection' , (socket) => {
             }
             
 
-        
 
-            if(iocreate == true && mapgametriviapretimebegan.get(ioroomid) == false ) {
-                mapgametriviapretimebegan.set(ioroomid , true);
+            if(iocreate == true) {
+                if(mapgametriviatimeleft.get(ioroomid) <= 0) {
+                    socket.emit('enableTriviaNextEvent');
+                } else socket.emit('displayTriviaNextEvent');
+            }
 
-                const countdownInterval = setInterval(() => {
-                    if (mapgametriviatimeleft.get(ioroomid) > 0) {
-                        io.to(ioroomid).emit('updateTriviaTimer', mapgametriviatimeleft.get(ioroomid)); // Envoyer le temps restant en secondes
-                        mapgametriviatimeleft.set(ioroomid ,  mapgametriviatimeleft.get(ioroomid) - 1)
-                    } else {
-                        // mapgametriviatimeon.set(ioroomid , true);
-                        clearInterval(countdownInterval);
-                        io.to(ioroomid).emit('endtriviatimer'); 
-                    }
-                }, 100); 
-            } 
+                
+            launchTriviaRound(iocreate , ioroomid);
 
 
-            socket.emit('displayTriviaDataEvent' , mapgametriviaquestion.get(ioroomid) , mapgametrivianbquestion.get(ioroomid) , iotrivialife);
+            socket.emit('displayTriviaDataEvent' , mapgametriviaquestion.get(ioroomid) , mapgametrivianumberq.get(ioroomid));
             socket.emit('updateTriviaTimer', mapgametriviatimeleft.get(ioroomid)); 
+            
           
 
             
@@ -900,13 +901,33 @@ io.on('connection' , (socket) => {
                 socket.emit('updateAnswerStatEvent' , iotriviaanswer , mapgametriviaquestion.get(ioroomid) , 0);
             } else socket.emit('updateAnswerStatEvent' , iotriviaanswer , mapgametriviaquestion.get(ioroomid) , 1);
         
-              
-
-
             
          
-    
         }
+
+
+         //PREPARE AND SHOW NEW TRIVIA QUESTION
+        socket.on('triggerNewTQEffect' , () => {
+            io.to(ioroomid).emit('showNewTriviaQuestionEvent');
+
+            generateNewQuestion().then(data => {
+                mapgametriviaquestion.set(ioroomid , data[0])
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+            
+            setTimeout(() => {
+                mapgametriviapretimebegan.set(ioroomid , false);
+                mapgametriviatimeleft.set(ioroomid , 100);
+
+                launchTriviaRound(iocreate , ioroomid);
+
+                io.to(ioroomid).emit('displayTriviaDataEvent' , mapgametriviaquestion.get(ioroomid) , mapgametrivianumberq.get(ioroomid));
+                io.to(ioroomid).emit('updateTriviaTimer', mapgametriviatimeleft.get(ioroomid)); 
+
+            }, 700);
+        });
+
 
 
 
@@ -953,6 +974,7 @@ io.on('connection' , (socket) => {
     if(ioback == true) {
         socket.to(ioformerid).emit('notifHostCancelFromPlayer' , iousername);
     }
+
 
 
 
@@ -2695,7 +2717,22 @@ async function generateNewQuestion() {
 
 
 
+function launchTriviaRound(iocreate , ioroomid) {
+    if(iocreate == true && mapgametriviapretimebegan.get(ioroomid) == false ) {
+        mapgametriviapretimebegan.set(ioroomid , true);
+        mapgametrivianumberq.set(ioroomid , mapgametrivianumberq.get(ioroomid) + 1);
 
+        const countdownInterval = setInterval(() => {
+            if (mapgametriviatimeleft.get(ioroomid) > 0) {
+                io.to(ioroomid).emit('updateTriviaTimer', mapgametriviatimeleft.get(ioroomid)); // Envoyer le temps restant en secondes
+                mapgametriviatimeleft.set(ioroomid ,  mapgametriviatimeleft.get(ioroomid) - 1)
+            } else {
+                clearInterval(countdownInterval);
+                io.to(ioroomid).emit('endtriviatimer'); 
+            }
+        }, 100); 
+    }    
+}
 
 
 

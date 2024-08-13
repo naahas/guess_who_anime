@@ -37,7 +37,7 @@ var app = new Vue({
             ruletitle: '',
             trivia_default_mode: 'Aléatoire',
             trivia_default_theme : 'Mainstream',
-             trivia_default_life : 3
+            trivia_default_trivianbq : 10
         }
 
     },
@@ -307,7 +307,7 @@ var app = new Vue({
 
             var body = {
                 mode : this.trivia_default_mode,
-                life :this.trivia_default_life,
+                nbq :this.trivia_default_trivianbq,
                 theme : this.trivia_default_theme
             };
 
@@ -402,10 +402,10 @@ var app = new Vue({
             this.trivia_default_mode = mode;
         },
 
-        setTriviaLife: function(life) {
-            this.trivia_default_life = life;
+        setTriviaNbq: function(nbq) {
+            this.trivia_default_trivianbq = nbq;
 
-            showTriviaLifeRule(life);
+            showTriviaNbqRule(nbq);
 
 
         },
@@ -529,6 +529,26 @@ var app = new Vue({
         },
 
 
+
+        goNextTriviaQuestion: function() {
+            $('.trivianextbtn').addClass('completedisable');
+
+            var config = {
+                method: 'post',
+                url: '/triggerNextTriviaQuestion',
+                data: ''
+            };
+
+            axios(config)
+            .then(function (res) {
+                if(res.status == 200) socket.emit('triggerNewTQEffect');
+            })
+            .catch(function (err) {
+                
+            });
+        }
+
+
         
 
 
@@ -602,8 +622,8 @@ var app = new Vue({
         });
 
 
-        socket.on('makePlayerPlayingEvent' , (life) => {
-            isplayingRequest(life);
+        socket.on('makePlayerPlayingEvent' , () => {
+            isplayingRequest();
         });
 
 
@@ -845,44 +865,54 @@ var app = new Vue({
 
 
 
-        socket.on('showTriviaLifeEvent' , (life) => {
-            showTriviaLifeRule(life);
+        socket.on('showTriviaNbqEvent' , (nbq) => {
+            showTriviaNbqRule(nbq);
         });
 
 
 
-        socket.on('displayTriviaDataEvent' , (data , nbq , clife) => {
-            showTriviaQR(data , nbq , clife);
+        socket.on('displayTriviaDataEvent' , (data , nbq) => {
+            showTriviaQR(data , nbq);
         });
-
-
-        socket.on('displayPreTriviaEvent' , (time) => {
-            showTriviaTimer(time);
-        });
-
 
 
         socket.on('updateTriviaTimer', (timeLeft) => {
-            $('#countdown-container').show();
+            if(timeLeft > 0) {
+                $('#countdown-container').show();
 
-            if(timeLeft <= 0) $('.triviasubans').addClass('triviadisableanswer');
+                // if(timeLeft <= 0) $('.triviasubans').addClass('triviadisableanswer');
 
-            const countdownTimer = document.getElementById('countdown-timer');
-            const progressBar = document.getElementById('progress-bar');
-            
-            // countdownTimer.textContent = (timeLeft/10).toFixed(1) + ' seconds';
-            // countdownTimer.textContent = Math.floor(timeLeft/10);
-   
-            const progressPercentage = 100 - timeLeft
-       
-            progressBar.style.filter = `saturate(${timeLeft}%)`;
-            progressBar.style.height = progressPercentage + '%';
+                const progressBar = document.getElementById('progress-bar');
+                const progressPercentage = 100 - timeLeft;
+        
+                progressBar.style.filter = `saturate(${timeLeft}%)`;
+                progressBar.style.height = progressPercentage + '%';
+            }
         });
 
 
         
         socket.on('endtriviatimer', () => {
             handleEndTriviaRoundAnswer();
+
+            /* TO ENABLE NEXT TRIVIA Q FOR HOST */
+            var config = {
+                method: 'post',
+                url: '/enableNextTriviaQBTNForHost',
+                data: ''
+            };
+
+            axios(config)
+            .then(function (res) {
+                if(res.status == 200) {
+                    $('.trivianextbtn').removeClass('completedisable');
+                    $('.trivianextbtn').show();
+                }
+            })
+            .catch(function (err) {
+                
+            });
+
         });
 
 
@@ -894,7 +924,7 @@ var app = new Vue({
                     el.classList.add('triviaselectedanswer');
                     $('.triviasubans').addClass('triviadisableanswer')
     
-                    $('.triviaselectedanswer').css('background-color' , 'rgba(250, 254, 145, 0.904)')
+                    $('.triviaselectedanswer').css('background-color' , 'rgba(116, 118, 88, 0.712)')
                     $('.triviaselectedanswer').css('color' , 'white')
                 } else if(stat == 0) {
                     if(tmp == data.coanswer) {
@@ -907,13 +937,52 @@ var app = new Vue({
 
 
                     $('.triviasubans').addClass('triviadisableanswer')
-                    $('.triviaselectedanswer').css('background-color' , 'rgba(250, 254, 145, 0.904)')
+                    $('.triviaselectedanswer').css('background-color' , 'rgba(116, 118, 88, 0.712)')
                     $('.triviaselectedanswer').css('color' , 'white')
 
                 }
 
                 tmp++;
 
+            });
+        });
+
+
+
+        socket.on('enableTriviaNextEvent' , () => {
+            $('.trivianextbtn').removeClass('completedisable');
+            $('.trivianextbtn').show();
+        });
+        
+        socket.on('displayTriviaNextEvent' , () => {
+            $('.trivianextbtn').show();
+        });
+
+
+
+        socket.on('showNewTriviaQuestionEvent' , () => {
+            $('.triviaanswerdiv , .triviaheadquestiondiv').addClass("hidetriviaroundclass");
+
+            setTimeout(() => {
+                $('#maindiv .triviaanswerdiv, #maindiv .triviaheadquestiondiv').remove();
+            }, 500);
+
+            var body = {
+                val: ''
+            };
+        
+            var config = {
+                method: 'post',
+                url: '/resetTriviaAnswer',
+                data: body
+            };
+        
+            axios(config)
+            .then(function (res) {
+              
+            })
+            .catch(function (err) {
+                
             });
         });
 
@@ -973,8 +1042,8 @@ $('.triviamodelist').on('click', function() {
 
 
 
-  $('.trivialifelist').on('click', function() {
-    $(".trivialifelist").css('filter' , 'brightness(100%)');
+  $('.trivianbqlist').on('click', function() {
+    $(".trivianbqlist").css('filter' , 'brightness(100%)');
     $(this).css('filter' , 'brightness(50%)');
     $(this).closest('.submenu1').addClass('hidden');
   });
@@ -1211,9 +1280,9 @@ function ingameRequest(imode) {
 }
 
 
-function isplayingRequest(tlife) {
+function isplayingRequest() {
     var body = {
-        life : tlife
+        val : ''
     };
 
     var config = {
@@ -2126,24 +2195,15 @@ function copyCode() {
 
 
 
-function showTriviaLifeRule(life) {
-    var tt = document.getElementById('triviarulelifeid')
-    tt.innerHTML = '';
-
-    for(let i = 0 ; i < life ; i++) {
-        var img = document.createElement('img');
-        img.src = 'trivialife.png'; 
-        img.width = 45;
-
-        tt.append(img)
-    }
-
+function showTriviaNbqRule(nbq) {
+    var tt = document.getElementById('triviarulenbqid')
+    tt.innerHTML = nbq;
 
 }
 
 
 
-function showTriviaQR(data , nbq , clife) {
+function showTriviaQR(data , nbq) {
       
         const maindiv = document.getElementById('maindiv');
         
@@ -2204,17 +2264,6 @@ function showTriviaQR(data , nbq , clife) {
         const trivialifediv = document.createElement('div');
         trivialifediv.className = "trivialifediv";
 
-        for(let i = 0 ; i < clife ; i++) {
-            const trivialifepic = document.createElement('img');
-            trivialifepic.src = 'trivialife.png';
-            trivialifepic.alt = 'life';
-            trivialifepic.className = "trivialifepic";
-
-            trivialifediv.appendChild(trivialifepic)
-        }
-
-
-
         maindiv.appendChild(trivialifediv);
         maindiv.appendChild(triviaHeadQuestionDiv);
 
@@ -2228,6 +2277,9 @@ function showTriviaQR(data , nbq , clife) {
             data.answer3 ,
             data.answer4 
         ];
+
+
+        // answers = shuffleArray(answers);
 
 
 
@@ -2244,7 +2296,7 @@ function showTriviaQR(data , nbq , clife) {
                 sendTriviaAnswer(answerDiv.textContent)
                 socket.emit('sendTriviaAnswerEvent' , answerDiv.textContent)
 
-                $('.triviaselectedanswer').css('background-color' , 'rgba(250, 254, 145, 0.904)')
+                $('.triviaselectedanswer').css('background-color' , 'rgba(116, 118, 88, 0.712)')
                 $('.triviaselectedanswer').css('color' , 'white')
               
 
@@ -2255,73 +2307,29 @@ function showTriviaQR(data , nbq , clife) {
         maindiv.appendChild(triviaAnswerDiv)
 
 
-        const neoshin = document.createElement('img');
-        neoshin.src = 'shinchan.png';
-        neoshin.alt = 'GO Image';
-        neoshin.className = "shinclass";
+        // const neoshin = document.createElement('img');
+        // neoshin.src = 'shinchan.png';
+        // neoshin.alt = 'GO Image';
+        // neoshin.className = "shinclass";
 
-        maindiv.appendChild(neoshin);
+        // maindiv.appendChild(neoshin);
         
     
 
 }
 
 
-function createCountdown() {
-    const maindiv = document.getElementById('maindiv');
-    // Create counter div
-    const counter = document.createElement('div');
-    counter.className = 'counter';
-    
-    // Create nums div
-    const trivia_spans = document.createElement('div');
-    trivia_spans.className = 'triviaspandiv';
 
-    // Create span elements for the countdown
-    const numbers = ['3', '2', '1', '0'];
-    numbers.forEach(number => {
-        const span = document.createElement('span');
-        span.textContent = number;
-        trivia_spans.appendChild(span);
-    });
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 
-    counter.appendChild(trivia_spans);
-    maindiv.appendChild(counter);
-
-
-    const finalMessage = document.createElement('div');
-    finalMessage.className = 'triviapretimerfinal';
-
-    const message = document.createElement('p');
-    message.textContent = "C'est parti..";
-    message.id = "triviamsg";
-    finalMessage.appendChild(message);
-
-    const finalhr = document.createElement('hr');
-
-    const img = document.createElement('img');
-    img.src = 'shinchan.png';
-    img.alt = 'GO Image';
-    img.id = "shinpicid";
-    
-
-
-    maindiv.append(finalMessage , img);
-
-
+    return array;
 }
 
 
-function showTriviaTimer(time) {
-
-    createCountdown()
-
-    const trivia_spans = document.querySelectorAll('.triviaspandiv span');
-    const counter = document.querySelector('.counter');
-    const finalMessage = document.querySelector('.triviapretimerfinal');
-
-    runAnimation(time , trivia_spans, counter, finalMessage)
-}
 
 
 
@@ -2402,28 +2410,33 @@ function handleEndTriviaRoundAnswer() {
 
 
 
-function finalTriviaRoundAnswerVisual(data , player_ans) {
-    console.log(player_ans)
-    console.log(data)
+function finalTriviaRoundAnswerVisual(data , player_answer) {
 
     var tmp = 1;
-    document.querySelectorAll('.triviasubans').forEach(el => {    
+    document.querySelectorAll('.triviasubans').forEach(el => {   
+        el.classList.add('triviadisableanswer') 
         if(tmp == data.coanswer) {
-            console.log(el)
             el.classList.add('triviagoodanswer');
 
-            $('.triviaselectedanswer').css('background-color' , 'rgba(250, 254, 145, 0.904)')
+            $('.triviaselectedanswer').css('background-color' , 'rgba(116, 118, 88, 0.712)')
             $('.triviaselectedanswer').css('color' , 'white')
         } else {
-            if(player_ans == el.textContent) {
+            if(player_answer == el.textContent) {
                 el.classList.add('triviawronganswer')
-               
-            }
+            } 
         }
         
 
         tmp++;
 
-    });      
+    });     
+    
+    
+
+    $('#countdown-container').fadeOut(500);
             
 }
+
+
+
+

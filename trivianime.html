@@ -60,11 +60,13 @@
 
                 <nav class="trivianavbar">
                     <ul>
-                        <li class="triviatitle1 triviatitle"><a href="#"> Vie </a>
+                        <li class="triviatitle1 triviatitle"><a href="#"> Questions </a>
                             <ul class="submenu submenu1">
-                                <li @click="setTriviaLife(1)" class="trivialifelist"><a href="#"><img width="30" src="trivialife.png"> </a></li>
-                                <li @click="setTriviaLife(2)" class="trivialifelist"><a href="#"><img width="30" src="trivialife.png"> <img width="30" src="trivialife.png"> </a></li>
-                                <li @click="setTriviaLife(3)" class="trivialifelist"><a href="#"><img width="30" src="trivialife.png"> <img width="30" src="trivialife.png"> <img width="30" src="trivialife.png"></a></li>
+                                <li @click="setTriviaNbq(10)" class="trivianbqlist"><a href="#"> 10 </a></li>
+                                <li @click="setTriviaNbq(15)" class="trivianbqlist"><a href="#"> 15 </a></li>
+                                <li @click="setTriviaNbq(20)" class="trivianbqlist"><a href="#"> 20 </a></li>
+                                <li @click="setTriviaNbq(25)" class="trivianbqlist"><a href="#"> 25 </a></li>
+                                <li @click="setTriviaNbq(30)" class="trivianbqlist"><a href="#"> 30 </a></li>
                             </ul>
                         </li>
     
@@ -167,13 +169,16 @@
 
 
 
+                 <img @click="goNextTriviaQuestion()" src = "trivianext.png" alt="NEXT" class="trivianextbtn completedisable">
+               
+
+
 
                   
 
 
                   <div id="countdown-container">
                     <div id="progress-bar"></div>
-                    <span id="countdown-timer"></span>
                 </div>
 
 
@@ -185,7 +190,7 @@
 
                   <div class="triviarule"> 
                     <p> Règles <hr> </p>
-                    <span id="triviarulelifeid" class="triviarulelife">  </span>
+                    <span id="triviarulenbqid">  </span>
                     <span> <span class="triviaruledata"> {{trivia_default_mode}} </span> </span> 
                     <span> <span class="triviaruledata"> {{trivia_default_theme}} </span> </span> 
                  </div>
