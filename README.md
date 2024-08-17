@@ -1,4 +1,4 @@
-![Capture d'écran 2024-08-17 222650](https://github.com/user-attachments/assets/4f6cbbe1-19de-4ac8-b363-b1add57a3d2c)# BOMBANIME
+# BOMBANIME
 > Bombparty like | Anime version , multigames and multiplayer
 ![home](rdpic/home.png)
 Basé sur le jeu Bomparty disponible sur le site de https://jklm.fun/ , le jeu propose divers mini jeux de plateau (jeu de la bombe et jeu de carte) sur le thèmes des anime/mangas concu pour les fan du milieu. D'autres sont en cours de développement.
