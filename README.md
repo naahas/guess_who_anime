@@ -17,10 +17,13 @@ Basé sur le jeu Bomparty disponible sur le site de https://jklm.fun/ , le jeu p
 ## MODES DE JEU
 
 - Bombanime : jeu de la bombe (l'hôte choisit  une série et ajuste les paramètres de jeu puis chaque joueur envoie à tour de rôle un personnage provenant de la série en question dans le temps imparti.
-
-- Cardanime : jeu de versus card (l'hôte choisit la capacité de main , selon ce nombre , chaque joueur pioche un nombre de cartes dans un deck commun à tous les joueurs. Chaque carte se voit attribuer des statistiques.Au début de chaque manche , une statistique principale est affichée aléatoirement, chaque joueur propose une carte et celui dont la carte présente la statistique correspondante la plus elevée remporte la manche. Chaque joueur possède 5 vies , le dernier joueur en vie gagne la partie.
-
 ![ice_screenshot_20240719-151935](https://github.com/user-attachments/assets/1ca39f0e-48de-4665-a52a-2fb05700657c)
+
+- Trivianime : jeu de quiz multijoueur à points , choix de mode de difficulté (progressif ou aléatoire , choix de thème (série sur laquelle porte les questions) , choix du nombres de questions et du temps
+![Capture d'écran 2024-08-17 221813](https://github.com/user-attachments/assets/f5e4f8c3-9fb6-43aa-82d7-eda9d689f0be)
+![Capture d'écran 2024-08-17 222514](https://github.com/user-attachments/assets/d6f0d50e-d3ac-4dfb-8453-1234f1e6de07)
+
+
 
 
 
