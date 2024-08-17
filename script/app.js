@@ -777,6 +777,9 @@ var app = new Vue({
 
         socket.on('displayRePlay' , () => {
             $('.replaybtn').show();
+
+
+            $('.trivianextbtn').fadeOut(500);
         });
 
 
@@ -960,8 +963,9 @@ var app = new Vue({
 
 
 
-        socket.on('showNewTriviaQuestionEvent' , () => {
+        socket.on('hidePreTriviaQuestionEvent' , () => {
             $('.triviaanswerdiv , .triviaheadquestiondiv').addClass("hidetriviaroundclass");
+            $('.triviafastestspan').fadeOut(500);
 
             setTimeout(() => {
                 $('#maindiv .triviaanswerdiv, #maindiv .triviaheadquestiondiv').remove();
@@ -985,6 +989,57 @@ var app = new Vue({
                 
             });
         });
+
+
+
+        socket.on('displayTriviaOpponentEvent' , (players_tab) => {
+            displayTriviaOpponent(players_tab);
+        });
+
+
+        
+        socket.on('showTriviaFastestEvent' , (fastest) => {
+            if(fastest) showTriviaFastestPlayer(fastest);
+        });
+
+
+        socket.on('increaseTriviaPoint' , () => {
+
+            var body = {
+                val: ''
+            };
+        
+            var config = {
+                method: 'post',
+                url: '/handleTriviaPoint',
+                data: body
+            };
+        
+            axios(config)
+            .then(function (res) {
+                IncreaseTriviaPoint(res.data.point)
+            })
+            .catch(function (err) {
+                
+            });
+        });
+
+
+        socket.on('endTriviaGameEvent' , (stat , delay , winner) => {
+            displayTriviaWinner(delay , winner);
+        
+            if(stat == 0) {
+                endTriviaGameRequest();
+            } 
+          
+        });
+
+
+        socket.on('displayTriviaPointEvent' , (point) => {
+            displayTriviaPoint(point);
+        });
+
+
 
     
     },
@@ -2440,3 +2495,149 @@ function finalTriviaRoundAnswerVisual(data , player_answer) {
 
 
 
+
+function displayTriviaOpponent(players) {
+    var mainarea = document.getElementById('maindiv');
+
+    var triviaplayerdiv = document.createElement('div');
+    triviaplayerdiv.classList.add('triviaopponentdiv');
+
+    var showp = document.createElement('img');
+    showp.setAttribute('src', 'eyeskill.png');
+    showp.classList.add('triviauserpic');
+
+    for (var i = 0; i < players.length; i++) {
+            var spanuser = document.createElement('span');
+            spanuser.classList.add('triviaopponenttxt');
+
+            // var usertxt = document.createTextNode(players[i]);
+            // spanuser.appendChild(usertxt);
+
+            if (players[i] == app.username) { 
+                spanuser.style.fontWeight = 'bold';
+                spanuser.innerHTML = players[i] + ' <i class="fa fa-star" aria-hidden="true"></i>';
+            } else spanuser.innerHTML = players[i]
+
+            var pbr = document.createElement("br");
+            triviaplayerdiv.appendChild(spanuser);
+            triviaplayerdiv.appendChild(pbr);
+    }
+    
+
+    showp.addEventListener('mouseenter', function(event) {
+        triviaplayerdiv.style.display = 'unset';
+    });
+
+    showp.addEventListener('mouseleave', function(event) {
+        triviaplayerdiv.style.display = 'none';
+    });
+
+    mainarea.append(showp, triviaplayerdiv);
+
+    showp.style.display = 'unset';
+}
+
+
+
+
+function showTriviaFastestPlayer(fastest) {
+    var mainarea = document.getElementById('maindiv'); 
+    var pbr = document.createElement("span");
+
+    pbr.classList.add('triviafastestspan')
+    
+    pbr.innerHTML = `<i class="fa fa-bolt" aria-hidden="true"></i> &nbsp;` + fastest[0] + " : " + fastest[1] + "s";
+
+    mainarea.appendChild(pbr);
+    pbr.style.display = 'unset';
+
+    
+}
+
+
+
+function displayTriviaWinner(delay , data) {
+    var mainarea = document.getElementById('maindiv'); 
+
+    const winnerDiv = document.createElement('div');
+    winnerDiv.className = 'triviawinnerdiv';
+
+    const subWinnerDiv = document.createElement('div');
+    subWinnerDiv.className = 'subwinnerdiv';
+
+    const crownImg = document.createElement('img');
+    crownImg.src = 'crown.png';
+    crownImg.alt = 'CROWN';
+
+    const title = document.createElement('h2');
+    title.textContent = data.winner + ' A GAGNÉ (' + data.point + ')';
+
+    const hr = document.createElement('hr');
+
+    subWinnerDiv.appendChild(crownImg);
+    subWinnerDiv.appendChild(title);
+    subWinnerDiv.appendChild(hr);
+
+    winnerDiv.appendChild(subWinnerDiv);
+
+    const replayButton = document.createElement('button');
+    replayButton.className = 'replaybtn';
+    replayButton.textContent = 'REJOUER';
+
+    replayButton.addEventListener('click', function() {
+        app.replay();
+    });
+
+
+    winnerDiv.appendChild(replayButton);
+
+    mainarea.appendChild(winnerDiv); 
+
+    setTimeout(() => {
+        winnerDiv.style.display = 'unset';
+    }, delay);
+
+
+}
+
+
+
+
+function endTriviaGameRequest() {
+    var body = {
+        val: ''
+    };
+
+    var config = {
+        method: 'post',
+        url: '/endTriviaGame',
+        data: body
+    };
+
+    axios(config)
+    .then(function (res) {
+    })
+    .catch(function (err) {
+        
+    });
+}
+
+
+
+function displayTriviaPoint(point) {
+    var mainarea = document.getElementById('maindiv'); 
+
+    var player_point = document.createElement("span");
+    player_point.classList.add('triviapointclass')
+    player_point.innerHTML = point;
+
+
+    mainarea.appendChild(player_point);
+
+}
+
+
+
+function IncreaseTriviaPoint(point) {
+    $('.triviapointclass').html(point);
+}

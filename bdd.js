@@ -56,11 +56,41 @@ async function getRandomQuestion() {
 
 
 
+async function geteMainstreamQuestion() {
+    try {
+        const query = 'SELECT * FROM questions WHERE serie_ans IN (SELECT serie from mainstream_serie) ORDER BY RAND() LIMIT 1';  
+        const resultSet = await bdd.query({ query });
+        const rows = await resultSet.json(); 
+        return rows.data;
+    } catch (error) {
+        console.error('Error executing query:', error.message);
+    }
+}
+
+
+
+async function getSerieQuestion(serie) {
+    try {
+        const query = `SELECT * FROM questions WHERE serie_ans = '${serie}' ORDER BY RAND() LIMIT 1`;  
+        const resultSet = await bdd.query({ query });
+        const rows = await resultSet.json(); 
+        return rows.data;
+    } catch (error) {
+        console.error('Error executing query:', error.message);
+    }
+}
+
+
+
+
+
 
 
 module.exports = {
   bdd,
   getAllQuestions,
   insertUsedQ,
-  getRandomQuestion
+  getRandomQuestion,
+  geteMainstreamQuestion,
+  getSerieQuestion
 };
