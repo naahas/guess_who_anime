@@ -17,7 +17,6 @@ Basé sur le jeu Bomparty disponible sur le site de https://jklm.fun/ , le jeu p
 ## MODES DE JEU
 
 - **Bombanime** : jeu de la bombe (l'hôte choisit  une série et ajuste les paramètres de jeu puis chaque joueur envoie à tour de rôle un personnage provenant de la série en question dans le temps imparti.
-![ice_screenshot_20240719-151935](https://github.com/user-attachments/assets/1ca39f0e-48de-4665-a52a-2fb05700657c)
 > EN SOLO CONTRE UN BOT
 ![bomb](rdpic/bomb.png)
 
