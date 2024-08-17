@@ -16,7 +16,7 @@ Basé sur le jeu Bomparty disponible sur le site de https://jklm.fun/ , le jeu p
 
 ## MODES DE JEU
 
-- Bombanime : jeu de la bombe (l'hôte choisit  une série et ajuste les paramètres de jeu puis chaque joueur envoie à tour de rôle un personnage provenant de la série en question dans le temps imparti.
+- **Bombanime** : jeu de la bombe (l'hôte choisit  une série et ajuste les paramètres de jeu puis chaque joueur envoie à tour de rôle un personnage provenant de la série en question dans le temps imparti.
 ![ice_screenshot_20240719-151935](https://github.com/user-attachments/assets/1ca39f0e-48de-4665-a52a-2fb05700657c)
 > EN SOLO CONTRE UN BOT
 ![bomb](rdpic/bomb.png)
@@ -25,7 +25,7 @@ Basé sur le jeu Bomparty disponible sur le site de https://jklm.fun/ , le jeu p
 > DE 2 A 10 JOUEURS
 ![ice_screenshot_20240728-033711](https://github.com/user-attachments/assets/062a2975-9d4c-453d-90f2-1416ee3bc7e4)
 
-- Trivianime : jeu de quiz multijoueur à points , choix de mode de difficulté (progressif ou aléatoire , choix de thème (série sur laquelle porte les questions) , choix du nombres de questions et du temps
+- **Trivianime** : jeu de quiz multijoueur à points , choix de mode de difficulté (progressif ou aléatoire , choix de thème (série sur laquelle porte les questions) , choix du nombres de questions et du temps
 
 > CHOIX DES PARAMETRES
 ![Capture d'écran 2024-08-17 221813](https://github.com/user-attachments/assets/f5e4f8c3-9fb6-43aa-82d7-eda9d689f0be)
