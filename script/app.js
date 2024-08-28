@@ -11,7 +11,6 @@ socket.on('connect' , () => { console.log(socket.id)});
 //     `
 //   });
 
-
   
 
 var app = new Vue({
@@ -1731,15 +1730,16 @@ if(sliderEl) {
 function editRule(stat) {
     if(stat == 1) {
         app.ruletitle = "Bombanime";
-        app.ruletxt = "Très similaire à Bombparty , les joueurs s'affrontent en citant des personnages à tour de rôle. Chaque personne dispose d'un temps donné pour envoyer leur réponse. Le dernier joueur en vie remporte la partie.";
+        app.ruletxt = "Très similaire à Bombparty , les joueurs s'affrontent en citant des personnages à tour de rôle.";
         
     }
 
 
-    if(stat == 4) {
+    if(stat == 2) {
         app.ruletitle = "Trivianime";
-        app.ruletxt = "Trivial MM";
+        app.ruletxt = "QCM à points , les joueurs s'affrontent en répondant à une suite de questions portant sur un thème choisit.";
     }
+
 
 
 

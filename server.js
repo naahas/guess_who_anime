@@ -1623,6 +1623,11 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "ENER")  { similar.push("ENERU"); }
                 if(answer == "ENERU")  { similar.push("ENER"); }
 
+                
+                if(answer == "IMU")  { similar.push("IM"); similar.push("IMU SAMA"); }
+                if(answer == "IM")  { similar.push("IMU"); similar.push("IMU SAMA"); }
+                if(answer == "IMU SAMA") { similar.push("IMU"); similar.push("IM"); }
+
                 if(answer == "ISSHO")  { similar.push("FUJITORA"); }
                 if(answer == "FUJITORA")  { similar.push("ISSHO"); }
 
