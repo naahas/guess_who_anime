@@ -1,5 +1,375 @@
 {
 
+    "Naruto" : {
+        "veryeasy" : [
+                ["Qui est le mentor de Naruto Uzumaki dans l'équipe 7 ?", "Kakashi", "Jiraiya", "Iruka", "Asuma", 1],
+                ["Quel est le nom du village natal de Naruto ?", "Konoha", "Suna", "Kiri", "Iwa", 1],
+                ["Quel est le bijuu scellé en Naruto ?", "Shukaku", "Kurama", "Gyuki", "Matatabi", 2],
+                ["Quel est le nom du clan de Sasuke ?", "Uchiha", "Uzumaki", "Hyuga", "Nara", 1],
+                ["Qui est le premier Hokage de Konoha ?", "Hashirama", "Tobirama", "Hiruzen", "Minato", 1],
+                ["Quel est le nom de la technique signature de Naruto ?", "Rasengan", "Chidori", "Amaterasu", "Sharingan", 1],
+                ["Comment s'appelle le frère aîné de Sasuke ?", "Madara", "Itachi", "Shisui", "Obito", 2],
+                ["Quel est le rêve de Naruto ?", "Devenir Hokage", "Devenir un ninja légendaire", "Devenir riche", "Détruire Konoha", 1],
+                ["Comment s'appelle le père de Naruto ?", "Minato", "Fugaku", "Jiraiya", "Tobirama", 1],
+                ["Qui est l'hôte de Shukaku ?", "Gaara", "Naruto", "Killer Bee", "Yugito", 1],
+                ["Quel est le clan connu pour utiliser le Byakugan ?", "Hyuga", "Uchiha", "Senju", "Aburame", 1],
+                ["Quel est le nom du groupe de ninjas renégats auquel Itachi appartient ?", "Akatsuki", "Anbu", "Taka", "Sound Four", 1],
+                ["Quel est le pouvoir héréditaire des Uchiha ?", "Sharingan", "Byakugan", "Rinnegan", "Mokuton", 1]
+            ],
+
+        "easy": [
+            ["Qui est le sensei de l'équipe 10 ?", "Asuma", "Kakashi", "Guy", "Kurenai", 1],
+            ["Quel est le nom du serpent invoqué par Orochimaru ?", "Gamabunta", "Manda", "Katsuyu", "Enma", 2]
+        ],
+
+        "medium" : [
+            ["Quel est le numéro d'équipe à laquelle appartient Shikamaru Nara ?", 8, 10, 9, 4, 2]
+        ],
+
+        "hard" : [
+            ["De quel couleur sont les yeux de Kakuzu ?", "Rouge", "Bleu", "Vert", "Jaune", 3]
+        ],
+
+        "veryhard" : [
+            ["Qui est arrivé en tête du premier concours officiel de popularité de la série ?", "Naruto", "Sasuke", "Itachi", "Kakashi", 4]
+        ],
+
+        "extreme" : [
+            ["Qui signifie le caractère sur la bague de Pain ?", "Haine", "Dieu", "Zéro", "Mort", 3]
+        ]
+
+    },
+
+
+    "One Piece" : {
+        "veryeasy" : [
+                ["Quel est le rêve de Monkey D. Luffy ?", "Devenir Roi des Pirates", "Devenir Amiral", "Devenir Empereur", "Devenir Vice-Amiral", 1],
+                ["Quel est le premier membre à rejoindre l'équipage de Luffy ?", "Zoro", "Nami", "Sanji", "Usopp", 1],
+                ["Qui est le médecin de l'équipage des Mugiwara ?", "Jinbe", "Nami", "Chopper", "Robin", 3],
+                ["Qui est le cuisinier de l'équipage des Mugiwaras ?", "Franky", "Zoro", "Luffy", "Sanji", 4],
+                ["Comment s'appelle le chasseur de pirates qui devient le premier rival de Luffy ?", "Zoro", "Smoker", "Law", "Barbe Noire", 2],
+                ["Qui est le capitaine des Pirates de Barbe Blanche ?", "Kaido", "Shanks", "Edward Newgate", "Big Mom", 3],
+                ["Quel est le nom de l'archipel où les supernovas se rencontrent avant le Nouveau Monde ?", "Archipel Sabaody", "Dressrosa", "Alabasta", "Whole Cake Island", 1],
+                ["Qui est le musicien de l'équipage des Mugiwara ?", "Brook", "Usopp", "Sanji", "Brook", 4]
+        ],
+
+        "easy": [
+            ["Quel est le nom de l'organisation criminelle dirigée par Crocodile ?", "Cipher Pol", "Baroque Works", "Bount Criminal", "Yonko", 2]
+        ],
+
+        "medium" : [
+            ["Quel sabre zoro à t-il reçu de Kuina ?", "Yubashiri", "Sandai Kitetsu" , "Wado ichimonji", "Nidai Kitetsu", 3],
+            ["Qui possède le Pika Pika no Mi ?", "Ener", "Kizaru" , "Mr 3", "Pica", 2]
+        ],
+
+        "hard" : [
+            ["Lors du Davy back fight , quel mugiwara Foxy choisit-il pour rejoindre son équipage ?", "Chopper", "Robin", "Zoro", "Nami", 1]
+        ],
+
+        "veryhard" : [
+            ["Quel dial Wiper utilise t-il sur Ener ?", "Reject Dial", "Impact Dial", "Stone dial", "Jet Dial", 1]
+        ],
+
+        "extreme" : [
+            ["De quel bloc de combattant luffy ressort-il vainqueur au Colosseum de Dressrosa ?", "A", "B", "C", "D", 3]
+        ]
+    },
+
+
+
+    "Demon Slayer" : {
+
+        "veryeasy" : [
+            ["Quel est le nom du personnage principal de Demon Slayer ?", "Zenitsu Agatsuma", "Tanjiro Kamado", "Inosuke Hashibira", "Kanao Tsuyuri", 2]
+        ],
+
+        "easy": [
+            ["Combien de mouvements Zenitsu est-il capable d'utiliser ?", "1", "2", "3", "4", 1]    
+        ],
+
+        "medium" : [
+            ["Quel est le nom du pilier de la Flamme ?", "Sanemi Shinazugawa", "Giyu Tomioka", "Kyojuro Rengoku", "Tengen Uzui", 3]
+        ],
+
+        "hard" : [
+            ["Quel est le nom de l'ennemi principal de l'arc du District Entertainment ?", "Gyutaro", "Daki", "Akaza", "Muzan Kibutsuji", 2]
+        ],
+
+        "veryhard" : [
+            ["Quel est le nom de la technique de respiration que Tanjiro utilise après le passage du Training Arc ?", "Breath of the Moon", "Breath of Water", "Breath of Thunder", "Breath of the Sun", 2]
+        ],
+
+        "extreme" : [
+            ["Quel est le rang du Hashira de la Brume avant sa retraite ?", "Pillar", "Elder", "Master", "Grandmaster", 1]
+        ]
+    },
+
+
+
+    "Bleach" : {
+
+        "veryeasy" : [
+            ["Quel est le nom du personnage principal de Bleach ?", "Renji Abarai", "Toshiro Hitsugaya", "Ichigo Kurosaki", "Rukia Kuchiki", 3]
+        ],
+
+        "easy": [
+            ["Quel est le nom de la zanpakuto d'Ichigo Kurosaki ?", "Sode no Shirayuki", "Zangetsu", "Haineko", "Katen Kyokotsu", 2]
+        ],
+
+        "medium" : [
+            ["Quel est le titre donné aux capitaines des divisions de la Soul Society ?", "Espadas", "Shinigamis", "Taichos", "Vizards", 3]
+        ],
+
+        "hard" : [
+            ["Qui est le leader des Espadas dans Bleach ?", "Ulquiorra Cifer", "Grimmjow Jaegerjaquez", "Coyote Starrk", "Sosuke Aizen", 4]
+        ],
+
+        "veryhard" : [
+            ["Quel est le nom de l'attaque finale de Kisuke Urahara ?", "Kurohitsugi", "Hōgyoku", "Utsusemi", "Shinji's Kannon", 1]
+        ],
+
+        "extreme" : [
+            ["Quel est le nom de la technique de Kido utilisée pour bloquer les attaques ?", "Bakudo", "Hadō", "Shunpo", "Zanjutsu", 1]
+        ]
+    },
+
+
+
+    "My Hero Academia" : {
+
+        "veryeasy" : [
+            ["Quel est le nom du personnage principal de My Hero Academia ?", "Shoto Todoroki", "Izuku Midoriya", "Katsuki Bakugo", "All Might", 2]
+        ],
+
+        "easy": [
+            ["Quel est le nom de l'école où étudie Izuku Midoriya ?", "Shiketsu High School", "UA High School", "Ketsubutsu Academy", "Seijin High School", 2]
+        ],
+
+        "medium" : [
+            ["Quel est le nom du mentor d'Izuku Midoriya ?", "Hawks", "Gran Torino", "All Might", "Endeavor", 3]
+        ],
+
+        "hard" : [
+            ["Quel est le nom du héros numéro 1 avant All Might ?", "Endeavor", "Nighteye", "Gran Torino", "Hawks", 1]
+        ],
+
+        "veryhard" : [
+            ["Quel est le nom de l'alter de Shoto Todoroki ?", "Fire and Ice", "Explosion", "One For All", "Erasure", 1]
+        ],
+
+        "extreme" : [
+            ["Quel est le nom du groupe de vilains qui affronte UA High School dans l'arc de l'internat ?", "League of Villains", "Meta Liberation Army", "Vanguard Action Squad", "Dark Hero Society", 1]
+        ]
+    },
+
+
+
+    "Death Note" : {
+
+        "veryeasy" : [
+            ["Quel est le nom du protagoniste principal de Death Note ?", "L", "Light Yagami", "Ryuk", "Misa Amane", 2]
+        ],
+
+        "easy": [
+            ["Quel est le nom du dieu de la mort qui donne le Death Note à Light ?", "Shinigami", "Ryuk", "Sidoh", "Rem", 2]
+        ],
+
+        "medium" : [
+            ["Quel est le pseudonyme utilisé par Light Yagami lorsqu'il devient célèbre pour ses actions ?", "Kira", "L", "Ryuk", "Rem", 1]
+        ],
+
+        "hard" : [
+            ["Quel est le véritable nom de L ?", "L Lawliet", "L Yamamoto", "L Keiji", "L Tsukasa", 1]
+        ],
+
+        "veryhard" : [
+            ["Quel est le prénom de la sœur de Light Yagami ?", "Sayu", "Misa", "Kiyomi", "Hikari", 1]
+        ],
+
+        "extreme" : [
+            ["Quel est le nom du personnage qui remplace L après sa mort ?", "Near", "Mello", "Light Yagami", "Aizawa", 1]
+        ]
+    },
+
+
+    "Fairy Tail" : {
+
+        "veryeasy" : [
+            ["Quel est le nom du personnage principal de Fairy Tail ?", "Gray Fullbuster", "Natsu Dragneel", "Erza Scarlet", "Wendy Marvell", 2]
+        ],
+
+        "easy": [
+            ["Quel est le nom de la guilde dont Natsu Dragneel est membre ?", "Sabertooth", "Raven Tail", "Fairy Tail", "Blue Pegasus", 3]
+        ],
+
+        "medium" : [
+            ["Quel est le prénom de la dragonne de l'air dans Fairy Tail ?", "Ultear", "Wendy", "Mavis", "Erza", 2]
+        ],
+
+        "hard" : [
+            ["Quel est le nom du mage fondateur de Fairy Tail ?", "Makarov Dreyar", "Mavis Vermillion", "Jose Porla", "Hades", 2]
+        ],
+
+        "veryhard" : [
+            ["Quel est le nom du sort utilisé par Natsu pour vaincre Atlas Flame ?", "Dragon Slayer Magic", "Fire Dragon's Roar", "Lightning Dragon's Roar", "Sky Dragon's Roar", 2]
+        ],
+
+        "extreme" : [
+            ["Quel est le nom du mage qui est le chef de la guilde de Dark Guild Oración Seis ?", "Brain", "Hades", "Ultear", "Jose", 1]
+        ]
+    },
+
+
+
+    "Dragon Ball" : {
+
+        "veryeasy" : [
+            ["Quel est le nom du personnage principal de Dragon Ball ?", "Vegeta", "Goku", "Krillin", "Piccolo", 2]
+        ],
+
+        "easy": [
+            ["Quel est le nom de la boule de cristal à quatre étoiles que possède Goku ?", "Dragon Ball", "Shenron Ball", "Four-Star Ball", "Eternal Dragon Ball", 3]
+        ],
+
+        "medium" : [
+            ["Quel est le nom du père de Goku ?", "Vegeta", "Raditz", "Bardock", "Frieza", 3]
+        ],
+
+        "hard" : [
+            ["Quel est le nom du tournoi où Goku affronte des adversaires puissants ?", "World Martial Arts Tournament", "Cell Games", "King Kai's Tournament", "Tournament of Power", 1]
+        ],
+
+        "veryhard" : [
+            ["Quel est le nom de l'attaque signature de Goku ?", "Kamehameha", "Final Flash", "Special Beam Cannon", "Big Bang Attack", 1]
+        ],
+
+        "extreme" : [
+            ["Quel est le nom du personnage qui est le créateur des Dragon Balls ?", "Kami", "Shenron", "Dende", "Supreme Kai", 1]
+        ]
+    },
+
+
+
+    "Hunter Hunter" : {
+
+        "veryeasy" : [
+            ["Comment est surnommé Hisoka ?", "Hisoka le maraudeur", "Hisoka l'éxécuteur", "Hisoka le magicien", "Hisoka le charmeur", 3]
+        ],
+
+        "easy": [
+            ["Dans quel domaine est spécialisé la famille Zoldyck ?", "L'Assassinat", "Le Vol" , "La Magie Noire" , "L'Electronique", 1]
+        ],
+
+        "medium" : [
+            ["Quel est le type de Nen de Killua ?", "Emission", "Transformation" , "Manipulation", "Matérialisation", 2]
+        ],
+
+        "hard" : [
+            ["Quel est le nom de la capacité unique de nen de Kuroro Lucifer ?", "Mine Set", "Phantom Thief", "Stolen Ability", "Skill Hunter", 4]
+        ],
+
+        "veryhard" : [
+            ["De combien d'étages est composée la tour céleste ?", "999", "251", "210", "505", 2]
+        ],
+
+        "extreme" : [
+            ["Quel surnom Biscuit donne-t-elle à sa Blue Planet ?", "Pla-chan", "Planet-chan", "Plue-chan", "Blue-chan", 2]
+        ]
+    },
+
+
+    "Attack on Titan" : {
+
+        "veryeasy" : [
+            ["Comment s'appelle la mère de Eren ?", "Hannah", "Carla", "Mia", "Julia", 2]
+        ],
+
+        "easy": [
+            ["Quel est le vrai nom de Krista Lenz ?", "Historia Reiss", "Historia Fritz" , "Historia Glass", "Historia Flair", 1]
+        ],
+
+        "medium" : [
+            ["Combien de titans primordiaux existent-ils ?", "7", "8", "9", "10", 3]
+        ],
+
+        "hard" : [
+            ["Comment s'appelle le frère de Porco ?", "Falco", "Marcel", "Calie", "Reiner", 2]
+        ],
+
+        "veryhard" : [
+            ["Quel est le plan des bataillons d'exploration pour reconquérir le mur Maria ?", "Faire en sorte que le Titan d'Eren rebouche la brèche avec un rocher", "Vérifier si Eren peut durcir son Titan pour combler la brèche", "Utiliser Annie qu'ils ont capturée afin qu'elle rebouche la brèche", "Utiliser Eren et Annie comme appats pour exterminer tous les titans autour du mur", 2]
+        ],
+
+        "extreme" : [
+            ["Quel membre de la Garnison ordonne l'exécution d'Eren lors de l'arc de la Bataille de Trost ?", "Daris Beisley", "Dot Pixis", "Vald Lance", "Kitts Verman", 4]
+        ]
+    },
+
+
+    "Jojo" : {
+
+        "veryeasy" : [
+                ["Comment s'appelle le Jojo de la 4ème partie ?", "Joseph", "Josuke", "Jotaro", "Giorno", 2]
+        ],
+
+        "easy": [
+            ["Qu'est-ce qu'un stand ?", "Une arme biologique", "Une matérialisation de l'esprit", "Une carte", "Un sosie", 2]
+        ],
+
+        "medium" : [
+            ["Que déteste par dessus-tout Josuke (P4) ?", "Qu'un homme le touche", "Les animaux de compagnie" , "Qu'on l'appelle par son nom de famille", "Qu'on se moque de ses cheveux", 4]
+        ],
+
+        "hard" : [
+            ["Quel pouvoir n'existe pas ?", "Arrêter le temps", "Créer des planètes", "Inverser la gravité", "Créer un univers", 2]
+        ],
+
+        "veryhard" : [
+            ["Parmi ces Stand , lequel n'a pas de manieur ?", "Wheel Of Fortune", "Enigma", "Anubis", "The Grateful Dead", 3]
+
+        ],
+
+        "extreme" : [
+            ["Comment est mort Von Stroheim ?", "Il meurt pendant la guerre", "Il se sacrifie en tuant Santana" , "Il ne meurt pas", "Il se fait tué par Kars", 1]
+        ]
+    },
+
+
+    "Jujutsu Kaisen" : {
+
+        "veryeasy" : [
+                ["Comment se nomme le démon enfermé dans Itadori ?", "Apache", "Sukuna", "Goto", "Mahoraga", 2]
+        ],
+
+        "easy": [
+            ["Quel est le sort inné de Todo ?", "Black Flash", "Instant Dance", "Skull Dance", "Boogie Woogie", 4]
+        ],
+
+        "medium" : [
+            ["Quel âge avait Gojo lors de son affrontement avec Toji ?", "17 ans", "18 ans" , "19 ans", "20 ans", 1]
+        ],
+
+        "hard" : [
+            ["Pourquoi Nobara est-elle venue à l'école d'exorcisme ?", "Pour rencontrer Gojo Satoru", "Parce qu'elle n'aime pas la campagne", "Pour retrouver le meurtrier de sa soeur", "Pour devenir plus forte", 2]
+        ],
+
+        "veryhard" : [
+            ["Qui parmi ces personnages n'est pas un étudiant en deuxième année à l'école de Kyoto ?", "Kasumi Miwa", "Mai Zenin", "Kokichi Muta", "Aoi Todo", 4]
+        ],
+
+        "extreme" : [
+            ["Parmi ces mangas , à quel manga Yuji fait-il référence lors de son apprentissage de l'énergie occulte ?", "Gintama", "Comwboy Bebop", "Yu Yu Hakusho", "Gundam", 3]
+        ]
+    }
+
+
+    
+
+
+
+
+
+
 
 
 

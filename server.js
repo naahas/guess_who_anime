@@ -10,7 +10,10 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 var _ = require('underscore');
 const cors = require('cors');
-const { bdd2, getRandomQuestion , geteMainstreamQuestion , getSerieQuestion} = require('./bdd');
+// const { bdd2, getRandomQuestion , geteMainstreamQuestion , getSerieQuestion} = require('./bdd');
+
+const triviadata = require('./triviadata.json');
+
 
 
 
@@ -535,7 +538,8 @@ app.post('/confirmSettingTrivianime' , function(req,res) {
     mapgametriviaendgame.set(req.session.rid , false);
     mapgametriviawinner.set(req.session.rid , { winner : "slayer" , point : 0});
 
-    generateTriviaQuestion(req.session.rid);
+    // generateTriviaQuestion(req.session.rid);
+    generateTriviaJsonQuestion(req.session.rid);
 
     io.once('connection' , (socket) => {
         socket.to(req.session.rid).emit('makePlayerPlayingEvent');
@@ -994,7 +998,8 @@ io.on('connection' , (socket) => {
 
             if(mapgametrivianumberq.get(ioroomid) + 1 <= mapgametrivianbquestion.get(ioroomid)) {
 
-                generateTriviaQuestion(ioroomid)
+                // generateTriviaQuestion(ioroomid)
+                generateTriviaJsonQuestion(ioroomid);
                
                 
                 setTimeout(() => {
@@ -2882,7 +2887,57 @@ function generateTriviaQuestion(ioroomid) {
 
 
 
+function generateTriviaJsonQuestion(ioroomid) {
+    var theme = mapgametriviatheme.get(ioroomid);
+    var mode = mapgametriviamode.get(ioroomid);
 
+    const Difficulty = [
+        "veryeasy" , "easy" , "medium" , "hard" , "veryhard" ,"extreme"
+    ];
+
+
+    var randomdiff = Math.floor(Math.random() * Difficulty.length);
+    var random_diff = Difficulty[randomdiff];
+
+    const Mainstream = [
+        "Naruto" , "One Piece" , "Attack on Titan" , "Dragon Ball" , "My Hero Academia" ,
+         "Hunter Hunter" , "Jojo" , "Bleach" , "Demon Slayer" , "Jujutsu Kaisen" , "Fairy Tail"
+    ];
+
+
+    var randomtheme = Math.floor(Math.random() * Mainstream.length);
+    var random_theme = Mainstream[randomtheme];
+
+
+    var q_select;
+    var rdn;
+    var final_question;
+    if(theme == "Mainstream" || theme == "Tout") {
+        q_select = triviadata[random_theme][random_diff].length;
+        rdn = Math.floor(Math.random() * q_select);
+        final_question = triviadata[random_theme][random_diff][rdn];
+    } else {
+        q_select = triviadata[theme][random_diff].length;
+        rdn = Math.floor(Math.random() * q_select);
+        final_question = triviadata[theme][random_diff][rdn];
+    } 
+
+    
+    console.log(final_question)
+    var final_question_format = {
+        question : final_question[0],
+        answer1 : final_question[1],
+        answer2 : final_question[2],
+        answer3 : final_question[3],
+        answer4 : final_question[4],
+        coanswer : final_question[5],
+        serie_ans : random_theme,
+        diff_ans : random_diff
+    }
+
+    mapgametriviaquestion.set(ioroomid , final_question_format)
+
+}
 
 
 
