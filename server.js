@@ -2920,10 +2920,10 @@ function generateTriviaJsonQuestion(ioroomid) {
         q_select = triviadata[theme][random_diff].length;
         rdn = Math.floor(Math.random() * q_select);
         final_question = triviadata[theme][random_diff][rdn];
+        random_theme = theme;
     } 
 
     
-    console.log(final_question)
     var final_question_format = {
         question : final_question[0],
         answer1 : final_question[1],
