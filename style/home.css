@@ -19,6 +19,51 @@ body{
 }
 
 
+#maindivback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('babe.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: -100;
+  filter: brightness(70%);
+}
+
+
+
+#maindivbackbomba {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('backcita1.jpg');
+  background-size:cover;
+  background-position: center;
+  z-index: -100;
+  filter: brightness(50%);
+}
+
+
+
+@media screen and (max-width: 432px) {
+  #maindivbackbomba {
+    background-image: url('backiphone.jpg');
+  }
+
+  #maindivback {
+    background-image: url('backiphone.jpg');
+  }
+  
+  
+}
+
+
+
+
 
 .maingame::before {    
 content: "";
@@ -113,6 +158,7 @@ object-fit: cover;
 
 
 .btndiv {
+  display: none;
   position: absolute;
   width: 50%;
   height: fit-content;
@@ -162,9 +208,13 @@ float: left;
 
 
 @media screen and (max-width: 432px) {
+  .btndiv {
+    width: 70%;
+  }
+
   .pbtn {
-      width: 100%;
-      font-size: 60%;
+      width: 80%;
+      font-size: 70%;
       height: 5.5em;
       margin: 1.5em;
   }
@@ -421,9 +471,6 @@ width: 10%;
 }
 
 
-.cjdiv {
-  display: none;
-}
 
 
 .creatediv {

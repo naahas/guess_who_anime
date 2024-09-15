@@ -575,7 +575,7 @@ var app = new Vue({
         });
         
         socket.on('showSettingEvent' , (iouser) => {
-            if(iouser != null) $('.cjdiv').show();
+            if(iouser != null) $('.btndiv').show();
             else $('.usernamediv').show();
         });
         

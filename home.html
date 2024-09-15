@@ -40,7 +40,9 @@
 
         <div id="maindiv">
 
-            <img id="mainback" src="babe.jpg" amt="backpic">
+            <div id = "maindivback"></div>
+
+            <!-- <img id="mainback" src="babe.jpg" amt="backpic"> -->
             <img @click="reload()" class="logopic" src ="bombico.png" alt="Bicon">
 
 
@@ -64,13 +66,12 @@
 
             <div class="btndiv">
 
-                <div class="cjdiv">
                     <button class="pbtn" @click="playSolo()" > <span>💣</span> JOUER SOLO</button> <br>
                     <button class="pbtn" @click="redirectMode()" > <span>🕹️</span> MODE DE JEU</button> <br>
                     <button class="pbtn" @click="createLobby()" > <span>⚔️</span> CRÉER SALON</button> <br>
                     <button class="pbtn" @click="joinLobby()"> <span>🛡️</span> REJOINDRE SALON</button>
                     <!-- <button class="pbtn" @click="goSetting()"> <span>⚙️</span> PARAMETRE</button> -->
-                </div>
+        
 
             </div>
 
