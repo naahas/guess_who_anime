@@ -336,6 +336,24 @@ var app = new Vue({
 
         launchWhoGame: function() {
 
+            var body = {
+                nbq :this.whoanime_default_perso,
+                theme : this.whoanime_default_theme
+            };
+
+            var config = {
+                method: 'post',
+                url: '/confirmSettingWhoanime',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.href = "/";
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
         },
 
 
