@@ -30,12 +30,15 @@ var app = new Vue({
             canswer:'',
             gwinner: 'SLAYER',
             nbplayer: 1,
+            maxplayer: 1,
             currentmode: 'Bombanime',
             hand: 3,
             ruletxt: '',
             ruletitle: '',
             trivia_default_mode: 'Aléatoire',
             trivia_default_theme : 'Mainstream',
+            whoanime_default_perso: 24,
+            whoanime_default_theme : 'Mainstream',
             trivia_default_trivianbq : 10
         }
 
@@ -300,9 +303,6 @@ var app = new Vue({
 
 
         launchTriviaGame: function() {
-            // var mode = this.trivia_default_mode;
-            // var life = this.trivia_default_life;
-            // var theme = this.trivia_default_theme;
 
             var body = {
                 mode : this.trivia_default_mode,
@@ -324,6 +324,30 @@ var app = new Vue({
                 console.log(err);
             });
         },
+
+
+        launchWhoGame: function() {
+
+            var body = {
+                nbq :this.whoanime_default_perso,
+                theme : this.whoanime_default_theme
+            };
+
+            var config = {
+                method: 'post',
+                url: '/confirmSettingWhoanime',
+                data: body
+            };
+
+            axios(config)
+            .then(function (res) {
+                location.href = "/";
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+        },
+
 
 
         returnHome: function() {
@@ -401,10 +425,19 @@ var app = new Vue({
             this.trivia_default_mode = mode;
         },
 
+
+
         setTriviaNbq: function(nbq) {
             this.trivia_default_trivianbq = nbq;
 
             showTriviaNbqRule(nbq);
+
+        },
+
+
+
+        setWhoanimePerso: function(nbq) {
+            this.whoanime_default_perso = nbq;
 
 
         },
@@ -523,12 +556,6 @@ var app = new Vue({
         },
 
 
-        displayRule: function(stat) {
-            editRule(stat);
-        },
-
-
-
         goNextTriviaQuestion: function() {
             $('.trivianextbtn').addClass('completedisable');
 
@@ -600,8 +627,9 @@ var app = new Vue({
         });
   
 
-        socket.on('joinNotificationEvent' , (nbplayer) => {
+        socket.on('joinNotificationEvent' , (nbplayer , maxplayer) => {
             // $('.waittxt').html("EN ATTENTE D'UN JOUEUR : 1/1 (" + player + ")");
+            this.maxplayer = maxplayer;
             this.nbplayer = nbplayer + 1;
             $('.kickdiv').show();
             $('.startbtn').removeClass('disablemode');
@@ -609,7 +637,9 @@ var app = new Vue({
 
 
         //AFTER RELOAD
-        socket.on('joinCountNotificationEvent' , (nbplayer) => {
+        socket.on('joinCountNotificationEvent' , (nbplayer , maxplayer) => {
+            console.log(maxplayer)
+            this.maxplayer = maxplayer;
             this.nbplayer = nbplayer;
             if(nbplayer > 1) $('.startbtn').removeClass('disablemode');
             $('.kickdiv').show();
@@ -638,6 +668,12 @@ var app = new Vue({
             $('.trivianavbar').show();
             $('.triviarule').show();
         });
+
+        socket.on('displaySettingWhoanime' , () => {
+            $('.trivianavbar').show();
+            $('.triviarule').show();
+        });
+
 
 
         socket.on('displayOpponents' , (opponents , ruser) => {   
@@ -996,6 +1032,11 @@ var app = new Vue({
         });
 
 
+        socket.on('displayWhoanimeOpponentEvent' , (players_tab) => {
+            displayWhoanimeOpponent(players_tab);
+        });
+
+
         
         socket.on('showTriviaFastestEvent' , (fastest) => {
             if(fastest) showTriviaFastestPlayer(fastest);
@@ -1074,6 +1115,7 @@ $('.triviatitle4').on('mouseleave' , () => {
 $('.triviacell').on('click' , function() {
     var name = $(this).attr('name');
     app.trivia_default_theme = name;
+    app.whoanime_default_theme = name;
     $('.triviacell').css('filter' , 'brightness(100%)')
     $(this).css('filter' , 'brightness(50%)')
 
@@ -1739,6 +1781,13 @@ function editRule(stat) {
         app.ruletitle = "Trivianime";
         app.ruletxt = "QCM à points , les joueurs s'affrontent en répondant à une suite de questions portant sur un thème choisit.";
     }
+
+
+    if(stat == 3) {
+        app.ruletitle = "Whoanime";
+        app.ruletxt = "Qui est-ce version Anime , le but étant de penser à un personnage affiché à l'écran et de deviner celui de l'adversaire avant que celui-ci devine le votre";
+    }
+
 
 
 
@@ -2493,6 +2542,12 @@ function finalTriviaRoundAnswerVisual(data , player_answer) {
 }
 
 
+
+function displayWhoanimeOpponent(players) {
+    var mainarea = document.getElementById('maindiv');
+
+
+}
 
 
 

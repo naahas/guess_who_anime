@@ -13,6 +13,7 @@ const cors = require('cors');
 // const { bdd2, getRandomQuestion , geteMainstreamQuestion , getSerieQuestion} = require('./bdd');
 
 const triviadata = require('./triviadata.json');
+const whodata = require('./whoanimedata.json');
 
 
 
@@ -111,7 +112,10 @@ var mapgametrivianumberq = new Map();
 var mapgametriviafastest = new Map();
 var mapgametriviaendgame = new Map();
 var mapgametriviawinner = new Map();
-
+var mapgamelimit = new Map();
+var mapgamewhocharactersession = new Map();
+var mapgamewhoperso = new Map();
+var mapgamewhotheme = new Map();
 
 var current_user = [];
 
@@ -171,8 +175,14 @@ app.post('/create' , function(req,res) {
     mapcode.set(req.session.username , roomID);
     req.session.rid = roomID;
 
-    res.end();
+    mapgamelimit.set(req.session.rid , 8);
+    if(req.session.mode == "Bombanime") mapgamelimit.set(req.session.rid , 8);
+    if(req.session.mode == "Trivianime") mapgamelimit.set(req.session.rid , 8);
+    if(req.session.mode == "Whoanime") mapgamelimit.set(req.session.rid , 2);
 
+
+    res.end();
+    
 });
 
 
@@ -551,6 +561,37 @@ app.post('/confirmSettingTrivianime' , function(req,res) {
 
 
 
+
+// GAME START AFTER CONFIRM SETTING (WHOANIME)
+app.post('/confirmSettingWhoanime' , function(req,res) {
+    var nbq = req.body.nbq;
+    var theme = req.body.theme;
+  
+    for (let [key, value] of mapcode) {
+        if(value == req.session.rid) mapcodecopy.set(key, value);
+    }
+
+
+    req.session.isplaying = true;
+    req.session.replayed = false;
+    req.session.endgame = false;
+
+
+    mapgamewhoperso.set(req.session.rid , nbq);
+    mapgamewhotheme.set(req.session.rid , theme);
+
+    generateWhoanimeJsonCharacter(req.session.rid);
+
+    io.once('connection' , (socket) => {
+        socket.to(req.session.rid).emit('makePlayerPlayingEvent');
+    });  
+
+
+    res.end();
+});
+
+
+
 app.post('/playSolo' , function(req,res) {
     req.session.created = true;
     req.session.ingame = true;
@@ -787,7 +828,7 @@ io.on('connection' , (socket) => {
             // if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
         }
 
-        socket.emit('joinCountNotificationEvent' , (nbplayer));   
+        socket.emit('joinCountNotificationEvent' , nbplayer , mapgamelimit.get(ioroomid));   
             
     }
 
@@ -802,8 +843,8 @@ io.on('connection' , (socket) => {
     if(iojoin == true && ioroomid) {
         if(io.sockets.adapter.rooms.get(ioroomid)) {
             var roomsize = io.sockets.adapter.rooms.get(ioroomid).size;
-            if(roomsize == 7) mapcodefull.push(ioroomid);
-            if(roomsize<=7) {
+            if(roomsize == mapgamelimit.get(ioroomid) - 1) mapcodefull.push(ioroomid);
+            if(roomsize<= mapgamelimit.get(ioroomid) - 1) {
                 mapcode.set(iousername , ioroomid);
                 socket.join(ioroomid);
 
@@ -813,7 +854,7 @@ io.on('connection' , (socket) => {
                 }
 
          
-                socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , nbplayer);
+                socket.broadcast.to(ioroomid).emit('joinNotificationEvent' , nbplayer , mapgamelimit.get(ioroomid));
             }
         }
 
@@ -830,6 +871,7 @@ io.on('connection' , (socket) => {
     if(iocreate && ioingame == true) {
         if(!ioplaying && iomode == 'Bombanime') socket.emit('displaySetting');
         if(!ioplaying && iomode == 'Trivianime') socket.emit('displaySettingTrivia');  
+        if(!ioplaying && iomode == 'Whoanime') socket.emit('displaySettingWhoanime');  
     }
 
 
@@ -918,6 +960,37 @@ io.on('connection' , (socket) => {
     }
 
 
+
+    if(iomode == "Whoanime") {
+        if(ioplaying == true && ioendgame != true) {
+            
+            if(ioingame == true) {
+                var oplayer = 'SLAYERBOT';
+                var playertab = [];
+                    
+                for (let [key, value] of mapcode) {
+                    if(mapcode.get(key) == ioroomid) playertab.push(key);
+                }
+                
+
+            } 
+
+
+
+
+            /* DISPLAY OPPONENTS */
+            var trivia_players = [];
+            for (let [key, value] of mapcode) {
+                if(mapcode.get(key) == ioroomid) {
+                    trivia_players.push(key)
+                } 
+            }
+            socket.emit('displayWhoanimeOpponentEvent' , trivia_players);       
+            
+         
+        }
+
+    }
   
 
     if(iomode == "Trivianime") {
@@ -925,8 +998,6 @@ io.on('connection' , (socket) => {
 
             socket.emit('showTriviaNbqEvent' , 10);
           
-            // FIRST GENERATE
-           
         }
 
      
@@ -2936,6 +3007,55 @@ function generateTriviaJsonQuestion(ioroomid) {
     }
 
     mapgametriviaquestion.set(ioroomid , final_question_format)
+
+}
+
+
+
+
+function generateWhoanimeJsonCharacter(ioroomid) {
+    var theme = mapgamewhotheme.get(ioroomid);
+
+
+    console.log(theme)
+
+    const Mainstream = [
+        "Naruto" , "One Piece" , "Attack on Titan" , "Dragon Ball" , "My Hero Academia" ,
+         "Hunter Hunter" , "Jojo" , "Bleach" , "Demon Slayer" , "Jujutsu Kaisen" , "Fairy Tail"
+    ];
+
+
+    // var randomtheme = Math.floor(Math.random() * Mainstream.length);
+    // var random_theme = Mainstream[randomtheme];
+
+
+    // var q_select;
+    // var rdn;
+    // var final_question;
+    // if(theme == "Mainstream" || theme == "Tout") {
+    //     q_select = triviadata[random_theme][random_diff].length;
+    //     rdn = Math.floor(Math.random() * q_select);
+    //     final_question = triviadata[random_theme][random_diff][rdn];
+    // } else {
+    //     q_select = triviadata[theme][random_diff].length;
+    //     rdn = Math.floor(Math.random() * q_select);
+    //     final_question = triviadata[theme][random_diff][rdn];
+    //     random_theme = theme;
+    // } 
+
+    
+    // var final_question_format = {
+    //     question : final_question[0],
+    //     answer1 : final_question[1],
+    //     answer2 : final_question[2],
+    //     answer3 : final_question[3],
+    //     answer4 : final_question[4],
+    //     coanswer : final_question[5],
+    //     serie_ans : random_theme,
+    //     diff_ans : random_diff
+    // }
+
+    // mapgametriviaquestion.set(ioroomid , final_question_format)
 
 }
 
