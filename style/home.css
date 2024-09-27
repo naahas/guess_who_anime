@@ -25,11 +25,11 @@ body{
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('babe.jpg');
+  background-image: url('back2.png'); 
   background-size: cover;
   background-position: center;
   z-index: -100;
-  filter: brightness(70%);
+  filter: brightness(60%);
 }
 
 
