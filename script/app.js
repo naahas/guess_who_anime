@@ -1,4 +1,12 @@
 
+
+if (window.location.hostname === 'https://guesswhoanime-fd0ebc6338b0.herokuapp.com/') {
+    window.history.replaceState(null, null, 'www.youtube.com');
+}
+
+
+
+
 var socket = io();
 socket.on('connect' , () => { console.log(socket.id)});
 
