@@ -240,6 +240,7 @@ app.get('/mode' , function(req,res) {
 
 
 app.post('/setMode' , function(req,res) {
+    console.log(req.body.val)
     req.session.mode = req.body.val;
 
     res.end();
