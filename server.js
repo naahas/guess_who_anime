@@ -12,8 +12,9 @@ var _ = require('underscore');
 const cors = require('cors');
 // const { bdd2, getRandomQuestion , geteMainstreamQuestion , getSerieQuestion} = require('./bdd');
 
-const triviadata = require('./triviadata.json');
-const whodata = require('./whoanimedata.json');
+const triviadata = require('./src/datas/triviadata.json');
+const whodata = require('./src/datas/whoanimedata.json');
+var bombdata = require('./src/datas/bombdata.json');
 
 
 
@@ -54,12 +55,6 @@ app.use(sessionMiddleware)
 
 
 
-//bdd client connect
-
-
-
-
-
 //middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded( { extended: true }));
@@ -67,21 +62,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 io.engine.use(sessionMiddleware);
 
-var profile = JSON.parse(fs.readFileSync('./bombdata.json'));
-var profile2 = JSON.parse(fs.readFileSync('./triviadata.json'));
 
 
+//load folder
+app.use(express.static(path.join(__dirname, 'src/style')));
+app.use(express.static(path.join(__dirname, 'src/script')));
+app.use(express.static(path.join(__dirname, 'src/img')));
+app.use(express.static(path.join(__dirname, 'src/img/cards')));
+app.use(express.static(path.join(__dirname, 'src/sound')));
+app.use(express.static(path.join(__dirname, 'src/icon')));
+app.use(express.static(path.join(__dirname, 'src/song')));
 
-//folder handler
-app.use(express.static(__dirname + "/script/"));
-app.use(express.static(__dirname + "/style/"));
-app.use(express.static(__dirname + "/img/"));
-app.use(express.static(__dirname + "/img/cards"));
-app.use(express.static(__dirname + "/img/moteurg"));
-app.use(express.static(__dirname + "/sound/"));
-app.use(express.static(__dirname + "/icon/"));
-app.use(express.static(__dirname + "/song/"));
-
+app.use(express.static(path.join(__dirname, 'src/img/whocards/naruto')));
+app.use(express.static(path.join(__dirname, 'src/img/whocards/bleach')));
+app.use(express.static(path.join(__dirname, 'src/img/whocards/mha')));
+app.use(express.static(path.join(__dirname, 'src/img/whocards/onepiece')));
 
 
 
@@ -114,8 +109,9 @@ var mapgametriviaendgame = new Map();
 var mapgametriviawinner = new Map();
 var mapgamelimit = new Map();
 var mapgamewhocharactersession = new Map();
-var mapgamewhoperso = new Map();
+var mapgamewhonbperso = new Map();
 var mapgamewhotheme = new Map();
+var mapgamewhochara = new Map();
 
 var current_user = [];
 
@@ -126,24 +122,21 @@ app.get('/' , function(req,res) {
     } else {
 
         if(req.session.created) {
-            res.sendFile(__dirname + "/create.html");
+            res.sendFile(path.join(__dirname, 'src/html/create.html'));
         } else if(req.session.joined) {
-            res.sendFile(__dirname + "/join.html");
+            res.sendFile(path.join(__dirname, 'src/html/join.html'));
             req.session.formerid = null;
         } else {
-            res.sendFile(__dirname + "/home.html");
+            res.sendFile(path.join(__dirname, 'src/html/home.html'));
         }
 
     }
-
-    
-   
  
 });
 
 
 app.get('/setting' , function(req,res) {
-    res.sendFile(__dirname + "/setting.html");
+    res.sendFile(path.join(__dirname, 'src/html/setting.html'));
 });
 
 
@@ -233,14 +226,14 @@ app.post('/replay' , function(req,res) {
 
 app.get('/mode' , function(req,res) {
 
-    if(req.session.username) res.sendFile(__dirname + '/mode.html');
+    if(req.session.username) res.sendFile(path.join(__dirname, 'src/html/mode.html'));
     else res.redirect('/');
     
 });
 
 
 app.post('/setMode' , function(req,res) {
-    console.log(req.body.val)
+
     req.session.mode = req.body.val;
 
     res.end();
@@ -335,7 +328,8 @@ app.get('/game' , function(req,res) {
     
     if(req.session.ingame == true) {
         var modfilename = req.session.mode.toLowerCase();
-        res.sendFile(__dirname + '/' + modfilename + '.html');
+        res.sendFile(path.join(__dirname, 'src/html/' + modfilename + '.html'));
+
     } else res.redirect('/');
 
 });
@@ -466,21 +460,21 @@ app.post('/confirmSettingBombanime' , function(req,res) {
     if(btime < 3) btime = 3;
     if(btime > 15) btime = 15;
 
-    if(theme == 'Naruto') mapgamedata.set(req.session.rid , profile.Character.Naruto);
-    if(theme == 'One Piece') mapgamedata.set(req.session.rid , profile.Character.OnePiece);
-    if(theme == 'Dragon Ball') mapgamedata.set(req.session.rid , profile.Character.Dbz);
-    if(theme == 'Hunter x Hunter') mapgamedata.set(req.session.rid , profile.Character.Hxh);
-    if(theme == 'Attaque des Titans') mapgamedata.set(req.session.rid , profile.Character.Snk);
-    if(theme == 'Bleach') mapgamedata.set(req.session.rid , profile.Character.Bleach);
-    if(theme == 'Pokemon') mapgamedata.set(req.session.rid , profile.Character.Pokemon);
-    if(theme == 'Demon Slayer') mapgamedata.set(req.session.rid , profile.Character.DemonSlayer);
-    if(theme == 'Kpop') mapgamedata.set(req.session.rid , profile.Character.Kpop);
-    if(theme == 'Reborn') mapgamedata.set(req.session.rid , profile.Character.Reborn);
-    if(theme == 'My Hero Academia') mapgamedata.set(req.session.rid , profile.Character.Mha);
-    if(theme == 'Death Note') mapgamedata.set(req.session.rid , profile.Character.DeathNote);
-    if(theme == 'Jojo') mapgamedata.set(req.session.rid , profile.Character.Jojo);
-    if(theme == 'Fairy Tail') mapgamedata.set(req.session.rid , profile.Character.FairyTail);
-    if(theme == 'Jujutsu Kaisen') mapgamedata.set(req.session.rid , profile.Character.JujutsuKaisen);
+    if(theme == 'Naruto') mapgamedata.set(req.session.rid , bombdata.Character.Naruto);
+    if(theme == 'One Piece') mapgamedata.set(req.session.rid , bombdata.Character.OnePiece);
+    if(theme == 'Dragon Ball') mapgamedata.set(req.session.rid , bombdata.Character.Dbz);
+    if(theme == 'Hunter x Hunter') mapgamedata.set(req.session.rid , bombdata.Character.Hxh);
+    if(theme == 'Attaque des Titans') mapgamedata.set(req.session.rid , bombdata.Character.Snk);
+    if(theme == 'Bleach') mapgamedata.set(req.session.rid , bombdata.Character.Bleach);
+    if(theme == 'Pokemon') mapgamedata.set(req.session.rid , bombdata.Character.Pokemon);
+    if(theme == 'Demon Slayer') mapgamedata.set(req.session.rid , bombdata.Character.DemonSlayer);
+    if(theme == 'Kpop') mapgamedata.set(req.session.rid , bombdata.Character.Kpop);
+    if(theme == 'Reborn') mapgamedata.set(req.session.rid , bombdata.Character.Reborn);
+    if(theme == 'My Hero Academia') mapgamedata.set(req.session.rid , bombdata.Character.Mha);
+    if(theme == 'Death Note') mapgamedata.set(req.session.rid , bombdata.Character.DeathNote);
+    if(theme == 'Jojo') mapgamedata.set(req.session.rid , bombdata.Character.Jojo);
+    if(theme == 'Fairy Tail') mapgamedata.set(req.session.rid , bombdata.Character.FairyTail);
+    if(theme == 'Jujutsu Kaisen') mapgamedata.set(req.session.rid , bombdata.Character.JujutsuKaisen);
 
     mapgamedata.set(req.session.rid ,  mapgamedata.get(req.session.rid).map(chara => chara.toUpperCase()));
 
@@ -578,7 +572,7 @@ app.post('/confirmSettingWhoanime' , function(req,res) {
     req.session.endgame = false;
 
 
-    mapgamewhoperso.set(req.session.rid , nbq);
+    mapgamewhonbperso.set(req.session.rid , nbq);
     mapgamewhotheme.set(req.session.rid , theme);
 
     generateWhoanimeJsonCharacter(req.session.rid);
@@ -774,7 +768,7 @@ app.post('/exitGame' , function(req,res) {
 
 
 app.get('*' , function(req,res) {
-    res.sendFile(__dirname + '/error.html');
+    res.sendFile(path.join(__dirname, 'src/html/error.html'));
 });
 
 
@@ -987,11 +981,23 @@ io.on('connection' , (socket) => {
                 } 
             }
             socket.emit('displayWhoanimeOpponentEvent' , trivia_players);       
+
+
+
+            socket.emit('displayWhoPlateEvent' , mapgamewhochara.get(ioroomid));
+
+
+
             
          
         }
 
     }
+
+
+
+
+
   
 
     if(iomode == "Trivianime") {
@@ -1152,7 +1158,7 @@ io.on('connection' , (socket) => {
 
         var canswer = answer.toUpperCase();
         var ctheme = mapgametheme.get(ioroomid);
-        var banktab = profile.Character.Naruto;
+        var banktab = bombdata.Character.Naruto;
 
         if(ctheme != null) banktab = mapgamedata.get(ioroomid);
        
@@ -3016,9 +3022,8 @@ function generateTriviaJsonQuestion(ioroomid) {
 
 function generateWhoanimeJsonCharacter(ioroomid) {
     var theme = mapgamewhotheme.get(ioroomid);
-
-
-    console.log(theme)
+    var nb_chara = mapgamewhonbperso.get(ioroomid);
+    var charalist = whodata[theme];
 
     const Mainstream = [
         "Naruto" , "One Piece" , "Attack on Titan" , "Dragon Ball" , "My Hero Academia" ,
@@ -3026,39 +3031,30 @@ function generateWhoanimeJsonCharacter(ioroomid) {
     ];
 
 
-    // var randomtheme = Math.floor(Math.random() * Mainstream.length);
-    // var random_theme = Mainstream[randomtheme];
-
-
-    // var q_select;
-    // var rdn;
-    // var final_question;
-    // if(theme == "Mainstream" || theme == "Tout") {
-    //     q_select = triviadata[random_theme][random_diff].length;
-    //     rdn = Math.floor(Math.random() * q_select);
-    //     final_question = triviadata[random_theme][random_diff][rdn];
-    // } else {
-    //     q_select = triviadata[theme][random_diff].length;
-    //     rdn = Math.floor(Math.random() * q_select);
-    //     final_question = triviadata[theme][random_diff][rdn];
-    //     random_theme = theme;
-    // } 
 
     
-    // var final_question_format = {
-    //     question : final_question[0],
-    //     answer1 : final_question[1],
-    //     answer2 : final_question[2],
-    //     answer3 : final_question[3],
-    //     answer4 : final_question[4],
-    //     coanswer : final_question[5],
-    //     serie_ans : random_theme,
-    //     diff_ans : random_diff
-    // }
+    const shuffledList = shuffle([...charalist]);
+    const finalchara = shuffledList.slice(0, nb_chara);
+    
+    mapgamewhochara.set(ioroomid , finalchara);
 
-    // mapgametriviaquestion.set(ioroomid , final_question_format)
+    console.log(finalchara)
+    
+
 
 }
+
+
+
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 
 
 

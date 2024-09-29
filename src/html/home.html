@@ -1,0 +1,105 @@
+
+
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="nahass">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="theme-color" content="#CFEBF3" />
+    <meta name="description" content="Tic Tac Boom Version Anime">
+    <meta nem="application-name" content="ejejj azleazlkza">
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9088419057079437"
+     crossorigin="anonymous"></script>
+
+
+    <link rel="icon" href="bicon1.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="home.css">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <title>Bombanime</title>
+</head>
+
+
+
+<body>
+    
+    
+    <div id = "app">
+
+
+
+        <div id="maindiv">
+
+            <div id = "maindivback"></div>
+
+            <!-- <img id="mainback" src="babe.jpg" amt="backpic"> -->
+            <img @click="reload()" class="logopic" src ="bombico.png" alt="Bicon">
+
+
+            <div class="userdiv userdivhome" @click="editUsername()">
+                <img src="edit2.png" alt="edit"> &nbsp; &nbsp;
+                <span class="currenthometxt currentxt"> {{usernamedisplay}} </span>
+            </div>
+
+          
+            <p></p>
+            <div class="usernamediv">
+                <h2>RENTRE TON PSEUDO </h2>
+                <hr>
+                <input v-focus @keyup.enter = "submitUsername" placeholder="Ton Pseudo..." maxlength="15" minlength="4" autocomplete="off" v-model="username" type="text" id="usernameinput">
+                <span class="errortxt">  </span>
+                <br>
+                <hr>
+                <button id="subnick" @click="submitUsername()">VALIDER</button>
+            </div>  
+
+
+            <div class="btndiv">
+
+                    <button class="pbtn" @click="playSolo()" > <span>💣</span> JOUER SOLO</button> <br>
+                    <button class="pbtn" @click="redirectMode()" > <span>🕹️</span> MODE DE JEU</button> <br>
+                    <button class="pbtn" @click="createLobby()" > <span>⚔️</span> CRÉER SALON</button> <br>
+                    <button class="pbtn" @click="joinLobby()"> <span>🛡️</span> REJOINDRE SALON</button>
+                    <!-- <button class="pbtn" @click="goSetting()"> <span>⚙️</span> PARAMETRE</button> -->
+        
+
+            </div>
+
+            <div class="modetxtdiv">
+                <span class="modetxt"> Actuellement en mode {{currentmode }} </span>
+            </div>
+
+            <span class="copyright"> Bombanime © Nahass 2024 </span>
+
+            <a title="Instagram" target=”_blank” href = "https://www.instagram.com/naahas__/" > <img class="instapic" src="insta.png" alt="INSTA"> </a> 
+
+    
+        </div> <!-- end main div-->
+    
+
+
+    </div> <!-- end app div -->
+
+    
+
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="./app.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,207 @@
+
+
+
+
+
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no , initial-scale=1.0">
+    <meta name="author" content="nahass">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="theme-color" content="#CFEBF3" />
+    <meta name="description" content="Tic Tac Boom Version Anime">
+    <meta nem="application-name" content="">
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
+
+
+    <link rel="icon" href="bicon1.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="home.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+                
+
+
+    <title>Bombanime</title>
+</head>
+
+
+
+<body>
+    
+    
+    <div id = "app">
+
+
+        <div id="maindiv" class="maingame">
+
+            <div id = "maindivbackbomba"></div>
+
+           
+            <p class="waitgametxt">L'HÔTE EDITE LES RÈGLES ...</p>
+
+
+                <nav class="trivianavbar">
+                    <ul>
+                        <li class="triviatitle1 triviatitle"><a href="#"> Personnages </a>
+                            <ul class="submenu submenu1">
+                                <li @click="setWhoanimePerso(24)" class="trivianbqlist"><a href="#"> 24 </a></li>
+                                <li @click="setWhoanimePerso(30)" class="trivianbqlist"><a href="#"> 30 </a></li>
+                            </ul>
+                        </li>
+    
+
+
+                      <li class="triviatitle triviatitle3"><a href="#"> Theme </a>
+                        
+                      </li>
+
+
+                      <li @click = "launchWhoGame()" class="triviatitle triviatitle4"><a href="#">  <img class="triviaarrowpic2" src="triviaarrow2.png" width="18">  JOUER  <img class="triviaarrowpic" src="triviaarrow.png" width="18"> </a>
+                        <ul class="submenu submenu4">
+
+                          </ul>
+                      </li>
+                      
+                    </ul>
+                  </nav>
+
+
+                  <div class="triviatheme" id="triviathemeid">
+                    <div class="triviacellcontainer">
+
+                        <div class="triviacell" name="Mainstream">
+                            <span class="spancell"> Mainstream <br> <hr> </span>
+                            <img src="mainstreamcell.jpg">
+                        </div>
+
+                        
+                        <div class="triviacell" name="Tout">
+                            <span class="spancell"> Tout <br> <hr> </span>
+                            <img src="overallcell.jpg">
+                        </div>
+                        
+                
+                        <div class="triviacell" name="Naruto">
+                            <span class="spancell"> Naruto <br> <hr> </span>
+                            <img src="narutocell2.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="One Piece">
+                            <span class="spancell"> One Piece <br> <hr> </span>
+                            <img src="onepiececell2.jpg">
+                        </div>
+                
+                        <!-- <div class="triviacell" name="Attack on Titan">
+                            <span class="spancell"> Attack on Titan <br> <hr> </span>
+                            <img src="snkcell.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Dragon Ball">
+                            <span class="spancell"> Dragon Ball <br> <hr> </span>
+                            <img src="dbzcell.jpg"> 
+                        </div> -->
+                
+                        <div class="triviacell" name="My Hero Academia">
+                            <span class="spancell"> My Hero Academia <br> <hr> </span>
+                            <img src="mhacell2.jpg">
+                        </div>
+                        
+                        <!--
+                        <div class="triviacell" name="Hunter Hunter">
+                            <span class="spancell"> Hunter Hunter <br> <hr> </span>
+                            <img src="hxhcell.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Jojo">
+                            <span class="spancell"> Jojo's <br> <hr> </span>
+                            <img src="jojocell2.jpg">
+                        </div> -->
+                
+                        <div class="triviacell" name="Bleach">
+                            <span class="spancell"> Bleach <br> <hr> </span>
+                            <img src="bleachcell.jpg">
+                        </div>
+                
+                        <!-- <div class="triviacell" name="Demon Slayer">
+                            <span class="spancell"> Demon Slayer <br> <hr> </span>
+                            <img src="knycell.jpg">
+                        </div>
+                
+                        <div class="triviacell" name="Jujutsu Kaisen">
+                            <span class="spancell"> Jujutsu Kaisen <br> <hr> </span>
+                            <img src="jjkcell.jpg">
+                        </div>
+    
+                        <div name="Fairy Tail" class="triviacell">
+                            <span class="spancell"> Fairy Tail  <br> <hr> </span>
+                            <img src="ftcell.jpg">
+                        </div>
+     -->
+                    </div>
+                  </div>
+
+
+
+                 <img @click="goNextTriviaQuestion()" src = "trivianext.png" alt="NEXT" class="trivianextbtn completedisable">
+               
+
+
+                  <!-- <p class="headwhotxt"> QUI EST CE </p> -->
+                  
+
+
+                  <div id="countdown-container">
+                    <div id="progress-bar"></div>
+                </div>
+
+
+
+
+                  <div class="triviarule"> 
+                    <p> Règles <hr> </p>
+                    <span> <span class="triviaruledata"> {{whoanime_default_perso}} </span> </span> 
+                    <span> <span class="triviaruledata"> {{whoanime_default_theme}} </span> </span> 
+                 </div>
+
+                
+
+
+
+
+                <button @click="exitGame()" class="backigbtn">RETOUR</button>
+
+
+            
+    
+        </div> <!-- end main div-->
+    
+
+
+
+    </div> <!-- end app div -->
+
+    
+
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="./app.js"></script>
+
+
+</body>
+
+</html>
