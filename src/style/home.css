@@ -5093,33 +5093,16 @@ padding: 0.7em;
       
 
   .whoplateclass {
-    position: absolute;
-    margin: auto;
     width: 90%;
-    height: fit-content;
+    height: 70%;
     right: 0;
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: #160e15ba;
-    display: grid;
-    /* grid-template-columns: repeat(auto-fill, minmax(9em, 3fr)); */
     grid-template-columns: repeat(4, 1fr);
-    text-align: center;
-    justify-items: center; 
-    align-items: center;
     row-gap: 0.5em;
     gap: 0.5em;
-    overflow-x: auto;
-    border-radius: 1em;
-    border-bottom: 0em double aliceblue;
-    border-top: 0em double aliceblue;
-    padding: 1em; 
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
-                rgba(0, 0, 0, 0.12) 0px -12px 30px, 
-                rgba(0, 0, 0, 0.12) 0px 4px 6px, 
-                rgba(0, 0, 0, 0.17) 0px 12px 13px, 
-                rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
   }
 
 
