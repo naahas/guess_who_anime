@@ -5094,12 +5094,12 @@ padding: 0.7em;
 
   .whoplateclass {
     width: 90%;
-    height: 60%;
+    height: 55%;
     right: 0;
     left: 0;
     top: 0;
     bottom: 0;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     row-gap: 0.5em;
     gap: 0.5em;
 
@@ -5111,7 +5111,7 @@ padding: 0.7em;
     text-align: center;
     border: 0.3em double rgba(245, 217, 250, 0.893);
     width: 100%;
-    height: 5em;
+    height: 4.5em;
     opacity: 1;
     transition: all 0.2s ease-in-out;
     border-top-left-radius: 0.6em;
