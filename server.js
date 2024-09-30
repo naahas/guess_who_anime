@@ -5,7 +5,6 @@ const { createServer } = require('http');
 const path  = require('path');
 const { Http2ServerRequest } = require("http2");
 const { Server } = require('socket.io');
-const mysql = require('mysql2');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 var _ = require('underscore');
