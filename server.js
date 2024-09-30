@@ -150,7 +150,7 @@ app.post('/subUsername' , function(req,res) {
     // good si le format du pseudo après vérification est correct
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Whoanime';
+        req.session.mode = 'Bombanime';
         current_user.push(nicknameup);
     }
 
@@ -984,8 +984,9 @@ io.on('connection' , (socket) => {
             socket.emit('displayWhoanimeOpponentEvent' , trivia_players);       
 
 
-
-            socket.emit('displayWhoPlateEvent' , mapgamewhochara.get(ioroomid));
+            if(iocreate == true) socket.emit('displayWhoPlateEvent' , mapgamewhochara.get(ioroomid) , true);
+            else socket.emit('displayWhoPlateEvent' , mapgamewhochara.get(ioroomid) , false);
+        
 
 
 
@@ -1425,7 +1426,15 @@ io.on('connection' , (socket) => {
 
     socket.on('verifyReloadForHost' , () => {
         if(iocreate == true) socket.emit('reloadFinalHost')
-    })
+    });
+
+
+
+    //SHUFFLE WHO CARDS 
+    socket.on('shuffleWhoCardsRequest' , () => {
+        generateWhoanimeJsonCharacter(ioroomid);
+        io.to(ioroomid).emit('displayWhoPlateAfterShuffleEvent' , mapgamewhochara.get(ioroomid) , iocreate); 
+    });
 
 
 

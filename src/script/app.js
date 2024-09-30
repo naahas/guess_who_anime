@@ -59,6 +59,11 @@ var app = new Vue({
 
     methods: {
 
+
+        shuffleWhoCards: function() {
+            socket.emit('shuffleWhoCardsRequest');
+        },
+
       
    
         createLobby: function() {
@@ -1096,10 +1101,15 @@ var app = new Vue({
 
 
 
-        socket.on('displayWhoPlateEvent' , (characters) => {
-            displayWhoanimePlate(characters);
+        socket.on('displayWhoPlateEvent' , (characters , host) => {
+            displayWhoanimePlate(characters , host);
         });
 
+        socket.on('displayWhoPlateAfterShuffleEvent' , (characters , host) => {
+            shuffleWhoPlate(characters , host);
+        });
+
+        
 
 
     
@@ -2759,13 +2769,23 @@ function IncreaseTriviaPoint(point) {
 
 
 
+function shuffleWhoPlate(characters , host) {
+    var whoplate = document.getElementById('whoplateid');
 
-function displayWhoanimePlate(characters) {
+    if(whoplate) whoplate.remove();
+    displayWhoanimePlate(characters , host);
+    
+}
+
+
+
+function displayWhoanimePlate(characters , host) {
     var mainarea = document.getElementById('maindiv'); 
 
 
     var plate = document.createElement('div');
     plate.classList.add('whoplateclass');
+    plate.id = "whoplateid";
 
 
     for(let i = 0 ; i < characters.length ; i++) {
@@ -2806,8 +2826,53 @@ function displayWhoanimePlate(characters) {
 
  
 
+    if(host == true) {
+
+        var whosetting = document.createElement('div');
+        whosetting.classList.add('whosettingclass');
+
+        
+        var whoresetpic = document.createElement('img');
+        whoresetpic.src = "whoreset.png";
+        whoresetpic.title = "Changer";
+        whoresetpic.addEventListener('click' , function() {
+            app.replay();
+        });
 
 
+        var whoshuffle = document.createElement('img');
+        whoshuffle.src = "whoshuffle.png";
+        whoshuffle.title = "Régénérer";
+        whoshuffle.addEventListener('click' , function() {
+        app.shuffleWhoCards();
+        });
+
+
+        whosetting.append( whoshuffle , whoresetpic);
+        mainarea.append(whosetting);
+
+
+    }
+
+
+
+    var whoclear = document.createElement('img');
+    whoclear.classList.add('whoclearpicclass');
+    whoclear.src = "whoclear.png";
+    whoclear.title = "Nettoyer";
+    whoclear.addEventListener('click' , function() {
+        $('.whocardclass').removeClass('whoclickedcardclass')
+        $('.whocardclass').find('img').removeClass('whocardtmpborderclass');
+        $('.whocardclass').css('cursor', `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🗡️</text></svg>") 16 0,auto`);
+    });
+
+
+
+
+ 
+
+
+    mainarea.append(plate , whoclear );
     mainarea.append(plate);
   
 }
