@@ -4986,7 +4986,7 @@ padding: 0.7em;
   border-top-right-radius: 0.6em;
   border-bottom-left-radius: 0.2em;
   border-bottom-right-radius: 0.2em;
-  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>👆</text></svg>") 16 0,auto; /*!emojicursor.app*/
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🗡️</text></svg>") 16 0,auto; /*!emojicursor.app*/
 }
 
 
@@ -5000,9 +5000,6 @@ padding: 0.7em;
 
 
 
-
-
-
 .whocardclass:hover {
   transform: scale(1.05);
   filter: brightness(60%);
@@ -5010,6 +5007,27 @@ padding: 0.7em;
 
 
 
+
+.whoclickedcardclass {
+  filter: brightness(10%);
+  transform: none;
+}
+
+
+.whocardtmpborderclass {
+  border: 0.3em double rgba(245, 217, 250, 0.893);
+
+}
+
+
+.whocardclass.whoclickedcardclass:hover {
+  filter: brightness(10%); 
+  transform: none; 
+}
+
+
+
+
 .whoplateclass::-webkit-scrollbar {
-  width: 0; /* Largeur de la scrollbar */
+  width: 0;
 }

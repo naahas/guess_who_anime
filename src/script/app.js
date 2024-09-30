@@ -50,7 +50,7 @@ var app = new Vue({
             trivia_default_mode: 'Aléatoire',
             trivia_default_theme : 'Mainstream',
             whoanime_default_perso: 24,
-            whoanime_default_theme : 'Mainstream',
+            whoanime_default_theme : 'Tout',
             trivia_default_trivianbq : 10
         }
 
@@ -2780,12 +2780,24 @@ function displayWhoanimePlate(characters) {
         img.style.objectFit = 'fill';
     
         card.appendChild(img);
+        
 
         plate.appendChild(card);
 
-        card.addEventListener('click' , () => {
+        card.addEventListener('click', function() {
+            $(this).toggleClass('whoclickedcardclass');
+            $(this).find('img').toggleClass('whocardtmpborderclass');
 
+            if ($(this).hasClass('whoclickedcardclass')) {
+                $(this).css('cursor', `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>❤️‍🩹</text></svg>") 16 0,auto`);
+            } else {
+                $(this).css('cursor', `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🗡️</text></svg>") 16 0,auto`);
+            }
+          
         });
+
+
+        animateWhoCard(card, i);
     }
 
  
@@ -2793,4 +2805,26 @@ function displayWhoanimePlate(characters) {
 
 
     mainarea.append(plate);
+  
+}
+
+
+
+
+function animateWhoCard(card , i) {
+    const directions = ['translateY(-100%)', 'translateY(100%)', 'translateX(-100%)', 'translateX(100%)'];
+    const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+    
+
+    anime({
+        targets: card,
+        opacity: [0, 1],
+        translateX: randomDirection.includes('X') ? [randomDirection, '0%'] : 0,
+        translateY: randomDirection.includes('Y') ? [randomDirection, '0%'] : 0,
+        duration: 200, 
+        easing: 'easeOutQuad', 
+        delay: 30 * i,  
+    })
+
+
 }

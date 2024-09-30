@@ -148,7 +148,7 @@ app.post('/subUsername' , function(req,res) {
     // good si le format du pseudo après vérification est correct
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Bombanime';
+        req.session.mode = 'Whoanime';
         current_user.push(nicknameup);
     }
 
@@ -3023,14 +3023,17 @@ function generateTriviaJsonQuestion(ioroomid) {
 function generateWhoanimeJsonCharacter(ioroomid) {
     var theme = mapgamewhotheme.get(ioroomid);
     var nb_chara = mapgamewhonbperso.get(ioroomid);
-    var charalist = whodata[theme];
-
-    const Mainstream = [
-        "Naruto" , "One Piece" , "Attack on Titan" , "Dragon Ball" , "My Hero Academia" ,
-         "Hunter Hunter" , "Jojo" , "Bleach" , "Demon Slayer" , "Jujutsu Kaisen" , "Fairy Tail"
-    ];
+    var charalist = [];
 
 
+    if (theme === "Tout") {
+        for (const series in whodata) {
+            charalist = charalist.concat(whodata[series]);
+        }
+    } else {
+        // Sinon, prend la liste des personnages pour le thème donné
+        charalist = whodata[theme];
+    }
 
     
     const shuffledList = shuffle([...charalist]);
