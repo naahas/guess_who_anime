@@ -256,7 +256,7 @@ app.post('/replayPlayer' , function(req,res) {
 app.post('/updateForBonusCharacter' , function(req,res) {
 
     req.session.character = req.session.character + 1;
-    console.log("characters" , " : " , req.session.character)
+    // console.log("characters" , " : " , req.session.character)
 
     
     res.send({ chara : req.session.character , auth1 : req.session.hint1 , auth2 : req.session.hint2 , auth3 : req.session.hint3 });
@@ -3052,7 +3052,7 @@ function generateWhoanimeJsonCharacter(ioroomid) {
     
     mapgamewhochara.set(ioroomid , finalchara);
 
-    console.log(finalchara)
+    // console.log(finalchara)
     
 
 

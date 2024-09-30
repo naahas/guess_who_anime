@@ -4947,8 +4947,8 @@ padding: 0.7em;
 .whoplateclass {
   position: absolute;
   margin: auto;
-  width: 65%;
-  height: 85%;
+  width: fit-content;
+  height: fit-content;
   right: 0;
   left: 0;
   top: 0;
@@ -4961,8 +4961,9 @@ padding: 0.7em;
   justify-items: center; 
   align-items: center;
   row-gap: 0.5em;
+  gap: 1em;
   overflow-x: auto;
-  border-radius: 3em;
+  border-radius: 1.5em;
   border-bottom: 0.1em double aliceblue;
   border-top: 0.1em double aliceblue;
   padding: 1.7em; 
@@ -5083,4 +5084,105 @@ padding: 0.7em;
 .whoclearpicclass:hover {
   filter: brightness(70%);
   transform: scale(1.05);
+}
+
+
+
+
+@media screen and (max-width: 432px) {
+      
+
+  .whoplateclass {
+    position: absolute;
+    margin: auto;
+    width: 90%;
+    height: fit-content;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #160e15ba;
+    display: grid;
+    /* grid-template-columns: repeat(auto-fill, minmax(9em, 3fr)); */
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+    justify-items: center; 
+    align-items: center;
+    row-gap: 0.5em;
+    gap: 0.5em;
+    overflow-x: auto;
+    border-radius: 1em;
+    border-bottom: 0em double aliceblue;
+    border-top: 0em double aliceblue;
+    padding: 1em; 
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+                rgba(0, 0, 0, 0.12) 0px -12px 30px, 
+                rgba(0, 0, 0, 0.12) 0px 4px 6px, 
+                rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+                rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  }
+
+
+
+  .whocardclass {
+    text-align: center;
+    border: 0.3em double rgba(245, 217, 250, 0.893);
+    width: 100%;
+    height: 5em;
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+    border-top-left-radius: 0.6em;
+    border-top-right-radius: 0.6em;
+    border-bottom-left-radius: 0.2em;
+    border-bottom-right-radius: 0.2em;
+    /* cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🗡️</text></svg>") 16 0,auto; !emojicursor.app */
+  }
+
+
+
+  
+  .whosettingclass {
+    top: 5%;
+    left: 0;
+    bottom: unset;
+    right: 0;
+    width: fit-content;
+    height: fit-content;
+    gap: 1em;
+    flex-direction: row-reverse;
+  }
+
+
+
+  .whosettingclass img {
+    width: 3em;
+    height: 3em;
+    cursor: pointer;
+  }
+
+
+
+  .whosettingclass img:hover {
+    filter: unset;
+    transform: unset;
+  }
+
+
+
+  .whoclearpicclass {
+    bottom: 5%;
+    top: unset;
+    right: 0;
+    left: 0;  
+    width: 3em;
+    height: 3em;
+    opacity: 1;
+  }
+
+
+
+
+
+
+
 }
