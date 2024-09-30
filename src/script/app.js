@@ -2774,10 +2774,14 @@ function displayWhoanimePlate(characters) {
 
 
         var img = document.createElement('img');
+
+
+        img.loading = 'lazy';
         img.src = characters[i][1];
         img.style.width = '100%'; 
         img.style.height = '100%'; 
         img.style.objectFit = 'fill';
+        
     
         card.appendChild(img);
         

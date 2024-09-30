@@ -72,10 +72,12 @@ app.use(express.static(path.join(__dirname, 'src/sound')));
 app.use(express.static(path.join(__dirname, 'src/icon')));
 app.use(express.static(path.join(__dirname, 'src/song')));
 
-app.use(express.static(path.join(__dirname, 'src/img/whocards/naruto')));
-app.use(express.static(path.join(__dirname, 'src/img/whocards/bleach')));
-app.use(express.static(path.join(__dirname, 'src/img/whocards/mha')));
-app.use(express.static(path.join(__dirname, 'src/img/whocards/onepiece')));
+
+
+// app.use(express.static(path.join(__dirname, 'src/img/whocards/naruto')));
+// app.use(express.static(path.join(__dirname, 'src/img/whocards/bleach')));
+// app.use(express.static(path.join(__dirname, 'src/img/whocards/mha')));
+// app.use(express.static(path.join(__dirname, 'src/img/whocards/onepiece')));
 
 
 
