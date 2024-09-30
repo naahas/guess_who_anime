@@ -2158,10 +2158,11 @@ function removeJsonAnswer(theme , answer , rid ,  banktab) {
                 if(answer == "PESCHE") similar.push("PESSHE");
                 if(answer == "PESSHE") similar.push("PESCHE");
 
-                if(answer == "TIER HARRIBEL")  { similar.push("TIA HALLIBEL"); similar.push("HALLIBEL"); }
-                if(answer == "TIA HALLIBEL")  { similar.push("TIER HARRIBEL"); similar.push("HARRIBEL"); }
-                if(answer == "HALLIBEL") similar.push("HARRIBEL");
-                if(answer == "HARRIBEL") similar.push("HALLIBEL");
+                if(answer == "TIER HARRIBEL")  { similar.push("TIA HALLIBEL"); similar.push("HALLIBEL"); similar.push("HALIBEL"); }
+                if(answer == "TIA HALLIBEL")  { similar.push("TIER HARRIBEL"); similar.push("HARRIBEL"); similar.push("HALIBEL"); }
+                if(answer == "HALLIBEL") { similar.push("HARRIBEL"); similar.push("HALIBEL"); } 
+                if(answer == "HARRIBEL") { similar.push("HALLIBEL"); similar.push("HALIBEL"); }
+                if(answer == "HALIBEL") { similar.push("TIER HARRIBEL"); similar.push("HARRIBEL"); similar.push("TIA HALLIBEL");  similar.push("HALLIBEL"); }
 
 
 
