@@ -3052,7 +3052,7 @@ function generateWhoanimeJsonCharacter(ioroomid) {
     
     mapgamewhochara.set(ioroomid , finalchara);
 
-    // console.log(finalchara)
+    console.log(finalchara)
     
 
 
