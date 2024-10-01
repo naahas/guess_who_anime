@@ -1,12 +1,5 @@
 
 
-if (window.location.hostname === 'https://guesswhoanime-fd0ebc6338b0.herokuapp.com/') {
-    window.history.replaceState(null, null, 'www.youtube.com');
-}
-
-
-
-
 var socket = io();
 socket.on('connect' , () => { console.log(socket.id)});
 
@@ -709,7 +702,7 @@ var app = new Vue({
             $('.waitgametxt').show();
         });
 
-
+        
         socket.on('displayPostRule' , (time , theme ) => {
             this.timer = time;
             this.currenttheme = theme;
@@ -2784,13 +2777,25 @@ function displayWhoanimePlate(characters , host) {
 
 
     var plate = document.createElement('div');
-    plate.classList.add('whoplateclass');
+
+    var plateclass;
+    var cardclass;
+    plate.classList.add(characters.length <= 24 ? 'whoplateclass' : 'whoplateclass2');
+    if(characters.length <= 24) {
+        plateclass = "whoplateclass";
+        cardclass = "whocardclass"
+    } else {
+        plateclass = "whoplateclass2";
+        cardclass = "whocardclass2";
+    }
+
+
     plate.id = "whoplateid";
 
 
     for(let i = 0 ; i < characters.length ; i++) {
         var card = document.createElement('div');
-        card.classList.add('whocardclass');
+        card.classList.add(cardclass);
 
 
         var img = document.createElement('img');
@@ -2861,9 +2866,9 @@ function displayWhoanimePlate(characters , host) {
     whoclear.src = "whoclear.png";
     whoclear.title = "Nettoyer";
     whoclear.addEventListener('click' , function() {
-        $('.whocardclass').removeClass('whoclickedcardclass')
-        $('.whocardclass').find('img').removeClass('whocardtmpborderclass');
-        $('.whocardclass').css('cursor', `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🗡️</text></svg>") 16 0,auto`);
+        $("." + cardclass).removeClass('whoclickedcardclass')
+        $("." + cardclass).find('img').removeClass('whocardtmpborderclass');
+        $("." + cardclass).css('cursor', `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🗡️</text></svg>") 16 0,auto`);
     });
 
 

@@ -150,7 +150,7 @@ app.post('/subUsername' , function(req,res) {
     // good si le format du pseudo après vérification est correct
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Bombanime';
+        req.session.mode = 'Whoanime';
         current_user.push(nicknameup);
     }
 

@@ -889,6 +889,7 @@ display: none;
 
 
 .backigbtn {
+  z-index: 100 !important;
   position: absolute;
   bottom: 0;
   left:0;
@@ -4152,9 +4153,9 @@ padding: 0.7em;
 
 
 
+
   
   .triviaanswerdiv {
-    background-color: red;
     top: 10%;
     width: 70%;
     height: 40%;  
@@ -5001,11 +5002,13 @@ padding: 0.7em;
 
 
 
+
+
 .whocardclass {
   text-align: center;
   border: 0.3em double rgba(245, 217, 250, 0.893);
-  width: 7em;
-  height: 8em;
+  width: 6.7em;
+  height: 7.7em;
   opacity: 1;
   transition: all 0.2s ease-in-out;
   border-top-left-radius: 0.6em;
@@ -5016,7 +5019,56 @@ padding: 0.7em;
 }
 
 
-.whocardclass img {
+
+
+.whoplateclass2 {
+  position: absolute;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #160e15ba;
+  display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(9em, 3fr)); */
+  grid-template-columns: repeat(6, 1fr);
+  text-align: center;
+  justify-items: center; 
+  align-items: center;
+  row-gap: 0.5em;
+  gap: 0.8em;
+  overflow-x: auto;
+  border-radius: 1.5em;
+  border-bottom: 0.1em double aliceblue;
+  border-top: 0.1em double aliceblue;
+  padding: 1.5em; 
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+              rgba(0, 0, 0, 0.12) 0px -12px 30px, 
+              rgba(0, 0, 0, 0.12) 0px 4px 6px, 
+              rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+              rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+
+
+.whocardclass2 {
+  text-align: center;
+  border: 0.3em double rgba(245, 217, 250, 0.893);
+  width: 5.8em;
+  height: 6.5em;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+  border-top-left-radius: 0.6em;
+  border-top-right-radius: 0.6em;
+  border-bottom-left-radius: 0.2em;
+  border-bottom-right-radius: 0.2em;
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='50' height='55' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🗡️</text></svg>") 16 0,auto; /*!emojicursor.app*/
+}
+
+
+.whocardclass img , .whocardclass2 img {
   text-align: center;
   border-top-left-radius: 0.6em;
   border-top-right-radius: 0.6em;
@@ -5026,7 +5078,7 @@ padding: 0.7em;
 
 
 
-.whocardclass:hover {
+.whocardclass:hover , .whocardclass2:hover {
   transform: scale(1.05);
   filter: brightness(60%);
 }
@@ -5046,7 +5098,7 @@ padding: 0.7em;
 }
 
 
-.whocardclass.whoclickedcardclass:hover {
+.whocardclass.whoclickedcardclass:hover ,  .whocardclass2.whoclickedcardclass:hover {
   filter: brightness(10%); 
   transform: none; 
 }
@@ -5054,7 +5106,7 @@ padding: 0.7em;
 
 
 
-.whoplateclass::-webkit-scrollbar {
+.whoplateclass::-webkit-scrollbar , .whoplateclass2::-webkit-scrollbar {
   width: 0;
 }
 
@@ -5148,6 +5200,27 @@ padding: 0.7em;
 
 
 
+  .whoplateclass2 {
+    width: fit-content;
+    height: fit-content;
+    /* grid-template-columns: repeat(auto-fill, minmax(9em, 3fr)); */
+    grid-template-columns: repeat(5, 1fr);
+    row-gap: 0.5em;
+    gap: 0.8em;
+  }
+  
+
+
+  .whocardclass2 {
+    width: 100%;
+    height: 4em;
+  }
+
+
+  
+
+
+
   
   .whosettingclass {
     top: 5%;
@@ -5191,6 +5264,7 @@ padding: 0.7em;
 
   
 .backigbtn {
+  z-index: 100 !important;
   font-size: 80%;
   font-family: Georgia, 'Times New Roman', Times, serif;
   padding: 0.7em;
@@ -5207,10 +5281,6 @@ padding: 0.7em;
   opacity: 1;
   border: 1px solid rgb(60, 80, 80);
 }
-
-
-
-
 
 
 }
