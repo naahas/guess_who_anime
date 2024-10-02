@@ -150,7 +150,7 @@ app.post('/subUsername' , function(req,res) {
     // good si le format du pseudo après vérification est correct
     if(cres == "good") {
         req.session.username = nickname;
-        req.session.mode = 'Whoanime';
+        req.session.mode = 'Bombanime';
         current_user.push(nicknameup);
     }
 
@@ -3036,15 +3036,17 @@ function generateWhoanimeJsonCharacter(ioroomid) {
     var nb_chara = mapgamewhonbperso.get(ioroomid);
     var charalist = [];
 
-
     if (theme === "Tout") {
         for (const series in whodata) {
             charalist = charalist.concat(whodata[series]);
         }
-    } else {
-        // Sinon, prend la liste des personnages pour le thème donné
-        charalist = whodata[theme];
-    }
+    } else if (theme === "Mainstream") {
+                for (const series in whodata) {
+                    if(series != "Autre") charalist = charalist.concat(whodata[series]);
+                }
+            } else {
+                charalist = whodata[theme];
+            }
 
     
     const shuffledList = shuffle([...charalist]);

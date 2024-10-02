@@ -43,7 +43,7 @@ var app = new Vue({
             trivia_default_mode: 'Aléatoire',
             trivia_default_theme : 'Mainstream',
             whoanime_default_perso: 24,
-            whoanime_default_theme : 'Tout',
+            whoanime_default_theme : 'Mainstream',
             trivia_default_trivianbq : 10
         }
 
