@@ -1098,8 +1098,8 @@ var app = new Vue({
             displayWhoanimePlate(characters , host);
         });
 
-        socket.on('displayWhoPlateAfterShuffleEvent' , (characters , host) => {
-            shuffleWhoPlate(characters , host);
+        socket.on('displayWhoPlateAfterShuffleEvent' , (characters) => {
+            shuffleWhoPlate(characters);
         });
 
         
@@ -2766,7 +2766,7 @@ function shuffleWhoPlate(characters , host) {
     var whoplate = document.getElementById('whoplateid');
 
     if(whoplate) whoplate.remove();
-    displayWhoanimePlate(characters , host);
+    displayWhoanimePlate(characters , false);
     
 }
 
@@ -2780,7 +2780,7 @@ function displayWhoanimePlate(characters , host) {
 
     var plateclass;
     var cardclass;
-    plate.classList.add(characters.length <= 24 ? 'whoplateclass' : 'whoplateclass2');
+
     if(characters.length <= 24) {
         plateclass = "whoplateclass";
         cardclass = "whocardclass"
@@ -2790,6 +2790,7 @@ function displayWhoanimePlate(characters , host) {
     }
 
 
+    plate.classList.add(plateclass);
     plate.id = "whoplateid";
 
 

@@ -1432,8 +1432,9 @@ io.on('connection' , (socket) => {
 
     //SHUFFLE WHO CARDS 
     socket.on('shuffleWhoCardsRequest' , () => {
+        console.log(" player who shuffle : " , iousername)
         generateWhoanimeJsonCharacter(ioroomid);
-        io.to(ioroomid).emit('displayWhoPlateAfterShuffleEvent' , mapgamewhochara.get(ioroomid) , iocreate); 
+        io.to(ioroomid).emit('displayWhoPlateAfterShuffleEvent' , mapgamewhochara.get(ioroomid)); 
     });
 
 
