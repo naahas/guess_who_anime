@@ -539,6 +539,9 @@ var app = new Vue({
             }
 
 
+            this.confirmMode();
+
+
         },
 
 
@@ -593,6 +596,7 @@ var app = new Vue({
     created:  function() {
         setTimeout(() => {
             $('#usernameinput').focus();
+            $('#inputroom').focus();
         },99);
     },
 
@@ -2775,7 +2779,6 @@ function shuffleWhoPlate(characters , host) {
 function displayWhoanimePlate(characters , host) {
     var mainarea = document.getElementById('maindiv'); 
 
-
     var plate = document.createElement('div');
 
     var plateclass;
@@ -2808,11 +2811,23 @@ function displayWhoanimePlate(characters , host) {
         img.style.height = '100%'; 
         img.style.objectFit = 'fill';
         
-    
+        
         card.appendChild(img);
         
-
+        card.setAttribute('draggable' , true);
+        
         plate.appendChild(card);
+
+
+        card.addEventListener('dragstart', function(e) {
+            e.target.classList.add("dragcardclass");
+            e.dataTransfer.setData('text/plain', characters[i][1]); // 
+        });
+
+
+        card.addEventListener('dragend', function(e) {
+            e.target.classList.remove('dragcardclass');
+        });
 
         card.addEventListener('click', function() {
             $(this).toggleClass('whoclickedcardclass');
@@ -2852,10 +2867,55 @@ function displayWhoanimePlate(characters , host) {
         whoshuffle.addEventListener('click' , function() {
         app.shuffleWhoCards();
         });
-
+        
 
         whosetting.append( whoshuffle , whoresetpic);
         mainarea.append(whosetting);
+        
+
+        /* DRAG AND DROP CARD */
+
+        var selectedchara = document.createElement('div');
+        selectedchara.id = "selectcharaid";
+
+        var selectedCharacterArea = document.createElement('div');
+        selectedCharacterArea.id = 'selectcharaid';
+        selectedCharacterArea.classList.add('selectedcharacterclass');
+
+        mainarea.append(selectedCharacterArea);
+    
+        selectedCharacterArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+    
+        selectedCharacterArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            var imgSrc = e.dataTransfer.getData('text/plain');
+            selectedCharacterArea.innerHTML = '';
+            selectedCharacterArea.classList.add('selectedcardareacursorclass');
+            selectedCharacterArea.classList.add('selectedcardareahoverclass');
+
+            document.getElementById('selectcharaid').addEventListener('click' , function() {
+                $("#selectcharaid").removeClass("selectedcardareahoverclass");
+                $("#selectcharaid").toggleClass("selectedcardareaclicked");
+            });
+
+            var selectedImg = document.createElement('img');
+            selectedImg.src = imgSrc;
+            selectedImg.style.width = '6em';
+            selectedImg.style.height = '7em';
+            selectedCharacterArea.appendChild(selectedImg);
+        });
+
+
+
+
+
+
+    
+
+
+
 
 
     }
@@ -2878,7 +2938,7 @@ function displayWhoanimePlate(characters , host) {
  
 
 
-    mainarea.append(plate , whoclear );
+    mainarea.append(plate , selectedchara , whoclear);
     mainarea.append(plate);
   
 }
@@ -2903,3 +2963,14 @@ function animateWhoCard(card , i) {
 
 
 }
+
+
+
+if(document.getElementById('rangeid')) {
+    var rangeElement = document.getElementById('rangeid');
+
+    rangeElement.addEventListener('touchmove', function (e) {
+        e.preventDefault(); 
+    });
+}
+

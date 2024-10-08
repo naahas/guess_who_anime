@@ -141,9 +141,11 @@ app.get('/setting' , function(req,res) {
 });
 
 
+
+
 app.post('/subUsername' , function(req,res) {
     
-    var nickname = req.body.val;
+    var nickname = req.body.val;    
     var nicknameup = nickname.toUpperCase();
     var cres = checkUsername(nicknameup);
 

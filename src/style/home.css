@@ -5166,6 +5166,51 @@ padding: 0.7em;
 
 
 
+.selectedcharacterclass {
+  width: 6.6em;
+  height: 7.7em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 1em;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  border: 0.3em double rgba(28, 6, 32, 0.893);
+  transition: all 0.2s ease-in-out;
+  border-top-left-radius: 0.6em;
+  border-top-right-radius: 0.6em;
+  border-bottom-left-radius: 0.2em;
+  border-bottom-right-radius: 0.2em;
+  transition: all 0.3s ease-in-out;
+}
+
+
+.selectedcardareacursorclass {
+    cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='30' height='30' viewport='0 0 100 100' style='fill:black;font-size:15px;'><text y='50%'>👁️</text></svg>") 16 0,auto; 
+}
+
+
+.selectedcardareahoverclass {
+
+}
+
+
+.selectedcardareahoverclass:hover {
+  filter: brightness(50%);
+}
+
+
+.selectedcardareaclicked {
+  filter: brightness(20%);
+}
+
+
+
+
+
+
 @media screen and (max-width: 432px) {
       
 
@@ -5284,3 +5329,6 @@ padding: 0.7em;
 
 
 }
+
+
+
