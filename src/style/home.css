@@ -5270,9 +5270,19 @@ padding: 0.7em;
 }
 
 
+.dragcardclass {
+  width: 6em;
+  height: 7em;
+}
+
 
 @media screen and (max-width: 432px) {
-      
+    
+  .dragcardclass {
+    width: 2.9em;
+    height: 3.8em;
+  }
+  
 
   .selectedcharacterclass {
     width: 3.5em;

@@ -2878,8 +2878,7 @@ function displayWhoanimePlate(characters , host) {
 
          var selectedImg = document.createElement('img');
          selectedImg.src = imgSrc;
-         selectedImg.style.width = '6em';
-         selectedImg.style.height = '7em';
+         selectedImg.classList.add('dragcardclass');
          selectedCharacterArea.appendChild(selectedImg);
      });
 
