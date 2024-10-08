@@ -821,7 +821,7 @@ var app = new Vue({
 
         socket.on('displayBeginning' , () => {
             $('.p1div').show();
-            $('.bombdiv').show();
+            $('.bombpic').show();
         });
 
 
@@ -1488,7 +1488,7 @@ function displayWinnerHost(winner) {
     app.gwinner = winner;
 
     $('.container').hide();
-    $('.bombdiv').hide();
+    $('.bombpic').hide();
     $('.bonuscontainer').hide();
     $('#containerid').hide();
     $('.winnerdiv').show();
@@ -1524,7 +1524,7 @@ function displayWinner(winner) {
 
     app.gwinner = winner;
     $('.container').hide();
-    $('.bombdiv').hide();
+    $('.bombpic').hide();
     $('.bonuscontainer').hide();
     $('.winnerdiv').show();
     $('#containerid').hide();
@@ -1728,7 +1728,9 @@ function editOpponent(players , username) {
             padlockpic.classList.add('tmplockclass');
             turnpic.classList.add('tmpturnclass');
             skullpic.classList.add('tmpskullpic');
+
             pinput.setAttribute('v-model' , 'canswer');
+            pinput.setAttribute('enterkeyhint', 'go');
 
             pinput.addEventListener('keypress' , function(event) {
                 if(event.key === 'Enter') {
@@ -2106,7 +2108,7 @@ function showBonus(character , auth1 , auth2 , auth3) {
         img.setAttribute('alt', alt);
 
         var span = document.createElement('span');
-        span.classList.add('bonus-text');
+        span.classList.add('bonustext');
         span.innerHTML = text;
 
         div.appendChild(img);
@@ -2768,8 +2770,11 @@ function IncreaseTriviaPoint(point) {
 
 function shuffleWhoPlate(characters , host) {
     var whoplate = document.getElementById('whoplateid');
+    var whoselectarea = document.getElementById('selectcharaid');
 
     if(whoplate) whoplate.remove();
+    if(whoselectarea) whoselectarea.remove();
+    
     displayWhoanimePlate(characters , false);
     
 }
@@ -2845,6 +2850,55 @@ function displayWhoanimePlate(characters , host) {
         animateWhoCard(card, i);
     }
 
+
+
+
+
+     /* DRAG AND DROP CARD */
+
+     var selectedCharacterArea = document.createElement('div');
+     selectedCharacterArea.id = 'selectcharaid';
+     selectedCharacterArea.classList.add('selectedcharacterclass');
+ 
+     selectedCharacterArea.addEventListener('dragover', function(e) {
+         e.preventDefault();
+     });
+ 
+     selectedCharacterArea.addEventListener('drop', function(e) {
+         e.preventDefault();
+         var imgSrc = e.dataTransfer.getData('text/plain');
+         selectedCharacterArea.innerHTML = '';
+    
+         if (selectedCharacterArea.firstChild) {
+            selectedCharacterArea.removeChild(selectedCharacterArea.firstChild);
+        }
+
+         selectedCharacterArea.classList.add('selectedcardareacursorclass');
+         selectedCharacterArea.classList.remove('selectedcardareaclicked');
+
+         var selectedImg = document.createElement('img');
+         selectedImg.src = imgSrc;
+         selectedImg.style.width = '6em';
+         selectedImg.style.height = '7em';
+         selectedCharacterArea.appendChild(selectedImg);
+     });
+
+
+
+     selectedCharacterArea.addEventListener('click' , function() {
+            
+        if (document.getElementById('selectcharaid').classList.contains('selectedcardareaclicked')) {
+           console.log('il a deja')
+           document.getElementById('selectcharaid').classList.remove('selectedcardareaclicked');
+       } else {
+           console.log('il a pas')
+           document.getElementById('selectcharaid').classList.add('selectedcardareaclicked');
+       }
+    });
+
+
+     mainarea.append(selectedCharacterArea);
+
  
 
     if(host == true) {
@@ -2861,60 +2915,24 @@ function displayWhoanimePlate(characters , host) {
         });
 
 
+        
         var whoshuffle = document.createElement('img');
         whoshuffle.src = "whoshuffle.png";
-        whoshuffle.title = "Régénérer";
+        whoshuffle.title = "Générer";
         whoshuffle.addEventListener('click' , function() {
-        app.shuffleWhoCards();
+            selectedCharacterArea.innerHTML = '';
+            selectedCharacterArea.classList.remove('selectedcardareacursorclass');
+            selectedCharacterArea.classList.remove('selectedcardareahoverclass');
+            selectedCharacterArea.classList.remove('selectedcardareaclicked'); 
+        
+
+            app.shuffleWhoCards();
         });
         
 
         whosetting.append( whoshuffle , whoresetpic);
         mainarea.append(whosetting);
         
-
-        /* DRAG AND DROP CARD */
-
-        var selectedchara = document.createElement('div');
-        selectedchara.id = "selectcharaid";
-
-        var selectedCharacterArea = document.createElement('div');
-        selectedCharacterArea.id = 'selectcharaid';
-        selectedCharacterArea.classList.add('selectedcharacterclass');
-
-        mainarea.append(selectedCharacterArea);
-    
-        selectedCharacterArea.addEventListener('dragover', function(e) {
-            e.preventDefault();
-        });
-    
-        selectedCharacterArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            var imgSrc = e.dataTransfer.getData('text/plain');
-            selectedCharacterArea.innerHTML = '';
-            selectedCharacterArea.classList.add('selectedcardareacursorclass');
-            selectedCharacterArea.classList.add('selectedcardareahoverclass');
-
-            document.getElementById('selectcharaid').addEventListener('click' , function() {
-                $("#selectcharaid").removeClass("selectedcardareahoverclass");
-                $("#selectcharaid").toggleClass("selectedcardareaclicked");
-            });
-
-            var selectedImg = document.createElement('img');
-            selectedImg.src = imgSrc;
-            selectedImg.style.width = '6em';
-            selectedImg.style.height = '7em';
-            selectedCharacterArea.appendChild(selectedImg);
-        });
-
-
-
-
-
-
-    
-
-
 
 
 
@@ -2938,8 +2956,7 @@ function displayWhoanimePlate(characters , host) {
  
 
 
-    mainarea.append(plate , selectedchara , whoclear);
-    mainarea.append(plate);
+    mainarea.append(plate , whoclear);
   
 }
 

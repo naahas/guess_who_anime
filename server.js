@@ -826,7 +826,7 @@ io.on('connection' , (socket) => {
             // if(key!=iousername && mapcode.get(key) == ioroomid) socket.emit('joinNotificationEvent' , (key));
         }
 
-        socket.emit('joinCountNotificationEvent' , nbplayer , mapgamelimit.get(ioroomid));   
+        if(!ioplaying) socket.emit('joinCountNotificationEvent' , nbplayer , mapgamelimit.get(ioroomid));   
             
     }
 

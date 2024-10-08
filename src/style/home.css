@@ -1103,17 +1103,17 @@ opacity: 1;
 }
 
 
-.bombdiv {
+.bombpic {
   display: none;
   position: absolute;
-  width: fit-content;
-  height: fit-content;
   top:0;
   left:0;
   right: 0;
   bottom: 0;
   margin: auto;
   animation: popbomb 0.2s forwards;
+  width: 4.7%;
+  height: 10%;
 }
 
 
@@ -1130,10 +1130,7 @@ opacity: 1;
 }
 
 
-.picpic {
-  width: 80%;
-  height: 80%;
-}
+
 
 .bombpic {
   animation: pulse 0.6s infinite;
@@ -1162,11 +1159,6 @@ opacity: 1;
 }
 
 
-@media screen and (max-width: 432px) {
-  .bombpic {
-    width: 85%;
-  }
-}
 
 
 @media screen and (orientation:landscape) and (max-width:950px)  { 
@@ -1546,20 +1538,33 @@ outline: none;
 opacity: 0.9;
 }
 
+
+@media screen and (max-width: 432px) {
+  .secrange {
+    margin: 0.5em;
+    outline: unset;
+  }
+}
+  
+
+@media screen and (min-width: 500px) {
+  
 .secrange::-webkit-slider-thumb {
--webkit-appearance: none;
-appearance: none;
-background-color: rgb(170, 31, 202)
-
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: rgb(170, 31, 202)
+  
+  }
+  
+  
+  .secrange::-webkit-slider-runnable-track {
+  cursor: pointer;
+  background: #aca0b1;
+  border-radius: 1em;
+  }
+  
+  
 }
-
-
-.secrange::-webkit-slider-runnable-track {
-cursor: pointer;
-background: #aca0b1;
-border-radius: 1em;
-}
-
 
 
 
@@ -3274,7 +3279,7 @@ gap: 2em;
 }
 
 
-.bonus-text {
+.bonustext {
 font-family: Georgia, 'Times New Roman', Times, serif;
 color:aliceblue;
 text-shadow: rgb(47, 250, 247) 1px 0 5px;  
@@ -3391,7 +3396,7 @@ border-color: #18334f;
   }
 
 
-  .bonus-text {
+  .bonustext {
     margin-left: 1em;
     font-size: 0.8em;
   }
@@ -3403,9 +3408,9 @@ border-color: #18334f;
   
 
 
-  .picpic {
-    width: 50%;
-    height: 50%;
+  .bombpic {
+    width: 3em;
+    height: 3.5em;
   }
 
 
@@ -3446,6 +3451,53 @@ border-color: #18334f;
 
 }
 
+
+@media screen and (orientation:landscape) and (max-width:950px)  { 
+  .bombpic {
+    width: 3.5em;
+    height: 4em;
+  }
+  
+
+  .bonuscontainer {
+    position: absolute;
+    bottom: 3%;
+    top: unset;
+    right: 0;
+    left: 0;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3em;
+  }
+
+
+  .bombbonuspicclass {
+    filter: brightness(40%);
+    width: 3em;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    }
+
+
+    .bonustext {
+      font-size: 0.8em;
+      margin-left: 0.3em;
+    }
+
+
+    .strikerdiv {
+      margin: none; 
+      left:0;
+      top:5%;
+    }
+
+
+
+}
 
 
 
@@ -5163,9 +5215,6 @@ padding: 0.7em;
   transform: scale(1.05);
 }
 
-
-
-
 .selectedcharacterclass {
   width: 6.6em;
   height: 7.7em;
@@ -5173,7 +5222,7 @@ padding: 0.7em;
   right: 0;
   top: 0;
   margin: 1em;
-  background-color: #f0f0f0;
+  background-color: #f0f0f077;
   display: flex;
   align-items: center;
   z-index: 1000;
@@ -5185,6 +5234,20 @@ padding: 0.7em;
   border-bottom-right-radius: 0.2em;
   transition: all 0.3s ease-in-out;
 }
+
+
+.selectedcardtxtclass {
+  position: absolute;
+  bottom: -3em;
+  right: 0;
+  left: 0;
+  margin: auto;
+  color: aliceblue;
+  font-weight: 800;
+}
+
+
+
 
 
 .selectedcardareacursorclass {
@@ -5203,10 +5266,35 @@ padding: 0.7em;
 
 
 .selectedcardareaclicked {
-  filter: brightness(20%);
+  filter: brightness(1%);
 }
 
 
+
+@media screen and (max-width: 432px) {
+      
+
+  .selectedcharacterclass {
+    width: 3.5em;
+    height: 4.4em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0.6em;
+    background-color: #f0f0f092;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    border: 0.3em double rgba(28, 6, 32, 0.893);
+    transition: all 0.2s ease-in-out;
+    border-top-left-radius: 0.6em;
+    border-top-right-radius: 0.6em;
+    border-bottom-left-radius: 0.2em;
+    border-bottom-right-radius: 0.2em;
+    transition: all 0.3s ease-in-out;
+    }
+  
+  }
 
 
 
