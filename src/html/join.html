@@ -49,7 +49,7 @@
 
 
             <div class="joindiv">   
-                    <input     @input="roomid = roomid.toUpperCase()" @keyup.enter = "submitCode" v-model="roomid" id="inputroom" name="codeid" placeholder="Code du salon.." autocomplete="off">
+                    <input @input="roomid = roomid.toUpperCase()" @keyup.enter = "submitCode" enterkeyhint="go" v-model="roomid" id="inputroom" name="codeid" placeholder="Code du salon.." autocomplete="off">
                     <br>
                     <button @click="submitCode()" id="codebtn">VALIDER</button>  
             </div>

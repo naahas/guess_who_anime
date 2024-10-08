@@ -57,7 +57,7 @@
             <div class="usernamediv">
                 <h2>RENTRE TON PSEUDO </h2>
                 <hr>
-                <input v-focus @keyup.enter = "submitUsername" placeholder="Ton Pseudo..." maxlength="15" minlength="4" autocomplete="off" v-model="username" type="text" id="usernameinput">
+                <input v-focus @keyup.enter = "submitUsername" enterkeyhint="go" placeholder="Ton Pseudo..." maxlength="15" minlength="4" autocomplete="off" v-model="username" type="text" id="usernameinput">
                 <span class="errortxt">  </span>
                 <br>
                 <hr>
