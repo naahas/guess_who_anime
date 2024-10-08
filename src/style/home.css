@@ -5313,14 +5313,14 @@ padding: 0.7em;
       
 
   .whoplateclass {
-    width: 90%;
+    width: 95%;
     height: 70%;
     right: 0;
     left: 0;
     top: 0;
     bottom: 0;
     grid-template-columns: repeat(5, 1fr);
-    row-gap: 0.5em;
+    row-gap: 0em;
     gap: 0.5em;
 
   }
@@ -5331,7 +5331,7 @@ padding: 0.7em;
     text-align: center;
     border: 0.3em double rgba(245, 217, 250, 0.893);
     width: 100%;
-    height: 4.5em;
+    height: 4em;
     opacity: 1;
     transition: all 0.2s ease-in-out;
     border-top-left-radius: 0.6em;
@@ -5343,21 +5343,24 @@ padding: 0.7em;
 
 
 
+  
+
+  .whocardclass2 {
+    width: 100%;
+    height: 3.8em;
+  }
+
+
+
   .whoplateclass2 {
     width: fit-content;
-    height: fit-content;
+    height: 70%;
     /* grid-template-columns: repeat(auto-fill, minmax(9em, 3fr)); */
     grid-template-columns: repeat(5, 1fr);
     row-gap: 0.5em;
     gap: 0.8em;
   }
   
-
-
-  .whocardclass2 {
-    width: 100%;
-    height: 4em;
-  }
 
 
   
