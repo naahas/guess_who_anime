@@ -8,6 +8,7 @@ body{
 }
 
 
+
 #maindiv {
   position: absolute;
   background-color: rgba(55, 69, 69, 0.489);
@@ -170,10 +171,10 @@ object-fit: cover;
 }
 
 .pbtn {
-  width: 50%;
-  font-size: 100%;
+  width: 40%;
+  font-size: 80%;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  padding: 0.9em;
+  padding: 1.5em;
   margin: 1em;
   letter-spacing: 0.2em;
   color: #fff;
@@ -1105,15 +1106,8 @@ opacity: 1;
 
 .bombpic {
   display: none;
-  position: absolute;
-  top:0;
-  left:0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
   animation: popbomb 0.2s forwards;
-  width: 4.7%;
-  height: 10%;
+  width: 4em;
 }
 
 
@@ -2218,7 +2212,9 @@ align-items: center;
 justify-content: center;
 font-weight: bold;
 color: #fff;
+transform-origin: center;
 }
+
 
 
 
@@ -3353,17 +3349,19 @@ background-color: rgb(52, 179, 233);
 
 
 #containerid {
-display: none;
-position: absolute;
-top:0;
-right: 7%;
-left: 0;
-bottom: 5%;
-margin: auto;
-width: fit-content;
-height: fit-content;
-background-color: rgb(52, 179, 233);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  height: 50vh; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+
+
 
 
 
@@ -5433,3 +5431,55 @@ padding: 0.7em;
 
 
 
+
+.utobtn {
+  background-color: rgba(6, 8, 46, 0.755);
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  padding: 1em 2em;
+  color: aliceblue;
+  width: 17%;
+  border-radius: 1em;
+  box-shadow: rgba(0, 0, 0, 0.696) 0px 5px 15px 0px;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  font-weight: 500;
+  bottom: 0;
+  top: 0;
+  height: 5em;
+  animation: utobtnA 2s infinite;
+  transition: all 0.2s ease-in-out;
+}
+
+
+@keyframes utobtnA {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+
+.utobtn:hover {
+  background-color: aliceblue;
+  color: #0f1112;
+}
+
+
+
+button.lobbybtn.disabled {
+  background-color: red;
+  cursor: default;
+  opacity: 0.6;
+}

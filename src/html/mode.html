@@ -59,7 +59,7 @@
 
             <nav class="modenav">
                 <p>
-                    <i class="fa-solid fa-circle-info" style="color: aliceblue;"></i>  &nbsp; Par défaut , le mode selectionné est <b>Bombanime</b> &nbsp; | Mode Whoanime en cours d'implémentation
+                    <i class="fa-solid fa-circle-info" style="color: aliceblue;"></i>  &nbsp; Par défaut , le mode selectionné est <b>Bombanime</b> &nbsp; | Mode ??? en cours d'implémentation
                 </p>
              
                 <hr class="navhr">
@@ -78,23 +78,31 @@
                 <div class="casecontainer" name = "Bombanime">
                     <i onclick="editRule(1)" title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
                     <div class="casemode casemode1" name = "Bombanime" id="bombanimecase" @click="selectMode('Bombanime')">
-                         <span>Bombanime &nbsp; <i class="fa fa-bomb" aria-hidden="true"></i> </span>
+                         <span>Bomb up &nbsp; <i class="fa fa-bomb" aria-hidden="true"></i> </span>
                     </div>
                 </div>
 
-                <!--         
+                        
                 <div class="casecontainer" name = "Trivianime">
                     <i onclick="editRule(2)" title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
                     <div class="casemode" name = "Trivianime" id="cardanimecase" @click="selectMode('Trivianime')">
                          <span>Trivianime &nbsp; <i class="fa fa-plane" aria-hidden="true"></i>
                     </div>
-                </div> -->
+                </div>
 
 
                 <div class="casecontainer" name = "Whoanime">
                     <i onclick="editRule(3)" title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
                     <div class="casemode" name = "Whoanime" id="cardanimecase" @click="selectMode('Whoanime')"> 
-                        <span>Whoanime &nbsp; <i class="fa-solid fa-person"></i></span>
+                        <span>Who is it &nbsp; <i class="fa-solid fa-person"></i></span>
+                    </div>
+                </div>
+
+
+                <div class="casecontainer" name = "Whoanime">
+                    <i onclick="editRule(4)" title="Infos" class="infomodepic fa-solid fa-circle-info" style="color: #cfc4ee;"></i>
+                    <div class="casemode" name = "Whoanime" id="cardanimecase" @click="selectMode('Utopia')"> 
+                        <span>Utopia &nbsp;<i class="fa fa-heartbeat" aria-hidden="true"></i>  </span>
                     </div>
                 </div>
 

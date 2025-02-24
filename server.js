@@ -9,11 +9,11 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 var _ = require('underscore');
 const cors = require('cors');
-// const { bdd2, getRandomQuestion , geteMainstreamQuestion , getSerieQuestion} = require('./bdd');
 
 const triviadata = require('./src/datas/triviadata.json');
 const whodata = require('./src/datas/whoanimedata.json');
 var bombdata = require('./src/datas/bombdata.json');
+
 
 
 
@@ -461,7 +461,7 @@ app.post('/confirmSettingBombanime' , function(req,res) {
     var btime = req.body.val1;
     var theme = req.body.val2;
     if(btime < 3) btime = 3;
-    if(btime > 15) btime = 15;
+    // if(btime > 15) btime = 15;
 
     if(theme == 'Naruto') mapgamedata.set(req.session.rid , bombdata.Character.Naruto);
     if(theme == 'One Piece') mapgamedata.set(req.session.rid , bombdata.Character.OnePiece);
@@ -873,6 +873,11 @@ io.on('connection' , (socket) => {
     }
 
 
+    if(iomode == "Utopia") {
+        socket.emit("disableMultiplayerEvent");
+    }
+
+
 
     if(iomode == "Bombanime") {
 
@@ -1032,6 +1037,7 @@ io.on('connection' , (socket) => {
 
                     
                 if(mapgametriviaendgame.get(ioroomid) != true) {
+                    console.log('laaaaa')
                     launchTriviaRound(iocreate , ioroomid);
                     socket.emit('displayTriviaDataEvent' , mapgametriviaquestion.get(ioroomid) , mapgametrivianumberq.get(ioroomid));
                     socket.emit('updateTriviaTimer', mapgametriviatimeleft.get(ioroomid)); 

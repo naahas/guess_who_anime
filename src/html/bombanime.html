@@ -92,7 +92,7 @@
                 <div class="subsetdiv rangediv">
                     <p >💣​ TEMPS BOMBE (sec)</p>
                     <hr>
-                    <input id="rangeid" class="secrange" type="range" value="5" min="3" max="15">
+                    <input id="rangeid" class="secrange" type="range" value="5" min="3" max="100">
                     <span id="secvalid" class="secval"> 5 </span>
                 </div>
 
@@ -123,15 +123,17 @@
                             </optgroup>
                         </select>
                     </div>
+ 
 
                   </div>
 
+                  
 
-                  <div class="subsetdiv rulediv">
+                  <!-- <div class="subsetdiv rulediv">
                     <p> RULES </p>
                     <hr>
                     <p> Indique le temps dont chaque joueur dispose pour donner une réponse respectant le thème </p>
-                  </div>
+                  </div> -->
 
                    
                   <button @click="sendGameSetting1()" class="subsettingbtn">CONFIRMER</button>
@@ -166,13 +168,10 @@
                 </div>
 
 
-                <img id="bombid" class="bombpic" src="step1.png">
+                <!-- <img id="bombid" class="bombpic" src="step1.png"> -->
                
 
 
-                <div id="containerid" class="circle outer-circle">
-                    
-                </div>
 
 
             
@@ -194,6 +193,7 @@
         <audio id="audio1" preload="auto">
             <source src="timer.mp3" type="audio/mp3">
         </audio>
+        
 
         <audio id="audio2" preload="auto">
             <source src="right2.mp3" type="audio/mp3">

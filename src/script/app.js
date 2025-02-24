@@ -1,5 +1,6 @@
 
 
+
 var socket = io();
 socket.on('connect' , () => { console.log(socket.id)});
 
@@ -60,45 +61,49 @@ var app = new Vue({
       
    
         createLobby: function() {
-            var body = {
-                val: 'create'
-            };
+            if(this.currentmode != "Utopia") {
+                var body = {
+                    val: 'create'
+                };
 
-            var config = {
-                method: 'post',
-                url: '/create',
-                data: body
-            };
+                var config = {
+                    method: 'post',
+                    url: '/create',
+                    data: body
+                };
 
-            axios(config)
-            .then(function (res) {
-                location.href = "/";
-             
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+                axios(config)
+                .then(function (res) {
+                    location.href = "/";
+                
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+            }
 
         },
 
         joinLobby: function() {
-            var body = {
-                val: 'join'
-            };
+            if(this.currentmode != "Utopia") {
+                var body = {
+                    val: 'join'
+                };
 
-            var config = {
-                method: 'post',
-                url: '/join',
-                data: body
-            };
+                var config = {
+                    method: 'post',
+                    url: '/join',
+                    data: body
+                };
 
-            axios(config)
-            .then(function (res) {
-                location.href = '/';
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+                axios(config)
+                .then(function (res) {
+                    location.href = '/';
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+            }
 
         },
 
@@ -597,7 +602,7 @@ var app = new Vue({
         setTimeout(() => {
             $('#usernameinput').focus();
             $('#inputroom').focus();
-        },99);
+        },150);
     },
 
    
@@ -1106,6 +1111,13 @@ var app = new Vue({
             shuffleWhoPlate(characters);
         });
 
+
+
+        socket.on("disableMultiplayerEvent" , () => {
+            this.currentmode = "Utopia";
+            $('.lobbybtn').prop('disabled', true).addClass('disabled');
+        });
+
         
 
 
@@ -1463,6 +1475,7 @@ function handleInput(nbturn) {
 
 
 
+
 function editBombPic(step) {
     if(step == 1) {
         $(".bombpic").removeClass('bombpic2');
@@ -1665,8 +1678,10 @@ function editBotAnswer(botanswer) {
 
 
 function editOpponent(players , username) {
+    var mainarea = document.getElementById('maindiv');
     
-    var container = document.getElementById('containerid');
+    var container = document.createElement('div');
+    container.id = "containerid";
     var numberOfPlayers = players.length;
 
     while (container.firstChild) {
@@ -1674,7 +1689,7 @@ function editOpponent(players , username) {
     }
 
 
-    var radius = window.innerWidth < 432 ? 120 : 220; // Adjust radius for smaller screens
+    var radius = window.innerWidth < 432 ? 120 : 220; 
 
     for(let i = 0 ; i < numberOfPlayers ; i++) {
 
@@ -1683,7 +1698,6 @@ function editOpponent(players , username) {
         playerdiv.classList.add('playerdiv');
 
         const angle =  (360 / numberOfPlayers) * i
-        const angleInRadians = angle * (Math.PI / 180);
 
         var playertxt = document.createElement('p');
 
@@ -1764,6 +1778,16 @@ function editOpponent(players , username) {
         $('#containerid').show();
     }
 
+
+    var bombpic = document.createElement('img');
+    bombpic.id = "bombid";
+    bombpic.classList.add('bombpic');
+    bombpic.src = "step11.png";
+
+    container.append(bombpic);
+
+    mainarea.append(container);
+
     
 }
 
@@ -1815,7 +1839,13 @@ function editRule(stat) {
 
     if(stat == 3) {
         app.ruletitle = "Whoanime";
-        app.ruletxt = "Qui est-ce version Anime , le but étant de penser à un personnage affiché à l'écran et de deviner celui de l'adversaire avant que celui-ci devine le votre";
+        app.ruletxt = "Qui est-ce version Anime , le but étant de penser à un personnage affiché à l'écran et de deviner celui de l'adversaire avant que celui-ci ne devine le votre";
+    }
+
+
+    if(stat == 4) {
+        app.ruletitle = "Utopia";
+        app.ruletxt = "Dans ce Battle Royal , chaque joueur devra répondre à toutes sortes de questions pour parvenir à se hisser au niveau 100 en premier";
     }
 
 
